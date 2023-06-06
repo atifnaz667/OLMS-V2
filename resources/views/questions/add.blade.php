@@ -33,11 +33,6 @@
         margin-top: 20px;
         margin-right: 20px;
     }
-
-    .mcq-options,
-    .reason-field {
-        display: none;
-    }
 </style>
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
@@ -113,77 +108,58 @@
     </div>
     <br>
     <div class="col-12">
-        <div class="card border-top border-0 border-4 border-primary">
-            <div class="card-body p-4">
-                <div class="px-3">
-                    <h5 class="card-title">Add New Question</h5>
-                    <hr />
-                </div>
-                <div class="form-body mt-4">
-                    <form method="POST" action="{{ route('question.store') }}">
-                        @csrf
-                        <div id="questions">
-                            <div class="question mb-4">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Question</label>
-                                        <textarea class="form-control" name="questions[][question]"></textarea>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Question Type</label>
-                                        <select class="form-select" name="questions[][type]">
-                                            <option value="long">Long Answer</option>
-                                            <option value="short">Short Answer</option>
-                                            <option value="mcq">Multiple Choice</option>
-                                        </select>
-                                    </div>
+        <div class="card">
+            <h5 class="card-header">Form Repeater</h5>
+            <div class="card-body">
+                <form class="form-repeater">
+                    <div data-repeater-list="group-a">
+                        <div data-repeater-item>
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label" for="form-repeater-1-3">Question Type</label>
+                                    <select id="form-repeater-1-3" class="form-select">
+                                        <option value="long">Long</option>
+                                        <option value="short">Short</option>
+                                        <option value="mcq">Mcq</option>
+                                    </select>
                                 </div>
-                                <div class="row mcq-options">
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Option 1</label>
-                                        <input type="text" class="form-control" name="questions[][options][0]">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Option 2</label>
-                                        <input type="text" class="form-control" name="questions[][options][1]">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Option 3</label>
-                                        <input type="text" class="form-control" name="questions[][options][2]">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Option 4</label>
-                                        <input type="text" class="form-control" name="questions[][options][3]">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Correct Option</label>
-                                        <select class="form-select" name="questions[][correct_option]">
-                                            <option value="1">Option 1</option>
-                                            <option value="2">Option 2</option>
-                                            <option value="3">Option 3</option>
-                                            <option value="4">Option 4</option>
-                                        </select>
-                                    </div>
+
+                                <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
+                                    <label class="form-label" for="form-repeater-1-1">Question</label>
+                                    <input type="text" id="form-repeater-1-1" class="form-control"
+                                        placeholder="john.doe" />
                                 </div>
-                                <div class="row reason-field">
-                                    <div class="col-sm-6">
-                                        <label class="form-label">Reason</label>
-                                        <input type="text" class="form-control" name="questions[][reason]">
-                                    </div>
+
+                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
+                                    <button class="btn btn-label-danger mt-4" data-repeater-delete>
+                                        <i class="ti ti-x ti-xs me-1"></i>
+                                        <span class="align-middle">Delete</span>
+                                    </button>
                                 </div>
-                                <hr />
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button type="button" class="btn btn-primary" onclick="addQuestion()">
-                                    Add Question
-                                </button>
-                                <button type="submit" class="btn btn-success">Submit</button>
+                            <div class="row">
+
+                                <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
+                                    <label class="form-label" for="form-repeater-1-2">Answer</label>
+                                    <textarea id="autosize-demo" rows="3" class="form-control"></textarea>
+                                </div>
+                                <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0 mcq-options">
+                                    <!-- Options -->
+                                </div>
+                                <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0 reason-field">
+                                    <!-- Reason Field -->
+                                </div>
                             </div>
+                            <hr>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="mb-0">
+                        <button class="btn btn-primary" data-repeater-create>
+                            <i class="ti ti-plus me-1"></i>
+                            <span class="align-middle">Add</span>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -194,141 +170,6 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<script>
-    function addQuestion() {
-        var questionsContainer = document.getElementById('questions');
-        var questionDiv = document.createElement('div');
-        questionDiv.classList.add('question', 'mb-4');
-
-        var questionRow = document.createElement('div');
-        questionRow.classList.add('row');
-
-        var questionCol1 = document.createElement('div');
-        questionCol1.classList.add('col-sm-6');
-        var questionLabel = document.createElement('label');
-        questionLabel.classList.add('form-label');
-        questionLabel.innerHTML = 'Question';
-        var questionTextarea = document.createElement('textarea');
-        questionTextarea.classList.add('form-control');
-        questionTextarea.name = 'questions[][question]';
-        questionCol1.appendChild(questionLabel);
-        questionCol1.appendChild(questionTextarea);
-
-        var questionCol2 = document.createElement('div');
-        questionCol2.classList.add('col-sm-6');
-        var typeLabel = document.createElement('label');
-        typeLabel.classList.add('form-label');
-        typeLabel.innerHTML = 'Question Type';
-        var typeSelect = document.createElement('select');
-        typeSelect.classList.add('form-select');
-        typeSelect.name = 'questions[][type]';
-        var longOption = document.createElement('option');
-        longOption.value = 'long';
-        longOption.innerHTML = 'Long Answer';
-        var shortOption = document.createElement('option');
-        shortOption.value = 'short';
-        shortOption.innerHTML = 'Short Answer';
-        var mcqOption = document.createElement('option');
-        mcqOption.value = 'mcq';
-        mcqOption.innerHTML = 'Multiple Choice';
-        typeSelect.appendChild(longOption);
-        typeSelect.appendChild(shortOption);
-        typeSelect.appendChild(mcqOption);
-        questionCol2.appendChild(typeLabel);
-        questionCol2.appendChild(typeSelect);
-
-        questionRow.appendChild(questionCol1);
-        questionRow.appendChild(questionCol2);
-        questionDiv.appendChild(questionRow);
-
-        var optionsRow = document.createElement('div');
-        optionsRow.classList.add('row', 'mt-3');
-
-        var optionCol1 = document.createElement('div');
-        optionCol1.classList.add('col-sm-6');
-        for (var i = 1; i <= 4; i++) {
-            var optionLabel = document.createElement('label');
-            optionLabel.classList.add('form-label');
-            optionLabel.innerHTML = 'Option ' + i;
-            var optionInput = document.createElement('input');
-            optionInput.type = 'text';
-            optionInput.classList.add('form-control');
-            optionInput.name = 'questions[][options][' + (i - 1) + ']';
-            optionCol1.appendChild(optionLabel);
-            optionCol1.appendChild(optionInput);
-        }
-
-        var optionCol2 = document.createElement('div');
-        optionCol2.classList.add('col-sm-6');
-        var correctOptionLabel = document.createElement('label');
-        correctOptionLabel.classList.add('form-label');
-        correctOptionLabel.innerHTML = 'Correct Option';
-        var correctOptionSelect = document.createElement('select');
-        correctOptionSelect.classList.add('form-select');
-        correctOptionSelect.name = 'questions[][correct_option]';
-        for (var j = 1; j <= 4; j++) {
-            var option = document.createElement('option');
-            option.value = j;
-            option.innerHTML = 'Option ' + j;
-            correctOptionSelect.appendChild(option);
-        }
-        optionCol2.appendChild(correctOptionLabel);
-        optionCol2.appendChild(correctOptionSelect);
-
-        optionsRow.appendChild(optionCol1);
-        optionsRow.appendChild(optionCol2);
-        questionDiv.appendChild(optionsRow);
-
-        var reasonRow = document.createElement('div');
-        reasonRow.classList.add('row');
-        var reasonCol = document.createElement('div');
-        reasonCol.classList.add('col-sm-6');
-        var reasonLabel = document.createElement('label');
-        reasonLabel.classList.add('form-label');
-        reasonLabel.innerHTML = 'Reason';
-        var reasonInput = document.createElement('input');
-        reasonInput.type = 'text';
-        reasonInput.classList.add('form-control');
-        reasonInput.name = 'questions[][reason]';
-        reasonCol.appendChild(reasonLabel);
-        reasonCol.appendChild(reasonInput);
-        reasonRow.appendChild(reasonCol);
-        questionDiv.appendChild(reasonRow);
-
-        var hr = document.createElement('hr');
-        questionDiv.appendChild(hr);
-
-        questionsContainer.appendChild(questionDiv);
-    }
-</script>
-
-
-<script>
-    function toggleMcqOptions() {
-        var questionType = $('select[name="questions[][type]"]').val();
-
-        if (questionType === 'mcq') {
-            $('.mcq-options').show();
-            $('.reason-field').show();
-        } else {
-            $('.mcq-options').hide();
-            $('.reason-field').hide();
-        }
-    }
-
-    // Initialize visibility based on initial question type
-    toggleMcqOptions();
-
-    // Trigger visibility toggle on question type change
-    $('select[name="questions[][type]"]').change(function() {
-        toggleMcqOptions();
-    });
-</script>
-
-
-
 <script>
     $(document).ready(function() {
         function toggleMcqOptions() {
