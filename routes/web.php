@@ -7,6 +7,7 @@ use App\Http\Controllers\TopicController;
 use App\Http\Controllers\ClassesController;
 use App\Http\Controllers\ChapterControlloer;
 use App\Http\Controllers\QuestionController;
+use Illuminate\Support\Facades\Artisan;
 
 
 /*
@@ -19,6 +20,17 @@ use App\Http\Controllers\QuestionController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::get('/us-clear', function () {
+
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    // Artisan::call('config:cache');
+    return "Cleared!";
+});
 
 $controller_path = 'App\Http\Controllers';
 

@@ -193,228 +193,233 @@
 @endsection
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section('script')
+    <script>
+
+      $(document).ready(function(){
+      })
+    </script>
+  <script>
+      function addQuestion() {
+          var questionsContainer = document.getElementById('questions');
+          var questionDiv = document.createElement('div');
+          questionDiv.classList.add('question', 'mb-4');
+
+          var questionRow = document.createElement('div');
+          questionRow.classList.add('row');
+
+          var questionCol1 = document.createElement('div');
+          questionCol1.classList.add('col-sm-6');
+          var questionLabel = document.createElement('label');
+          questionLabel.classList.add('form-label');
+          questionLabel.innerHTML = 'Question';
+          var questionTextarea = document.createElement('textarea');
+          questionTextarea.classList.add('form-control');
+          questionTextarea.name = 'questions[][question]';
+          questionCol1.appendChild(questionLabel);
+          questionCol1.appendChild(questionTextarea);
+
+          var questionCol2 = document.createElement('div');
+          questionCol2.classList.add('col-sm-6');
+          var typeLabel = document.createElement('label');
+          typeLabel.classList.add('form-label');
+          typeLabel.innerHTML = 'Question Type';
+          var typeSelect = document.createElement('select');
+          typeSelect.classList.add('form-select');
+          typeSelect.name = 'questions[][type]';
+          var longOption = document.createElement('option');
+          longOption.value = 'long';
+          longOption.innerHTML = 'Long Answer';
+          var shortOption = document.createElement('option');
+          shortOption.value = 'short';
+          shortOption.innerHTML = 'Short Answer';
+          var mcqOption = document.createElement('option');
+          mcqOption.value = 'mcq';
+          mcqOption.innerHTML = 'Multiple Choice';
+          typeSelect.appendChild(longOption);
+          typeSelect.appendChild(shortOption);
+          typeSelect.appendChild(mcqOption);
+          questionCol2.appendChild(typeLabel);
+          questionCol2.appendChild(typeSelect);
+
+          questionRow.appendChild(questionCol1);
+          questionRow.appendChild(questionCol2);
+          questionDiv.appendChild(questionRow);
+
+          var optionsRow = document.createElement('div');
+          optionsRow.classList.add('row', 'mt-3');
+
+          var optionCol1 = document.createElement('div');
+          optionCol1.classList.add('col-sm-6');
+          for (var i = 1; i <= 4; i++) {
+              var optionLabel = document.createElement('label');
+              optionLabel.classList.add('form-label');
+              optionLabel.innerHTML = 'Option ' + i;
+              var optionInput = document.createElement('input');
+              optionInput.type = 'text';
+              optionInput.classList.add('form-control');
+              optionInput.name = 'questions[][options][' + (i - 1) + ']';
+              optionCol1.appendChild(optionLabel);
+              optionCol1.appendChild(optionInput);
+          }
+
+          var optionCol2 = document.createElement('div');
+          optionCol2.classList.add('col-sm-6');
+          var correctOptionLabel = document.createElement('label');
+          correctOptionLabel.classList.add('form-label');
+          correctOptionLabel.innerHTML = 'Correct Option';
+          var correctOptionSelect = document.createElement('select');
+          correctOptionSelect.classList.add('form-select');
+          correctOptionSelect.name = 'questions[][correct_option]';
+          for (var j = 1; j <= 4; j++) {
+              var option = document.createElement('option');
+              option.value = j;
+              option.innerHTML = 'Option ' + j;
+              correctOptionSelect.appendChild(option);
+          }
+          optionCol2.appendChild(correctOptionLabel);
+          optionCol2.appendChild(correctOptionSelect);
+
+          optionsRow.appendChild(optionCol1);
+          optionsRow.appendChild(optionCol2);
+          questionDiv.appendChild(optionsRow);
+
+          var reasonRow = document.createElement('div');
+          reasonRow.classList.add('row');
+          var reasonCol = document.createElement('div');
+          reasonCol.classList.add('col-sm-6');
+          var reasonLabel = document.createElement('label');
+          reasonLabel.classList.add('form-label');
+          reasonLabel.innerHTML = 'Reason';
+          var reasonInput = document.createElement('input');
+          reasonInput.type = 'text';
+          reasonInput.classList.add('form-control');
+          reasonInput.name = 'questions[][reason]';
+          reasonCol.appendChild(reasonLabel);
+          reasonCol.appendChild(reasonInput);
+          reasonRow.appendChild(reasonCol);
+          questionDiv.appendChild(reasonRow);
+
+          var hr = document.createElement('hr');
+          questionDiv.appendChild(hr);
+
+          questionsContainer.appendChild(questionDiv);
+      }
+  </script>
 
 
-<script>
-    function addQuestion() {
-        var questionsContainer = document.getElementById('questions');
-        var questionDiv = document.createElement('div');
-        questionDiv.classList.add('question', 'mb-4');
+  <script>
+      function toggleMcqOptions() {
+          var questionType = $('select[name="questions[][type]"]').val();
 
-        var questionRow = document.createElement('div');
-        questionRow.classList.add('row');
+          if (questionType === 'mcq') {
+              $('.mcq-options').show();
+              $('.reason-field').show();
+          } else {
+              $('.mcq-options').hide();
+              $('.reason-field').hide();
+          }
+      }
 
-        var questionCol1 = document.createElement('div');
-        questionCol1.classList.add('col-sm-6');
-        var questionLabel = document.createElement('label');
-        questionLabel.classList.add('form-label');
-        questionLabel.innerHTML = 'Question';
-        var questionTextarea = document.createElement('textarea');
-        questionTextarea.classList.add('form-control');
-        questionTextarea.name = 'questions[][question]';
-        questionCol1.appendChild(questionLabel);
-        questionCol1.appendChild(questionTextarea);
+      // Initialize visibility based on initial question type
+      toggleMcqOptions();
 
-        var questionCol2 = document.createElement('div');
-        questionCol2.classList.add('col-sm-6');
-        var typeLabel = document.createElement('label');
-        typeLabel.classList.add('form-label');
-        typeLabel.innerHTML = 'Question Type';
-        var typeSelect = document.createElement('select');
-        typeSelect.classList.add('form-select');
-        typeSelect.name = 'questions[][type]';
-        var longOption = document.createElement('option');
-        longOption.value = 'long';
-        longOption.innerHTML = 'Long Answer';
-        var shortOption = document.createElement('option');
-        shortOption.value = 'short';
-        shortOption.innerHTML = 'Short Answer';
-        var mcqOption = document.createElement('option');
-        mcqOption.value = 'mcq';
-        mcqOption.innerHTML = 'Multiple Choice';
-        typeSelect.appendChild(longOption);
-        typeSelect.appendChild(shortOption);
-        typeSelect.appendChild(mcqOption);
-        questionCol2.appendChild(typeLabel);
-        questionCol2.appendChild(typeSelect);
-
-        questionRow.appendChild(questionCol1);
-        questionRow.appendChild(questionCol2);
-        questionDiv.appendChild(questionRow);
-
-        var optionsRow = document.createElement('div');
-        optionsRow.classList.add('row', 'mt-3');
-
-        var optionCol1 = document.createElement('div');
-        optionCol1.classList.add('col-sm-6');
-        for (var i = 1; i <= 4; i++) {
-            var optionLabel = document.createElement('label');
-            optionLabel.classList.add('form-label');
-            optionLabel.innerHTML = 'Option ' + i;
-            var optionInput = document.createElement('input');
-            optionInput.type = 'text';
-            optionInput.classList.add('form-control');
-            optionInput.name = 'questions[][options][' + (i - 1) + ']';
-            optionCol1.appendChild(optionLabel);
-            optionCol1.appendChild(optionInput);
-        }
-
-        var optionCol2 = document.createElement('div');
-        optionCol2.classList.add('col-sm-6');
-        var correctOptionLabel = document.createElement('label');
-        correctOptionLabel.classList.add('form-label');
-        correctOptionLabel.innerHTML = 'Correct Option';
-        var correctOptionSelect = document.createElement('select');
-        correctOptionSelect.classList.add('form-select');
-        correctOptionSelect.name = 'questions[][correct_option]';
-        for (var j = 1; j <= 4; j++) {
-            var option = document.createElement('option');
-            option.value = j;
-            option.innerHTML = 'Option ' + j;
-            correctOptionSelect.appendChild(option);
-        }
-        optionCol2.appendChild(correctOptionLabel);
-        optionCol2.appendChild(correctOptionSelect);
-
-        optionsRow.appendChild(optionCol1);
-        optionsRow.appendChild(optionCol2);
-        questionDiv.appendChild(optionsRow);
-
-        var reasonRow = document.createElement('div');
-        reasonRow.classList.add('row');
-        var reasonCol = document.createElement('div');
-        reasonCol.classList.add('col-sm-6');
-        var reasonLabel = document.createElement('label');
-        reasonLabel.classList.add('form-label');
-        reasonLabel.innerHTML = 'Reason';
-        var reasonInput = document.createElement('input');
-        reasonInput.type = 'text';
-        reasonInput.classList.add('form-control');
-        reasonInput.name = 'questions[][reason]';
-        reasonCol.appendChild(reasonLabel);
-        reasonCol.appendChild(reasonInput);
-        reasonRow.appendChild(reasonCol);
-        questionDiv.appendChild(reasonRow);
-
-        var hr = document.createElement('hr');
-        questionDiv.appendChild(hr);
-
-        questionsContainer.appendChild(questionDiv);
-    }
-</script>
-
-
-<script>
-    function toggleMcqOptions() {
-        var questionType = $('select[name="questions[][type]"]').val();
-
-        if (questionType === 'mcq') {
-            $('.mcq-options').show();
-            $('.reason-field').show();
-        } else {
-            $('.mcq-options').hide();
-            $('.reason-field').hide();
-        }
-    }
-
-    // Initialize visibility based on initial question type
-    toggleMcqOptions();
-
-    // Trigger visibility toggle on question type change
-    $('select[name="questions[][type]"]').change(function() {
-        toggleMcqOptions();
-    });
-</script>
+      // Trigger visibility toggle on question type change
+      $('select[name="questions[][type]"]').change(function() {
+          toggleMcqOptions();
+      });
+  </script>
 
 
 
-<script>
-    $(document).ready(function() {
-        function toggleMcqOptions() {
-            var questionType = $('#form-repeater-1-3').val();
+  <script>
+      $(document).ready(function() {
+          function toggleMcqOptions() {
+              var questionType = $('#form-repeater-1-3').val();
 
-            if (questionType === 'mcq') {
-                $('.mcq-options').show();
-                $('.reason-field').show();
-            } else {
-                $('.mcq-options').hide();
-                $('.reason-field').hide();
-            }
-        }
+              if (questionType === 'mcq') {
+                  $('.mcq-options').show();
+                  $('.reason-field').show();
+              } else {
+                  $('.mcq-options').hide();
+                  $('.reason-field').hide();
+              }
+          }
 
-        // Initialize visibility based on initial question type
-        toggleMcqOptions();
+          // Initialize visibility based on initial question type
+          toggleMcqOptions();
 
-        // Trigger visibility toggle on question type change
-        $('#form-repeater-1-3').change(function() {
-            toggleMcqOptions();
-        });
+          // Trigger visibility toggle on question type change
+          $('#form-repeater-1-3').change(function() {
+              toggleMcqOptions();
+          });
 
-        $('#board_id, #book_id, #class_id').change(function() {
-            var boardId = $('#board_id').val();
-            var bookId = $('#book_id').val();
-            var classId = $('#class_id').val();
+          $('#board_id, #book_id, #class_id').change(function() {
+              var boardId = $('#board_id').val();
+              var bookId = $('#book_id').val();
+              var classId = $('#class_id').val();
 
-            $.ajax({
-                url: '{{ route('chapterDropDown') }}',
-                method: 'GET',
-                data: {
-                    board: $('#board_id').val(),
-                    book: $('#book_id').val(),
-                    class: $('#class_id').val()
-                },
-                success: function(response) {
-                    var chapterSelect = $('#chapter_id');
-                    chapterSelect.empty().append('<option value="">Select</option>');
+              $.ajax({
+                  url: '{{ route('chapterDropDown') }}',
+                  method: 'GET',
+                  data: {
+                      board: $('#board_id').val(),
+                      book: $('#book_id').val(),
+                      class: $('#class_id').val()
+                  },
+                  success: function(response) {
+                      var chapterSelect = $('#chapter_id');
+                      chapterSelect.empty().append('<option value="">Select</option>');
 
-                    if (response.status === 'success') {
-                        var chapters = response.Chapters;
-                        if (chapters && chapters.length > 0) {
-                            $.each(chapters, function(index, chapter) {
-                                chapterSelect.append('<option value="' + chapter
-                                    .id + '">' + chapter.name + '</option>');
-                            });
-                        }
-                    } else {
-                        console.error(response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
+                      if (response.status === 'success') {
+                          var chapters = response.Chapters;
+                          if (chapters && chapters.length > 0) {
+                              $.each(chapters, function(index, chapter) {
+                                  chapterSelect.append('<option value="' + chapter
+                                      .id + '">' + chapter.name + '</option>');
+                              });
+                          }
+                      } else {
+                          console.error(response.message);
+                      }
+                  },
+                  error: function(xhr, status, error) {
+                      console.error(error);
+                  }
+              });
 
-        });
-        $('#board_id, #book_id, #class_id, #chapter_id').change(function() {
-            $.ajax({
-                url: '{{ route('topicDropDown') }}',
-                method: 'GET',
-                data: {
+          });
+          $('#board_id, #book_id, #class_id, #chapter_id').change(function() {
+              $.ajax({
+                  url: '{{ route('topicDropDown') }}',
+                  method: 'GET',
+                  data: {
 
-                    chapter: $('#chapter_id').val()
-                },
-                success: function(response) {
-                    var topicSelect = $('#topic_id');
-                    topicSelect.empty().append('<option value="">Select</option>');
+                      chapter: $('#chapter_id').val()
+                  },
+                  success: function(response) {
+                      var topicSelect = $('#topic_id');
+                      topicSelect.empty().append('<option value="">Select</option>');
 
-                    if (response.status === 'success') {
-                        var topics = response.Topics;
-                        if (topics && topics.length > 0) {
-                            $.each(topics, function(index, topic) {
-                                topicSelect.append('<option value="' + topic
-                                    .id + '">' + topic.name + '</option>');
-                            });
-                        }
-                    } else {
-                        console.error(response.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
+                      if (response.status === 'success') {
+                          var topics = response.Topics;
+                          if (topics && topics.length > 0) {
+                              $.each(topics, function(index, topic) {
+                                  topicSelect.append('<option value="' + topic
+                                      .id + '">' + topic.name + '</option>');
+                              });
+                          }
+                      } else {
+                          console.error(response.message);
+                      }
+                  },
+                  error: function(xhr, status, error) {
+                      console.error(error);
+                  }
+              });
 
-        });
-    });
-</script>
+          });
+      });
+  </script>
+@endsection
+
