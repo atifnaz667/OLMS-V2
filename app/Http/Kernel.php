@@ -44,6 +44,18 @@ class Kernel extends HttpKernel
       \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ],
+    'AlreadyLoggedIn' => [
+      \App\Http\Middleware\AlreadyLoggedIn::class,
+    ],
+    'AdminMiddleware' => [
+      \App\Http\Middleware\AdminMiddleware::class,
+    ],
+    'UserMiddleware' => [
+      \App\Http\Middleware\UserMiddleware::class,
+    ],
+    'CommonRoutes' => [
+      \App\Http\Middleware\CommonRoutes::class,
+    ],
   ];
 
   /**

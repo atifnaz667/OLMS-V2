@@ -99,7 +99,7 @@ class Helpers
       'rtlMode' => $data['myRTLMode'],
       'textDirection' => $data['myRTLMode'],
       'menuCollapsed' => $data['menuCollapsed'],
-      'hasCustomizer' => $data['hasCustomizer'],
+      'hasCustomizer' => false,
       'showDropdownOnHover' => $data['showDropdownOnHover'],
       'displayCustomizer' => $data['displayCustomizer'],
       'menuFixed' => $data['menuFixed'],

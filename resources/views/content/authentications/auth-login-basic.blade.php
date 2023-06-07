@@ -4,7 +4,7 @@ $customizerHidden = 'customizer-hide';
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Login Basic - Pages')
+@section('title', 'Login '.config('variables.templateName'))
 
 @section('vendor-style')
 <!-- Vendor -->
@@ -17,7 +17,7 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js')}}"></script>
+{{-- <script src="{{asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js')}}"></script> --}}
 <script src="{{asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js')}}"></script>
 <script src="{{asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js')}}"></script>
 @endsection
@@ -44,10 +44,11 @@ $customizerHidden = 'customizer-hide';
           <h4 class="mb-1 pt-2">Welcome to {{config('variables.templateName')}}! 👋</h4>
           <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
-          <form id="formAuthentication" class="mb-3" action="{{url('/')}}" method="GET">
+          <form id="formAuthentication" class="mb-3" action="{{url('login')}}" method="POST">
+            @csrf
             <div class="mb-3">
-              <label for="email" class="form-label">Email or Username</label>
-              <input type="text" class="form-control" id="email" name="email-username" placeholder="Enter your email or username" autofocus>
+              <label for="email" class="form-label">Username</label>
+              <input type="text" class="form-control" id="email" name="username" placeholder="Enter your username" autofocus>
             </div>
             <div class="mb-3 form-password-toggle">
               <div class="d-flex justify-content-between">
@@ -73,31 +74,6 @@ $customizerHidden = 'customizer-hide';
               <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
             </div>
           </form>
-
-          <p class="text-center">
-            <span>New on our platform?</span>
-            <a href="{{url('auth/register-basic')}}">
-              <span>Create an account</span>
-            </a>
-          </p>
-
-          <div class="divider my-4">
-            <div class="divider-text">or</div>
-          </div>
-
-          <div class="d-flex justify-content-center">
-            <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
-              <i class="tf-icons fa-brands fa-facebook-f fs-5"></i>
-            </a>
-
-            <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-              <i class="tf-icons fa-brands fa-google fs-5"></i>
-            </a>
-
-            <a href="javascript:;" class="btn btn-icon btn-label-twitter">
-              <i class="tf-icons fa-brands fa-twitter fs-5"></i>
-            </a>
-          </div>
         </div>
       </div>
       <!-- /Register -->

@@ -18,4 +18,9 @@ class Question extends Model
   {
     return $this->belongsTo(Topic::class);
   }
+
+  public function scopeMcq($query)
+    {
+        return $query->where('question_type','mcq');
+    }
 }
