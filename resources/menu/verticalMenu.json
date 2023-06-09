@@ -29,6 +29,12 @@
       "name": "Questions",
       "icon": "menu-icon tf-icons ti ti-user",
       "slug": "auth-register-basic"
+    },
+    {
+      "url": "mcq-choice",
+      "name": "Multiple Choices",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "auth-register-basic"
     }
   ]
 }

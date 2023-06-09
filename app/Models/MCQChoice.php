@@ -5,7 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MCQChoice extends Model
+class McqChoice extends Model
 {
-    use HasFactory;
+  use HasFactory;
+  protected $fillable = [
+    'question_id',
+    'choice',
+    'is_true',
+    'reason'
+  ];
 }

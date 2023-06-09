@@ -36,7 +36,7 @@ class QuestionController extends Controller
     $sort_order = $request->input('sort_order', 'asc');
     $topicId = $request->input('topic_id'); // Get the topic ID from the request
 
-    $query = Question::orderBy($sort, $sort_order);
+    $query = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq');
 
     if ($topicId) {
       $query->where('topic_id', $topicId); // Apply the filter by topic ID
@@ -72,6 +72,7 @@ class QuestionController extends Controller
 
   public function store(Request $request)
   {
+
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
@@ -80,7 +81,7 @@ class QuestionController extends Controller
     ]);
 
     if ($validator->fails()) {
-      return response()->json(['error' => $validator->errors()], 400);
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
     }
 
     try {
@@ -96,26 +97,26 @@ class QuestionController extends Controller
         ];
         $question_id = Question::insertGetId($insertData);
 
-        if ($question['question_type'] === 'short') {
-          $slanswerData = [
-            'question_id' => $question_id,
-            'answer' => $question['answer'],
-          ];
-          SLAnswer::insert($slanswerData);
-        } elseif ($question['question_type'] === 'mcq') {
-          foreach ($question['mcqs'] as $choice) {
-            $choiceData = [
-              'question_id' => $question_id,
-              'choice' => $choice['choice'],
-              'is_true' => $choice['is_true'],
-              'reason' => $choice['reason'],
-            ];
-            MCQChoice::insert($choiceData);
-          }
-        }
+        // if ($question['question_type'] === 'short') {
+        $slanswerData = [
+          'question_id' => $question_id,
+          'answer' => $question['answer'],
+        ];
+        SlAnswer::insert($slanswerData);
+        // } elseif ($question['question_type'] === 'mcq') {
+        //   foreach ($question['mcqs'] as $choice) {
+        //     $choiceData = [
+        //       'question_id' => $question_id,
+        //       'choice' => $choice['choice'],
+        //       'is_true' => $choice['is_true'],
+        //       'reason' => $choice['reason'],
+        //     ];
+        //     MCQChoice::insert($choiceData);
+        //   }
+        // }
       }
       DB::commit();
-      return response()->json(['message' => 'Questions created successfully'], 201);
+      return response()->json(['status' => 'success', 'message' => 'Questions created successfully'], 201);
     } catch (\Exception $e) {
       DB::rollBack();
 
@@ -142,27 +143,31 @@ class QuestionController extends Controller
       ], 400);
     }
 
-    $question = Question::findOrFail($id);
+    $question = Question::with('answer')->findOrFail($id);
+
     return response()->json(['Question' => $question], 200);
   }
+
 
   public function update(Request $request, $id)
   {
     $validator = Validator::make($request->all(), [
-      'topic_id' => 'sometimes|exists:topics,id',
-      'question_type' => 'sometimes|in:long,short,mcq',
-      'description' => 'sometimes|string|max:255',
+      'question' => 'sometimes|string|max:255',
+      'answer' => 'sometimes|string|max:500',
     ]);
 
     if ($validator->fails()) {
-      return response()->json(['error' => $validator->errors()], 400);
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
     }
 
     try {
       $question = Question::findOrFail($id);
-      $question->update($request->all());
+      $question->update(['description' => $request->input('question')]);
 
-      return response()->json(['message' => 'Question updated successfully', 'data' => $question], 200);
+      $answer = $question->answer;
+      $answer->update(['answer' => $request->input('answer')]);
+
+      return response()->json(['status' => 'success', 'message' => 'Question and answer updated successfully', 'data' => $question], 200);
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
