@@ -1,31 +1,8 @@
 @php
     $configData = Helper::appClasses();
 @endphp
-
 @extends('layouts/layoutMaster')
-
-
 @section('title', 'Add Multiple Choices')
-
-
-@section('vendor-style')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
-@endsection
-
-@section('vendor-script')
-    <script src="{{ asset('assets/vendor/libs/jquery-sticky/jquery-sticky.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/jquery-repeater/jquery-repeater.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/autosize/autosize.js') }}"></script>
-@endsection
-
-@section('page-script')
-    <script src="{{ asset('assets/js/form-layouts.js') }}"></script>
-    <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
-@endsection
-
 <style>
     .pagination-nav {
         display: flex;
@@ -34,6 +11,7 @@
         margin-right: 20px;
     }
 </style>
+
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">Home/Multiple Choices/</span>
@@ -55,7 +33,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md">
-                                <label class="form-label" for="state">Board</label>
+                                <label class="form-label" for="board_id">Board</label>
                                 <select id="board_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($boards as $board)
@@ -65,7 +43,7 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Class</label>
+                                <label class="form-label" for="class_id">Class</label>
                                 <select id="class_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($classes as $class)
@@ -74,7 +52,7 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Book</label>
+                                <label class="form-label" for="book_id">Book</label>
                                 <select id="book_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($books as $book)
@@ -83,13 +61,13 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Chapter</label>
+                                <label class="form-label" for="chapter_id">Chapter</label>
                                 <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Topic</label>
+                                <label class="form-label" for="topic_id">Topic</label>
                                 <select id="topic_id" name="topic_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
@@ -131,20 +109,20 @@
                             </div>
                             <div class="row">
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-1">Option A</label>
-                                    <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" />
+                                    <label class="form-label" for="form-repeater-1-2">Option A</label>
+                                    <input type="text" name="option-a" id="form-repeater-1-2" class="form-control" />
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-1">Option B</label>
-                                    <input type="text" name="option-b" id="form-repeater-1-1" class="form-control" />
+                                    <label class="form-label" for="form-repeater-1-3">Option B</label>
+                                    <input type="text" name="option-b" id="form-repeater-1-3" class="form-control" />
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-1">Option C</label>
-                                    <input type="text" name="option-c" id="form-repeater-1-1" class="form-control" />
+                                    <label class="form-label" for="form-repeater-1-4">Option C</label>
+                                    <input type="text" name="option-c" id="form-repeater-1-4" class="form-control" />
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-1">Option D</label>
-                                    <input type="text" name="option-d" id="form-repeater-1-1" class="form-control" />
+                                    <label class="form-label" for="form-repeater-1-5">Option D</label>
+                                    <input type="text" name="option-d" id="form-repeater-1-5" class="form-control" />
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label">Correct Option</label>
@@ -157,7 +135,7 @@
                                     </select>
                                 </div>
                                 <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-2">Reason</label>
+                                    <label class="form-label" for="autosize-demo">Reason</label>
                                     <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
                                 </div>
                             </div>

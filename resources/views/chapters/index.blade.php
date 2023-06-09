@@ -1,36 +1,8 @@
 @php
     $configData = Helper::appClasses();
 @endphp
-
 @extends('layouts/layoutMaster')
-
-
 @section('title', 'Chapters')
-
-
-@section('vendor-style')
-
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/flatpickr/flatpickr.css') }}" />
-@endsection
-
-@section('vendor-script')
-    <script src="{{ asset('assets/vendor/libs/jquery-sticky/jquery-sticky.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-@endsection
-
-@section('page-script')
-    <script src="{{ asset('assets/js/form-layouts.js') }}"></script>
-@endsection
-
 <style>
     .pagination-nav {
         display: flex;
@@ -39,6 +11,7 @@
         margin-right: 20px;
     }
 </style>
+
 @section('content')
 
     <h4 class="fw-bold py-3 mb-4">
@@ -59,7 +32,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md">
-                            <label class="form-label" for="state">Board</label>
+                            <label class="form-label" for="board_id">Board</label>
                             <select id="board_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                                 @foreach ($boards as $board)
@@ -69,7 +42,7 @@
                             </select>
                         </div>
                         <div class="col-md">
-                            <label class="form-label" for="state">Class</label>
+                            <label class="form-label" for="class_id">Class</label>
                             <select id="class_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                                 @foreach ($classes as $class)
@@ -78,7 +51,7 @@
                             </select>
                         </div>
                         <div class="col-md">
-                            <label class="form-label" for="state">Book</label>
+                            <label class="form-label" for="book_id">Book</label>
                             <select id="book_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                                 @foreach ($books as $book)
