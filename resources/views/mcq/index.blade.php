@@ -5,7 +5,7 @@
 @extends('layouts/layoutMaster')
 
 
-@section('title', 'Topics')
+@section('title', 'Multiple Choices')
 
 
 @section('vendor-style')
@@ -34,7 +34,7 @@
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">Home/</span>
-        Topics
+        Multiple Choices
     </h4>
 
     <div class="row">
@@ -44,8 +44,7 @@
                     class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                     <h5 class="card-title mb-sm-0 me-2">Listing</h5>
                     <div class="action-btns">
-                        <a href="{{ route('add-topic') }}" class="btn btn-primary">Add Record</a>
-
+                        <a href="{{ route('add-mcq-choice') }}" class="btn btn-primary">Add Record</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -84,13 +83,19 @@
                                 <option value="">Select</option>
                             </select>
                         </div>
+                        <div class="col-md">
+                            <label class="form-label" for="state">Topic</label>
+                            <select id="topic_id" class="select2 form-select" data-allow-clear="true">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div
                         class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                         <h5 class="card-title mb-sm-0 me-2"></h5>
                         <div class="action-btns">
-                            <button type="button" onclick="fetchTopicRecords()" class="btn btn-primary">Filter</button>
+                            <button type="button" onclick="fetchQuestionRecords()" class="btn btn-primary">Filter</button>
                         </div>
                     </div>
                 </div>
@@ -111,7 +116,8 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
-                                <th>Topic</th>
+                                <th>Type</th>
+                                <th>Question</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -126,22 +132,57 @@
             </div>
         </div>
     </div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateChapter"
-        aria-labelledby="offcanvasUpdateChapterLabel">
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasViewQuestion"
+        aria-labelledby="offcanvasViewQuestionLabel">
         <div class="offcanvas-header">
-            <h5 id="offcanvasUpdateChapterLabel" class="offcanvas-title">Edit Topic</h5>
+            <h5 id="offcanvasViewQuestionLabel" class="offcanvas-title">View Mcq</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body mx-0 flex-grow-0">
-            <form class="update-class pt-0" id="addBookForm">
+            <form class="update-class pt-0" id="viewQuestionForm">
                 @csrf
-
-                <div class="mb-3">
-                    <label class="form-label" for="update-topic-name">Topic Name</label>
-                    <input type="text" class="form-control" required id="update-topic-name" name="update-topic-name"
-                        aria-label="Chapter" />
-                    <input type="hidden" class="form-control" required id="topicID" name="topicID" />
+                <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
+                    <label class="form-label" for="update-question">Question</label>
+                    <textarea required id="update-question" name="update-question" rows="3" class="form-control"></textarea>
                 </div>
+
+                <div class="row">
+                    <div class="mb-3">
+                        <label class="form-label" for="form-repeater-1-1">Option A</label>
+                        <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" />
+                        <input type="hidden" name="option-a-id" id="option-a-id" class="form-control" />
+                        <input type="hidden" name="questionId" id="questionId" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form-repeater-1-1">Option B</label>
+                        <input type="text" name="option-b" id="form-repeater-1-1" class="form-control" />
+                        <input type="hidden" name="option-b-id" id="option-b-id" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form-repeater-1-1">Option C</label>
+                        <input type="text" name="option-c" id="form-repeater-1-1" class="form-control" />
+                        <input type="hidden" name="option-c-id" id="option-c-id" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form-repeater-1-1">Option D</label>
+                        <input type="text" name="option-d" id="form-repeater-1-1" class="form-control" />
+                        <input type="hidden" name="option-d-id" id="option-d-id" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correct Option</label>
+                        <select id="correct-option" name="correct-option" class=" form-select" data-allow-clear="true">
+                            <option value="a">Option A</option>
+                            <option value="b">Option b</option>
+                            <option value="c">Option C</option>
+                            <option value="d">Option D</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="form-repeater-1-2">Reason</label>
+                        <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
             </form>
@@ -187,6 +228,36 @@
                 });
 
             });
+            $('#board_id, #book_id, #class_id, #chapter_id').change(function() {
+                $.ajax({
+                    url: '{{ route('topicDropDown') }}',
+                    method: 'GET',
+                    data: {
+
+                        chapter: $('#chapter_id').val()
+                    },
+                    success: function(response) {
+                        var topicSelect = $('#topic_id');
+                        topicSelect.empty().append('<option value="">Select</option>');
+
+                        if (response.status === 'success') {
+                            var topics = response.Topics;
+                            if (topics && topics.length > 0) {
+                                $.each(topics, function(index, topic) {
+                                    topicSelect.append('<option value="' + topic
+                                        .id + '">' + topic.name + '</option>');
+                                });
+                            }
+                        } else {
+                            console.error(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+
+            });
         });
     </script>
     <script>
@@ -194,22 +265,52 @@
         var lastPage = 1;
         var perPage = 10;
         const toastAnimationExample = document.querySelector('.toast-ex');
-        var offcanvasElement = document.getElementById('offcanvasUpdateChapter');
-        var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+        var offcanvasElementview = document.getElementById('offcanvasViewQuestion');
+        var offcanvas = new bootstrap.Offcanvas(offcanvasElementview);
 
-        function editChapter(id) {
+        function viewQuestion(id) {
+            $('#update-question').val('');
+            $('input[name^="option-"]').val('');
+            $('#correct-option').empty();
+            $('textarea[name="answer"]').val('');
             $.ajax({
-                url: "{{ route('topic.show', '') }}" + "/" + id,
+                url: "{{ route('mcq-choice.show', '') }}" + "/" + id,
                 type: 'GET',
                 success: function(response) {
                     // Update the form fields with the fetched data
-                    $('#update-topic-name').val(response.topic.name);
-                    $('#topicID').val(response.topic.id);
+                    $('#update-question').val(response.Question.description);
+                    $('#questionId').val(response.Question.id);
+
+                    // Loop through the mcq choices and populate the options
+                    $.each(response.Question.mcq, function(index, choice) {
+                        var optionName = 'option-' + String.fromCharCode(97 +
+                            index); // Convert index to corresponding character code (a, b, c, d)
+                        var inputElement = $('input[name="' + optionName + '"]');
+                        var inputIdElement = $('input[name="' + optionName + '-id"]');
+                        var isTrue = choice.is_true === 1;
+
+                        inputElement.val(choice.choice);
+                        inputIdElement.val(choice.id);
+
+                        // If this choice is the correct option, select it in the dropdown
+                        if (isTrue) {
+                            // Add the correct option at the top of the dropdown
+                            $('#correct-option').prepend('<option value="' + optionName +
+                                '" selected>' + choice.choice + '</option>');
+                        } else {
+                            // Append other options to the dropdown
+                            $('#correct-option').append('<option value="' + optionName + '">' + choice
+                                .choice + '</option>');
+                        }
+                    });
+
+                    // Populate the reason field with the correct option's reason
+                    $('textarea[name="answer"]').val(response.Question.mcq.find(function(choice) {
+                        return choice.is_true === 1;
+                    }).reason);
 
                     // Show the offcanvas
                     offcanvas.show();
-
-
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -218,16 +319,37 @@
             });
         }
 
-        function updateChapter(id) {
+        function updateQuestion(id) {
             // Get the form data
             var _token = $('input[name="_token"]').val();
-            var topicName = $('#update-topic-name').val();
+            var question = $('#update-question').val();
+            var optionA = $('input[name="option-a"]').val();
+            var optionAId = $('input[name="option-a-id"]').val();
+            var optionB = $('input[name="option-b"]').val();
+            var optionBId = $('input[name="option-b-id"]').val();
+            var optionC = $('input[name="option-c"]').val();
+            var optionCId = $('input[name="option-c-id"]').val();
+            var optionD = $('input[name="option-d"]').val();
+            var optionDId = $('input[name="option-d-id"]').val();
+            var correctOption = $('#correct-option').val();
+            var reason = $('textarea[name="answer"]').val();
+
             var formData = {
                 _token: _token,
-                name: topicName
+                question: question,
+                'option-a': optionA,
+                'option-a-id': optionAId,
+                'option-b': optionB,
+                'option-b-id': optionBId,
+                'option-c': optionC,
+                'option-c-id': optionCId,
+                'option-d': optionD,
+                'option-d-id': optionDId,
+                'correct-option': correctOption,
+                answer: reason
             };
             $.ajax({
-                url: "{{ route('topic.update', '') }}" + "/" + id,
+                url: "{{ route('mcq-choice.update', '') }}" + "/" + id,
                 type: 'PUT',
                 data: formData,
                 success: function(response) {
@@ -241,7 +363,7 @@
                     toastAnimationExample.querySelector('.ti').classList.add(selectedType);
                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                     toastAnimation.show();
-                    fetchTopicRecords(currentPage)
+                    fetchQuestionRecords(currentPage)
                     offcanvas.hide();
 
                 },
@@ -260,21 +382,22 @@
                 }
             });
         }
+
         // Handle the form submission
-        $('#addBookForm').on('submit', function(event) {
+        $('#viewQuestionForm').on('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
-            var topicID = $('#topicID').val();
-            updateChapter(topicID);
+            var questionId = $('#questionId').val();
+            updateQuestion(questionId);
         });
 
-        function fetchTopicRecords(page = 1) {
-            var chapterId = $('#chapter_id').val();
+        function fetchQuestionRecords(page = 1) {
+            var topicId = $('#topic_id').val();
             var check = "ajax";
             $.ajax({
-                url: '{{ route('topic.index') }}',
+                url: '{{ route('mcq-choice.index') }}',
                 method: 'GET',
                 data: {
-                    chapter_id: chapterId,
+                    topic_id: topicId,
                     check: check,
                     page: page,
                     perPage: perPage
@@ -284,28 +407,31 @@
                     tableBody.empty();
 
                     if (response.status === 'success') {
-                        var topics = response.data;
+                        var questions = response.data;
                         currentPage = response.current_page;
                         lastPage = response.last_page;
 
-                        if (topics && topics.length > 0) {
-                            $.each(topics, function(index, topic) {
+                        if (questions && questions.length > 0) {
+                            $.each(questions, function(index, question) {
                                 var row = '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +
-                                    // '<td>' + topic.board + '</td>' +
-                                    // '<td>' + topic.book + '</td>' +
-                                    // '<td>' + topic.class + '</td>' +
-                                    // '<td>' + topic.topic_no + '</td>' +
-                                    '<td>' + topic.name + '</td>' +
-                                    "<td>" +
-                                    "<a onclick=\"editChapter('" + topic
+                                    // '<td>' + question.board + '</td>' +
+                                    // '<td>' + question.book + '</td>' +
+                                    // '<td>' + question.class + '</td>' +
+                                    // '<td>' + question.question_no + '</td>' +
+                                    '<td>' + question.question_type + '</td>' +
+                                    '<td>' + question.description + '</td>' +
+                                    '<td>' +
+                                    '<div class="dropdown">' +
+                                    ' <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
+                                    ' <div class="dropdown-menu">' +
+                                    '<a class="dropdown-item" onclick=\"viewQuestion(' + question
                                     .id +
-                                    "')\" class=\"btn-icon edit-record\"data-id='" + topic
-                                    .id +
-                                    "'><i class=\"ti ti-edit\"></i></a>" +
-                                    // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + topic.id +
-                                    // "'><i class=\"ti ti-trash\"></i></button>" +
-                                    "</td>" +
+                                    ')\" href="javascript:void(0);"><i class="ti ti-eye me-1"></i> View</a>' +
+
+                                    '</div>' +
+                                    '</div>' +
+                                    '</td>' +
                                     '</tr>';
                                 tableBody.append(row);
                             });
@@ -323,12 +449,12 @@
         }
 
 
-        // Trigger fetchTopicRecords() on filter button click
+        // Trigger fetchQuestionRecords() on filter button click
         $('#filterButton, #perPageSelect').on('click change', function(e) {
             e.preventDefault();
             currentPage = 1; // Reset to first page when filter is applied
             perPage = $('#perPageSelect').val();
-            fetchTopicRecords();
+            fetchQuestionRecords();
         });
 
         // Handle pagination click event
@@ -336,7 +462,7 @@
             e.preventDefault();
             var page = $(this).attr('data-page');
             if (page !== currentPage) {
-                fetchTopicRecords(page);
+                fetchQuestionRecords(page);
             }
         });
 
@@ -372,6 +498,6 @@
         }
 
         // Initial fetch and pagination UI update
-        // fetchTopicRecords();
+        // fetchQuestionRecords();
     </script>
 @endsection

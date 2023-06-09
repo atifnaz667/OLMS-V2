@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Validator;
 
 class TopicController extends Controller
 {
+
+  public function addTopic(Request $request)
+  {
+    $results = DropdownHelper::getBoardBookClass();
+    $books = $results['Books'];
+    $boards = $results['Boards'];
+    $classes = $results['Classes'];
+    return view('topics.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -75,13 +85,14 @@ class TopicController extends Controller
    */
   public function store(Request $request)
   {
+    // return $request;
     $validator = Validator::make($request->all(), [
       'chapter_id' => 'required|exists:chapters,id',
       'topics.*.name' => 'required|string|max:255',
     ]);
 
     if ($validator->fails()) {
-      return response()->json(['error' => $validator->errors()], 400);
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
     }
     try {
       $topics = $request->input('topics');
@@ -121,21 +132,17 @@ class TopicController extends Controller
     ]);
 
     if ($validator->fails()) {
-      return response()->json(['errors' => $validator->errors()], 422);
+      return response()->json(['status' => 'errors', 'message' => $validator->errors()->first()], 422);
     }
     try {
-      $topic = Topic::with('chapter')->findOrFail($id);
+      $topic = Topic::findOrFail($id);
 
-      $topicData = [
-        'board' => $topic->chapter->board->name,
-        'book' => $topic->chapter->book->name,
-        'class' => $topic->chapter->class->name,
-        'chapter_name' => $topic->chapter->name,
-        'chapter_no' => $topic->chapter->chapter_no,
-        'topic_name' => $topic->name,
-      ];
 
-      return response()->json(['data' => $topicData], 200);
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Topic retrieved successfully',
+        'topic' => $topic
+      ]);
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
@@ -155,9 +162,13 @@ class TopicController extends Controller
    */
   public function update(Request $request, $id)
   {
+    $topicCheck = Topic::find($id);
+    if (!$topicCheck)
+      return response()->json(['status' => 'error', 'message' => 'Topic not found'], 404);
+
     // Validate input
     $validator = Validator::make($request->all(), [
-      'chapter_id' => 'exists:chapters,id',
+      // 'chapter_id' => 'exists:chapters,id',
       'name' => 'required|string|max:255',
     ]);
 
@@ -173,7 +184,7 @@ class TopicController extends Controller
       $topic = Topic::findOrFail($id);
 
       // Update the topic
-      $topic->chapter_id = $request->input('chapter_id', $topic->chapter_id);
+      // $topic->chapter_id = $request->input('chapter_id', $topic->chapter_id);
       $topic->name = $request->input('name', $topic->name);
       $topic->save();
 

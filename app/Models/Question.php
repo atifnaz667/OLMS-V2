@@ -20,7 +20,15 @@ class Question extends Model
   }
 
   public function scopeMcq($query)
-    {
-        return $query->where('question_type','mcq');
-    }
+  {
+    return $query->where('question_type', 'mcq');
+  }
+  public function answer()
+  {
+    return $this->hasOne(SlAnswer::class);
+  }
+  public function mcq()
+  {
+    return $this->hasMany(McqChoice::class);
+  }
 }
