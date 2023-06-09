@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssignUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\TestController;
@@ -25,5 +26,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // --------------------------------------- Test Routes---------------------------------------
   Route::get('add-test', [TestController::class, 'store'])->name('add-test');
+
+
+  // --------------------------------------- Assign user Routes---------------------------------------
+  Route::post('assign-users', [AssignUserController::class, 'store']);
 
 });
