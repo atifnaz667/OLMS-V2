@@ -11,6 +11,7 @@
         margin-right: 20px;
     }
 </style>
+
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">Home/Question/</span>
@@ -32,7 +33,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md">
-                                <label class="form-label" for="state">Board</label>
+                                <label class="form-label" for="board_id">Board</label>
                                 <select id="board_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($boards as $board)
@@ -42,7 +43,7 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Class</label>
+                                <label class="form-label" for="class_id">Class</label>
                                 <select id="class_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($classes as $class)
@@ -51,7 +52,7 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Book</label>
+                                <label class="form-label" for="book_id">Book</label>
                                 <select id="book_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($books as $book)
@@ -60,13 +61,13 @@
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Chapter</label>
+                                <label class="form-label" for="chapter_id">Chapter</label>
                                 <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md">
-                                <label class="form-label" for="state">Topic</label>
+                                <label class="form-label" for="topic_id">Topic</label>
                                 <select id="topic_id" name="topic_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
@@ -117,7 +118,7 @@
                             <div class="row">
 
                                 <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-2">Answer</label>
+                                    <label class="form-label" for="autosize-demo">Answer</label>
                                     <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
                                 </div>
                             </div>

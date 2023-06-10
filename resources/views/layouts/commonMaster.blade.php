@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="{{ session()->get('locale') ?? app()->getLocale() }}"
     class="{{ $configData['style'] }}-style {{ $navbarFixed ?? '' }} {{ $menuFixed ?? '' }} {{ $menuCollapsed ?? '' }} {{ $footerFixed ?? '' }} {{ $customizerHidden ?? '' }}"
     dir="{{ $configData['textDirection'] }}" data-theme="{{ $configData['theme'] }}"

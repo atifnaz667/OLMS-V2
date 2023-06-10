@@ -31,7 +31,6 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
-
 });
 
 
