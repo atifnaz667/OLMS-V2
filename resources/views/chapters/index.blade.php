@@ -329,6 +329,6 @@
         }
 
         // Initial fetch and pagination UI update
-        // fetchChapterRecords();
+        fetchChapterRecords();
     </script>
 @endsection

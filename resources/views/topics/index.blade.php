@@ -353,6 +353,6 @@
         }
 
         // Initial fetch and pagination UI update
-        // fetchTopicRecords();
+        fetchTopicRecords();
     </script>
 @endsection

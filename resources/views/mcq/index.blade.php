@@ -479,6 +479,6 @@
         }
 
         // Initial fetch and pagination UI update
-        // fetchQuestionRecords();
+        fetchQuestionRecords();
     </script>
 @endsection
