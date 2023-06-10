@@ -37,9 +37,12 @@ Route::get('/us-clear', function () {
 });
 
 
+Route::middleware([CommonRoutes::class])->group(function () {
+
+  Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
+});
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
-  Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
   Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
   // pages

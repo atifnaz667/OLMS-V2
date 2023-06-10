@@ -50,8 +50,14 @@ class Kernel extends HttpKernel
     'AdminMiddleware' => [
       \App\Http\Middleware\AdminMiddleware::class,
     ],
-    'UserMiddleware' => [
-      \App\Http\Middleware\UserMiddleware::class,
+    'StudentMiddleware' => [
+      \App\Http\Middleware\StudentMiddleware::class,
+    ],
+    'ParentMiddleware' => [
+      \App\Http\Middleware\ParentMiddleware::class,
+    ],
+    'TeacherMiddleware' => [
+      \App\Http\Middleware\TeacherMiddleware::class,
     ],
     'CommonRoutes' => [
       \App\Http\Middleware\CommonRoutes::class,

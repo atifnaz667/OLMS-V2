@@ -32,6 +32,9 @@ class LoginController extends Controller
         $credentials = array('username' => $req->username, 'password' => $req->password);
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            if ($user->status == 'deactive') {
+              return back()->withInput()->with(['status' => 'danger', 'message' => 'Your account has been deactivated']);
+            }
             return redirect('home')->with(['status' => 'success', 'message' => 'Welcome..! ' . $user->name]);
         }
         return back()->with(['status' => 'danger', 'message' => 'Wrong Credentials']);

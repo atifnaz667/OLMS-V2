@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
-class UserMiddleware
+class TeacherMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::user() || Auth::user()->role_id != 2) {
+        if (!Auth::user() || Auth::user()->role_id != 3) {
             return redirect('/');
         }
 

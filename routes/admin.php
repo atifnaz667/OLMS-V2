@@ -3,6 +3,7 @@
 use App\Http\Controllers\AssignUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
+use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TestController;
 
 $controller_path = 'App\Http\Controllers';
@@ -31,4 +32,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
 
+});
+
+
+Route::middleware([StudentMiddleware::class])->group(function () {
+  Route::get('syllabus-preparation', [SyllabusPreparationController::class, 'index']);
 });
