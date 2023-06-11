@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AssignUser extends Model
 {
     use HasFactory;
+
+    public function child(){
+      return $this->belongsTo(User::class,'child_id');
+    }
 }

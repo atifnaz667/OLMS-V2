@@ -8,5 +8,9 @@ $configData = Helper::appClasses();
 
 @section('content')
 <h4> {{ Auth::user()->role->role }} Home Page</h4>
-
+<div class="row mt-5">
+  <div class="col-sm-3">
+    <a href="parent/test/create" class="form-control btn btn-primary">Create Test</a>
+  </div>
+</div>
 @endsection

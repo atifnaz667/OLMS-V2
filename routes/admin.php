@@ -37,3 +37,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('syllabus-preparation', [SyllabusPreparationController::class, 'index']);
 });
+
+
+Route::prefix('parent')->middleware([ParentMiddleware::class])->group(function () {
+  Route::get('test/create', [TestController::class, 'create']);
+  Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('parent/test/books');
+});
