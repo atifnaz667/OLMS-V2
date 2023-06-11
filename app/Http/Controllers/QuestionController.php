@@ -77,7 +77,7 @@ class QuestionController extends Controller
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
       'questions.*.question_type' => 'required|string|in:long,short,mcq',
-      'questions.*.question_nature' => 'required|string|in:conceptual,comprehension',
+      'questions.*.question_nature' => 'required|string|in:Conceptual,Exercise',
       'questions.*.description' => 'required',
     ]);
     if ($validator->fails()) {

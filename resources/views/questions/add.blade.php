@@ -109,8 +109,8 @@
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-4">Question Nature</label>
                                     <select id="form-repeater-1-4" name="question_nature" class="form-select">
-                                        <option value="conceptual">Conceptual</option>
-                                        <option value="comprehension ">Comprehension</option>
+                                        <option value="Conceptual">Conceptual</option>
+                                        <option value="Exercise ">Exercise</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
