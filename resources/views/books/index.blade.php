@@ -46,88 +46,88 @@
                 <div class="tab-content">
                     <!-- Personal Info -->
                     <div class="tab-pane fade active show" id="form-tabs-personal" role="tabpanel">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <label class="col-sm-3 col-form-label text-sm-end" for="board-name">Board
-                                            Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="board-name" name="board-name" class="form-control"
-                                                placeholder="Enter Board Name" />
-                                        </div>
-                                    </div>
-                                </div>
 
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <div class="row justify-content-end">
-                                        <div class="col-sm-9">
-                                            <button type="button" onclick="addBoard()"
-                                                class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                            <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="board-name">Board
+                                        Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="board-name" name="board-name" required
+                                            class="form-control" placeholder="Enter Board Name" />
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="row justify-content-end">
+                                    <div class="col-sm-9">
+                                        <button type="button" onclick="addBoard()"
+                                            class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                        <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <!-- Account Details -->
                     <div class="tab-pane fade" id="form-tabs-account" role="tabpanel">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <label class="col-sm-3 col-form-label text-sm-end" for="class-name">Class
-                                            Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="class-name" name="class-name" class="form-control"
-                                                placeholder="Enter Class Name" />
-                                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="class-name">Class
+                                        Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="class-name" name="class-name" required
+                                            class="form-control" placeholder="Enter Class Name" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <div class="row justify-content-end">
-                                        <div class="col-sm-9">
-                                            <button type="button" onclick="addClass()"
-                                                class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                            <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                        </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="row justify-content-end">
+                                    <div class="col-sm-9">
+                                        <button type="button" onclick="addClass()"
+                                            class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                        <button type="reset" class="btn btn-label-secondary">Cancel</button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+
                     </div>
                     <!-- Social Links -->
                     <div class="tab-pane fade" id="form-tabs-social" role="tabpanel">
-                        <form>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <label class="col-sm-3 col-form-label text-sm-end" for="book-name">Book
-                                            Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" id="book-name" name="book-name" class="form-control"
-                                                placeholder="Enter Book Name" />
-                                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="book-name">Book
+                                        Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="book-name" name="book-name" required class="form-control"
+                                            placeholder="Enter Book Name" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <div class="row justify-content-end">
-                                        <div class="col-sm-9">
-                                            <button type="button" onclick="addBook()"
-                                                class="btn btn-primary me-sm-3 me-1">Submit</button>
-                                            <button type="reset" class="btn btn-label-secondary">Cancel</button>
-                                        </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="row justify-content-end">
+                                    <div class="col-sm-9">
+                                        <button type="button" onclick="addBook()"
+                                            class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                        <button type="reset" class="btn btn-label-secondary">Cancel</button>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -299,6 +299,9 @@
 
 @section('page2-script')
     <script>
+        $(document).ready(function() {
+            getData();
+        });
         const toastAnimationExample = document.querySelector('.toast-ex');
         var offcanvasElementbook = document.getElementById('offcanvasUpdateBook');
         var offcanvasbook = new bootstrap.Offcanvas(offcanvasElementbook);
@@ -502,56 +505,6 @@
             updateBoard(boardId);
         });
 
-        function addBoard() {
-            const toastAnimationExample = document.querySelector('.toast-ex');
-            var boardName = $('#board-name').val();
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('board.store') }}',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    name: boardName
-                },
-                success: function(response) {
-                    var status = response.status;
-                    var message = response.message;
-
-                    // Update toast message and status
-                    $('.toast-ex .fw-semibold').text(status);
-                    $('.toast-ex .toast-body').text(message);
-
-                    // Show the toast notification
-                    selectedType = "text-success";
-                    selectedAnimation = "animate__fade";
-                    toastAnimationExample.classList.add(selectedAnimation);
-                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
-                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
-                    toastAnimation.show();
-                    $('#board-name').val('');
-                    getData();
-                },
-                error: function(xhr) {
-
-                    var response = JSON.parse(xhr.responseText);
-                    var status = response.status;
-                    var message = response.message;
-
-                    console.log(status);
-                    console.log(message);
-
-                    $('.toast-ex .fw-semibold').text(status);
-                    $('.toast-ex .toast-body').text(message);
-                    selectedType = "text-warning";
-                    selectedAnimation = "animate__fade";
-                    toastAnimationExample.classList.add(selectedAnimation);
-                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
-                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
-                    toastAnimation.show();
-
-                }
-            });
-        }
-
         function addBook() {
             const toastAnimationExample = document.querySelector('.toast-ex');
             var bookName = $('#book-name').val();
@@ -645,6 +598,227 @@
             });
         }
 
+        function addBoard() {
+            const toastAnimationExample = document.querySelector('.toast-ex');
+            var boardName = $('#board-name').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('board.store') }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: boardName
+                },
+                success: function(response) {
+                    var status = response.status;
+                    var message = response.message;
+
+                    // Update toast message and status
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+
+                    // Show the toast notification
+                    selectedType = "text-success";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                    $('#board-name').val('');
+                    getData();
+                },
+                error: function(xhr) {
+
+                    var response = JSON.parse(xhr.responseText);
+                    var status = response.status;
+                    var message = response.message;
+
+                    console.log(status);
+                    console.log(message);
+
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-warning";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+
+                }
+            });
+        }
+
+        $(document).on('click', '.delete-book', function() {
+            var _token = $('input[name="_token"]').val();
+            var user_id = $(this).data('id'),
+                dtrModal = $('.dtr-bs-modal.show');
+            if (dtrModal.length) {
+                dtrModal.modal('hide');
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('book.destroy', '') }}" + "/" + user_id,
+                        data: {
+                            _token: _token,
+                        },
+                        success: function success(response) {
+                            getData();
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                icon: 'success',
+                                title: status,
+                                text: message,
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            var response = JSON.parse(xhr.responseText);
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                title: status,
+                                text: message,
+                                icon: 'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-class', function() {
+            var _token = $('input[name="_token"]').val();
+            var user_id = $(this).data('id'),
+                dtrModal = $('.dtr-bs-modal.show');
+            if (dtrModal.length) {
+                dtrModal.modal('hide');
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('class.destroy', '') }}" + "/" + user_id,
+                        data: {
+                            _token: _token,
+                        },
+                        success: function success(response) {
+                            getData();
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                icon: 'success',
+                                title: status,
+                                text: message,
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            var response = JSON.parse(xhr.responseText);
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                title: status,
+                                text: message,
+                                icon: 'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '.delete-board', function() {
+            var _token = $('input[name="_token"]').val();
+            var user_id = $(this).data('id'),
+                dtrModal = $('.dtr-bs-modal.show');
+            if (dtrModal.length) {
+                dtrModal.modal('hide');
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('board.destroy', '') }}" + "/" + user_id,
+                        data: {
+                            _token: _token,
+                        },
+                        success: function success(response) {
+                            getData();
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                icon: 'success',
+                                title: status,
+                                text: message,
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            var response = JSON.parse(xhr.responseText);
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                title: status,
+                                text: message,
+                                icon: 'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
         function getData() {
             $.ajax({
                 url: "{{ url('getBoardBookClass') }}",
@@ -664,8 +838,8 @@
                             "<button  onclick=\"editBook('" + book.id +
                             "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + book.id +
                             "'><i class=\"ti ti-edit\"></i></button>" +
-                            // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + book.id +
-                            // "'><i class=\"ti ti-trash\"></i></button>" +
+                            "<button class=\"btn btn-sm btn-icon delete-book\" data-id='" + book.id +
+                            "'><i class=\"ti ti-trash\"></i></button>" +
                             "</td>" +
                             "</tr>";
                         booksTableBody.append(row);
@@ -684,8 +858,8 @@
                             "<button  onclick=\"editBoard('" + board.id +
                             "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + board.id +
                             "'><i class=\"ti ti-edit\"></i></button>" +
-                            // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + board.id +
-                            // "'><i class=\"ti ti-trash\"></i></button>" +
+                            "<button class=\"btn btn-sm btn-icon delete-board\" data-id='" + board.id +
+                            "'><i class=\"ti ti-trash\"></i></button>" +
                             "</td>" +
                             "</tr>";
                         boardsTableBody.append(row);
@@ -706,8 +880,8 @@
                             "<button  onclick=\"editClass('" + classs.id +
                             "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + classs.id +
                             "'><i class=\"ti ti-edit\"></i></button>" +
-                            // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + classs
-                            // .id + "'><i class=\"ti ti-trash\"></i></button>" +
+                            "<button class=\"btn btn-sm btn-icon delete-class\" data-id='" + classs
+                            .id + "'><i class=\"ti ti-trash\"></i></button>" +
                             "</td>" +
                             "</tr>";
                         classesTableBody.append(row);
@@ -726,65 +900,6 @@
             });
 
         }
-        $(document).ready(function() {
-            getData();
-        });
-        $(document).on('click', '.delete-record', function() {
-            var user_id = $(this).data('id'),
-                dtrModal = $('.dtr-bs-modal.show');
-
-            // hide responsive modal in small screen
-            if (dtrModal.length) {
-                dtrModal.modal('hide');
-            }
-
-            // sweetalert for confirmation of delete
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                customClass: {
-                    confirmButton: 'btn btn-primary me-3',
-                    cancelButton: 'btn btn-label-secondary'
-                },
-                buttonsStyling: false
-            }).then(function(result) {
-                if (result.value) {
-                    // delete the data
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "".concat(baseUrl, "user-list/").concat(user_id),
-                        success: function success() {
-                            dt_user.draw();
-                        },
-                        error: function error(_error) {
-                            console.log(_error);
-                        }
-                    });
-
-                    // success sweetalert
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Deleted!',
-                        text: 'The user has been deleted!',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    Swal.fire({
-                        title: 'Cancelled',
-                        text: 'The User is not deleted!',
-                        icon: 'error',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                }
-            });
-        });
     </script>
 
 @endsection

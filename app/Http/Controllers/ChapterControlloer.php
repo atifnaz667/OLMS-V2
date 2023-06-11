@@ -227,10 +227,35 @@ class ChapterControlloer extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy($id)
   {
-    //
+    $chapter = Chapter::find($id);
+
+    // Check if chapter exists
+    if (!$chapter) {
+      return response()->json(['status' => 'error', 'message' => 'Chapter not found'], 404);
+    }
+
+    try {
+      // Check if the chapter has any topics
+      if ($chapter->topics()->count() > 0) {
+        return response()->json(['status' => 'error', 'message' => 'Cannot delete chapter with topics'], 400);
+      }
+
+      // Delete the chapter
+      $chapter->delete();
+
+      return response()->json(['status' => 'success', 'message' => 'Chapter deleted successfully'], 200);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json([
+        'status' => 'error',
+        'message' => $message,
+      ], 500);
+    }
   }
+
 
   public function chapterDropDown(Request $request)
   {

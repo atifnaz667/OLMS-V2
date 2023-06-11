@@ -250,8 +250,39 @@ class McqChoiceController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy($id)
   {
-    //
+    $validator = Validator::make(['id' => $id], [
+      'id' => 'required|int|exists:questions,id',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 'error',
+        'message' => $validator->errors()->first(),
+      ], 400);
+    }
+
+    try {
+      DB::transaction(function () use ($id) {
+        // Delete the associated records in the McqChoice table
+        McqChoice::where('question_id', $id)->delete();
+
+        // Delete the question
+        Question::findOrFail($id)->delete();
+      });
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Mcq and associated records deleted successfully',
+      ], 200);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json([
+        'status' => 'error',
+        'message' => $message,
+      ], 500);
+    }
   }
 }

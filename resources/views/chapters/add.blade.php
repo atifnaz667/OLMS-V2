@@ -25,7 +25,8 @@
                         <div class="row">
                             <div class="col-md">
                                 <label class="form-label" for="board_id">Board</label>
-                                <select id="board_id" name="board_id" class="select2 form-select" data-allow-clear="true">
+                                <select id="board_id" name="board_id" class="select2 form-select" required
+                                    data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($boards as $board)
                                         <option value="{{ $board->id }}">{{ $board->name }}</option>
@@ -35,7 +36,8 @@
                             </div>
                             <div class="col-md">
                                 <label class="form-label" for="class_id">Class</label>
-                                <select id="class_id" name="class_id" class="select2 form-select" data-allow-clear="true">
+                                <select id="class_id" name="class_id" class="select2 form-select" required
+                                    data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -44,7 +46,8 @@
                             </div>
                             <div class="col-md">
                                 <label class="form-label" for="book_id">Book</label>
-                                <select id="book_id" name="book_id" class="select2 form-select" data-allow-clear="true">
+                                <select id="book_id" name="book_id" class="select2 form-select" required
+                                    data-allow-clear="true">
                                     <option value="">Select</option>
                                     @foreach ($books as $book)
                                         <option value="{{ $book->id }}">{{ $book->name }}</option>
@@ -114,6 +117,11 @@
             $('#submitChapter').click(function() {
                 const toastAnimationExample = document.querySelector('.toast-ex');
                 var form = $('#chapterForm');
+                if (form[0].checkValidity() === false) {
+                    form.addClass('was-validated');
+                    return;
+                }
+
                 var formData = form.serialize();
 
                 $.ajax({

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DropdownHelper;
 use App\Models\Topic;
 use App\Models\Chapter;
+use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Helpers\DropdownHelper;
 use Illuminate\Support\Facades\DB;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -55,7 +56,7 @@ class TopicController extends Controller
 
         return response()->json([
           'status' => 'success',
-          'message' => 'Chapters retrieved successfully',
+          'message' => 'Topic retrieved successfully',
           'data' => $data,
           'current_page' => $topics->currentPage(),
           'last_page' => $topics->lastPage(),
@@ -224,7 +225,16 @@ class TopicController extends Controller
 
     try {
       DB::transaction(function () use ($id) {
-        Topic::findOrFail($id)->delete();
+        $topic = Topic::findOrFail($id);
+
+        // Check if the topic_id exists in the questions table
+        $questionsWithTopic = Question::where('topic_id', $id)->exists();
+
+        if ($questionsWithTopic) {
+          throw new \Exception('This topic is referenced in the questions table and cannot be deleted.');
+        }
+
+        $topic->delete();
       });
 
       return response()->json([
@@ -240,6 +250,7 @@ class TopicController extends Controller
       ], 500);
     }
   }
+
 
   public function topics(Request $request)
   {

@@ -408,8 +408,8 @@
                                     "')\" class=\"btn-icon edit-record\"data-id='" + question
                                     .id +
                                     "'><i class=\"ti ti-edit\"></i></a>" +
-                                    // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + question.id +
-                                    // "'><i class=\"ti ti-trash\"></i></button>" +
+                                    "<a class=\"btn-icon delete-question\" data-id='" + question.id +
+                                    "'><i class=\"ti ti-trash\"></i></a>" +
                                     "</td>" +
                                     '</tr>';
                                 tableBody.append(row);
@@ -427,6 +427,62 @@
             });
         }
 
+        $(document).on('click', '.delete-question', function() {
+            var _token = $('input[name="_token"]').val();
+            var user_id = $(this).data('id'),
+                dtrModal = $('.dtr-bs-modal.show');
+            if (dtrModal.length) {
+                dtrModal.modal('hide');
+            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('mcq-choice.destroy', '') }}" + "/" + user_id,
+                        data: {
+                            _token: _token,
+                        },
+                        success: function success(response) {
+                            fetchQuestionRecords(currentPage)
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                icon: 'success',
+                                title: status,
+                                text: message,
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            var response = JSON.parse(xhr.responseText);
+                            var status = response.status;
+                            var message = response.message;
+                            Swal.fire({
+                                title: status,
+                                text: message,
+                                icon: 'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        });
 
         // Trigger fetchQuestionRecords() on filter button click
         $('#filterButton, #perPageSelect').on('click change', function(e) {
