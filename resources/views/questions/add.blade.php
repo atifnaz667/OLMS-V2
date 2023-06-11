@@ -2,6 +2,10 @@
     $configData = Helper::appClasses();
 @endphp
 @extends('layouts/layoutMaster')
+@section('vendor-script')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+@endsection
 @section('title', 'Add Chapters')
 <style>
     .pagination-nav {
@@ -87,13 +91,28 @@
             </div>
         </div>
         <br>
+
         <div class="col-12">
             <div class="card">
-                <h5 class="card-header">Form Repeater</h5>
                 <div class="card-body">
                     <div data-repeater-list="questions">
                         <div data-repeater-item>
+                            <div
+                                class="card-header d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
+                                <h5 class="card-title">Long Short Question</h5>
+                                <button class="btn btn-label-danger" data-repeater-delete>
+                                    <i class="ti ti-x ti-xs me-1"></i>
+                                    <span class="align-middle">Delete</span>
+                                </button>
+                            </div>
                             <div class="row">
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label" for="form-repeater-1-4">Question Nature</label>
+                                    <select id="form-repeater-1-4" name="question_nature" class="form-select">
+                                        <option value="conceptual">Conceptual</option>
+                                        <option value="comprehension ">Comprehension</option>
+                                    </select>
+                                </div>
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-3">Question Type</label>
                                     <select id="form-repeater-1-3" name="question_type" class="form-select">
@@ -101,25 +120,20 @@
                                         <option value="short">Short</option>
                                     </select>
                                 </div>
+                            </div>
 
-                                <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
+                            <div class="row">
+                                <div class="mb-3 col-lg-12 col-xl-12 col-12">
                                     <label class="form-label" for="form-repeater-1-1">Question</label>
-                                    <input type="text" name="description" id="form-repeater-1-1" class="form-control"
-                                        placeholder="john.doe" />
-                                </div>
-
-                                <div class="mb-3 col-lg-12 col-xl-2 col-12 d-flex align-items-center mb-0">
-                                    <button class="btn btn-label-danger mt-4" data-repeater-delete>
-                                        <i class="ti ti-x ti-xs me-1"></i>
-                                        <span class="align-middle">Delete</span>
-                                    </button>
+                                    <textarea id="autosize-demo" name="description" rows="3" class="form-control"></textarea>
                                 </div>
                             </div>
+
                             <div class="row">
 
                                 <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
-                                    <label class="form-label" for="autosize-demo">Answer</label>
-                                    <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
+                                    <label class="form-label" for="full-editor">Answer</label>
+                                    <textarea class="form-control summernote" name="answer" rows="4"></textarea>
                                 </div>
                             </div>
                             <hr>
@@ -143,6 +157,29 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
+            initializeSummernote();
+            $('button[data-repeater-create]').click(function() {
+                setTimeout(function() {
+                    initializeSummernote();
+                }, 100); // Delay the initialization to ensure the DOM is updated
+            });
+
+            function initializeSummernote() {
+                $('.summernote').summernote({
+                    tabsize: 4,
+                    height: 260,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        // ['insert', ['link', 'picture', 'video']],
+                        // ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+            }
+
             function resetFormRepeater() {
                 var formRepeater = $('#questionForm .form-repeater');
 

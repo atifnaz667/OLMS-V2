@@ -49,6 +49,7 @@ class QuestionController extends Controller
         return [
           'id' => $question->id,
           'question_type' => $question->question_type,
+          'question_nature' => $question->question_nature,
           'description' => $question->description,
         ];
       });
@@ -72,48 +73,33 @@ class QuestionController extends Controller
 
   public function store(Request $request)
   {
-
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
       'questions.*.question_type' => 'required|string|in:long,short,mcq',
-      'questions.*.description' => 'required|string|max:255',
+      'questions.*.question_nature' => 'required|string|in:conceptual,comprehension',
+      'questions.*.description' => 'required',
     ]);
-
     if ($validator->fails()) {
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
     }
-
     try {
       DB::beginTransaction();
       $questions = $request->input('questions');
       $topic_id = $request->input('topic_id');
-
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
           'question_type' => $question['question_type'],
+          'question_nature' => $question['question_nature'],
           'description' => $question['description'],
         ];
         $question_id = Question::insertGetId($insertData);
-
-        // if ($question['question_type'] === 'short') {
         $slanswerData = [
           'question_id' => $question_id,
           'answer' => $question['answer'],
         ];
         SlAnswer::insert($slanswerData);
-        // } elseif ($question['question_type'] === 'mcq') {
-        //   foreach ($question['mcqs'] as $choice) {
-        //     $choiceData = [
-        //       'question_id' => $question_id,
-        //       'choice' => $choice['choice'],
-        //       'is_true' => $choice['is_true'],
-        //       'reason' => $choice['reason'],
-        //     ];
-        //     MCQChoice::insert($choiceData);
-        //   }
-        // }
       }
       DB::commit();
       return response()->json(['status' => 'success', 'message' => 'Questions created successfully'], 201);

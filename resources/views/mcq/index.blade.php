@@ -402,17 +402,15 @@
                                     // '<td>' + question.question_no + '</td>' +
                                     '<td>' + question.question_type + '</td>' +
                                     '<td>' + question.description + '</td>' +
-                                    '<td>' +
-                                    '<div class="dropdown">' +
-                                    ' <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
-                                    ' <div class="dropdown-menu">' +
-                                    '<a class="dropdown-item" onclick=\"viewQuestion(' + question
+                                    "<td>" +
+                                    "<a onclick=\"viewQuestion('" + question
                                     .id +
-                                    ')\" href="javascript:void(0);"><i class="ti ti-eye me-1"></i> View</a>' +
-
-                                    '</div>' +
-                                    '</div>' +
-                                    '</td>' +
+                                    "')\" class=\"btn-icon edit-record\"data-id='" + question
+                                    .id +
+                                    "'><i class=\"ti ti-edit\"></i></a>" +
+                                    // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + question.id +
+                                    // "'><i class=\"ti ti-trash\"></i></button>" +
+                                    "</td>" +
                                     '</tr>';
                                 tableBody.append(row);
                             });

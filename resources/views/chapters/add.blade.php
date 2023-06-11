@@ -82,11 +82,11 @@
                             <div class="row">
                                 <div class="mb-12 col-lg-6 col-xl-6 col-6 mb-0">
                                     <label class="form-label" for="chapter_no">Chapter Number</label>
-                                    <textarea id="chapter_no" name="chapter_no" rows="3" class="form-control"></textarea>
+                                    <textarea id="chapter_no" required name="chapter_no" rows="3" class="form-control"></textarea>
                                 </div>
                                 <div class="mb-12 col-lg-6 col-xl-6 col-6 mb-0">
                                     <label class="form-label" for="name">Chapter Name</label>
-                                    <textarea id="name" name="name" rows="3" class="form-control" autocomplete="off"></textarea>
+                                    <textarea id="name" name="name" required rows="3" class="form-control" autocomplete="off"></textarea>
                                 </div>
                             </div>
                             <hr>

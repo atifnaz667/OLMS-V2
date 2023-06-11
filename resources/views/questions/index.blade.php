@@ -3,6 +3,10 @@
 @endphp
 @extends('layouts/layoutMaster')
 @section('title', 'Questions')
+@section('vendor-script')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+@endsection
 <style>
     .pagination-nav {
         display: flex;
@@ -99,6 +103,7 @@
                             <tr>
                                 <th>Sr#</th>
                                 <th>Type</th>
+                                <th>Nature</th>
                                 <th>Question</th>
                                 <th>Action</th>
                             </tr>
@@ -114,29 +119,38 @@
             </div>
         </div>
     </div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasViewQuestion"
-        aria-labelledby="offcanvasViewQuestionLabel">
-        <div class="offcanvas-header">
-            <h5 id="offcanvasViewQuestionLabel" class="offcanvas-title">View Question</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body mx-0 flex-grow-0">
+    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <form class="update-class pt-0" id="viewQuestionForm">
                 @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">View Question</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <input type="hidden" id="questionId" name="questionId" />
+                                <label class="form-label" for="update-question">Question</label>
+                                <textarea required id="update-question" name="update-question" rows="3" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col mb-0">
+                                <label class="form-label" for="update-question-answer">Answer</label>
+                                <textarea required id="update-question-answer" name="update-question-answer" rows="10" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Save changes</button>
+                    </div>
+                </div>
 
-                <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
-                    <label class="form-label" for="update-question">Question</label>
-                    <textarea required id="update-question" name="update-question" rows="3" class="form-control"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="update-question-answer">Answer</label>
-                    <textarea required id="update-question-answer" name="update-question-answer" rows="10" class="form-control"></textarea>
-                    <input type="hidden" id="questionId" name="questionId" />
-                </div>
-                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
-                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-            </form>
         </div>
+        </form>
     </div>
 @endsection
 
@@ -145,6 +159,20 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
+            $('#update-question-answer').summernote({
+                // placeholder: 'Hello stand alone ui',
+                tabsize: 4,
+                height: 260,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    // ['insert', ['link', 'picture', 'video']],
+                    // ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
             $('#board_id, #book_id, #class_id').change(function() {
                 var boardId = $('#board_id').val();
                 var bookId = $('#book_id').val();
@@ -217,8 +245,6 @@
         var lastPage = 1;
         var perPage = 10;
         const toastAnimationExample = document.querySelector('.toast-ex');
-        var offcanvasElementview = document.getElementById('offcanvasViewQuestion');
-        var offcanvas = new bootstrap.Offcanvas(offcanvasElementview);
 
         function viewQuestion(id) {
             $.ajax({
@@ -227,13 +253,9 @@
                 success: function(response) {
                     // Update the form fields with the fetched data
                     $('#update-question').val(response.Question.description);
-                    $('#update-question-answer').val(response.Question.answer.answer);
+                    $('#update-question-answer').summernote('code', response.Question.answer.answer);
                     $('#questionId').val(response.Question.id);
-
-                    // Show the offcanvas
-                    offcanvas.show();
-
-
+                    $('#largeModal').modal('show');
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -243,7 +265,6 @@
         }
 
         function updateQuestion(id) {
-            // Get the form data
             var _token = $('input[name="_token"]').val();
             var question = $('#update-question').val();
             var answer = $('#update-question-answer').val();
@@ -268,7 +289,7 @@
                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                     toastAnimation.show();
                     fetchQuestionRecords(currentPage)
-                    offcanvas.hide();
+                    $('#largeModal').modal('hide');
 
                 },
                 error: function(xhr, status, error) {
@@ -287,7 +308,6 @@
             });
         }
 
-        // Handle the form submission
         $('#viewQuestionForm').on('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
             var questionId = $('#questionId').val();
@@ -324,18 +344,17 @@
                                     // '<td>' + question.class + '</td>' +
                                     // '<td>' + question.question_no + '</td>' +
                                     '<td>' + question.question_type + '</td>' +
+                                    '<td>' + question.question_nature + '</td>' +
                                     '<td>' + question.description + '</td>' +
-                                    '<td>' +
-                                    '<div class="dropdown">' +
-                                    ' <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
-                                    ' <div class="dropdown-menu">' +
-                                    '<a class="dropdown-item" onclick=\"viewQuestion(' + question
+                                    "<td>" +
+                                    "<a onclick=\"viewQuestion('" + question
                                     .id +
-                                    ')\" href="javascript:void(0);"><i class="ti ti-eye me-1"></i> View</a>' +
-
-                                    '</div>' +
-                                    '</div>' +
-                                    '</td>' +
+                                    "')\" class=\"btn-icon edit-record\"data-id='" + question
+                                    .id +
+                                    "'><i class=\"ti ti-edit\"></i></a>" +
+                                    // "<button class=\"btn btn-sm btn-icon delete-record\" data-id='" + question.id +
+                                    // "'><i class=\"ti ti-trash\"></i></button>" +
+                                    "</td>" +
                                     '</tr>';
                                 tableBody.append(row);
                             });

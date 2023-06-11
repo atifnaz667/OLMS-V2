@@ -489,7 +489,6 @@
         $('#addBookForm').on('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
             var bookId = $('#bookId').val();
-            alert(bookId)
             updateBook(bookId);
         });
         $('#addClassForm').on('submit', function(event) {
