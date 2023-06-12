@@ -78,7 +78,6 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
-            // Handle modal show event
             $('#chapterModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
                 var bookId = button.data('book-id');
@@ -127,14 +126,14 @@
                 });
             });
 
-            // Handle "Check All" checkbox change event
+
             $('#checkAllChapters').change(function() {
                 var isChecked = $(this).prop('checked');
                 $('.chapter-checkbox').prop('checked', isChecked);
                 $('.topic-checkbox').prop('checked', isChecked);
             });
 
-            // Handle save button click event
+
             $('#saveSelection').click(function() {
                 var selectedChapters = [];
                 var selectedTopics = [];
@@ -149,39 +148,32 @@
                     alert('Please enter the total number of questions.');
                     return;
                 }
-                // Get selected chapters
+
                 $('.chapter-checkbox:checked').each(function() {
                     selectedChapters.push($(this).attr('id').split('_')[1]);
                 });
 
-                // Get selected topics
+
                 $('.topic-checkbox:checked').each(function() {
                     selectedTopics.push($(this).attr('id').split('_')[1]);
-                });
-
-                // Create an object to send in the AJAX request
+                })
                 var data = {
                     totalQuestions: totalQuestions,
                     testType: testType,
                     chapters: selectedChapters,
                     topics: selectedTopics
                 };
-
-                // Send the data to your AJAX function
                 $.ajax({
                     url: "{{ route('get-test-for-preparation') }}",
-                    method: "POST", // Use POST method to send data
+                    method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
                     data: data,
                     success: function(response) {
-                        // Handle the response from the server
                         console.log(response);
                     }
                 });
-
-                // Close the modal
                 $('#chapterModal').modal('hide');
             });
 
