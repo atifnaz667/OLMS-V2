@@ -631,10 +631,6 @@
                     var response = JSON.parse(xhr.responseText);
                     var status = response.status;
                     var message = response.message;
-
-                    console.log(status);
-                    console.log(message);
-
                     $('.toast-ex .fw-semibold').text(status);
                     $('.toast-ex .toast-body').text(message);
                     selectedType = "text-warning";

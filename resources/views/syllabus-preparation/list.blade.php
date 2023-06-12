@@ -139,7 +139,16 @@
                 var selectedTopics = [];
                 var testType = $('#test-type').val();
                 var totalQuestions = $('#total-questions').val();
-                if (selectedChapters.length === 0 || selectedTopics.length === 0) {
+
+                $('.chapter-checkbox:checked').each(function() {
+                    selectedChapters.push($(this).attr('id').split('_')[1]);
+                });
+
+                $('.topic-checkbox:checked').each(function() {
+                    selectedTopics.push($(this).attr('id').split('_')[1]);
+                });
+
+                if (selectedTopics.length === 0) {
                     alert('Please select at least one chapter and one topic.');
                     return;
                 }
@@ -149,14 +158,6 @@
                     return;
                 }
 
-                $('.chapter-checkbox:checked').each(function() {
-                    selectedChapters.push($(this).attr('id').split('_')[1]);
-                });
-
-
-                $('.topic-checkbox:checked').each(function() {
-                    selectedTopics.push($(this).attr('id').split('_')[1]);
-                })
                 var data = {
                     totalQuestions: totalQuestions,
                     testType: testType,
@@ -171,7 +172,7 @@
                     },
                     data: data,
                     success: function(response) {
-                        console.log(response);
+
                     }
                 });
                 $('#chapterModal').modal('hide');
