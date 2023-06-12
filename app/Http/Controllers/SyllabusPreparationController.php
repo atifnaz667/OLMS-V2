@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Topic;
 use App\Models\Chapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,9 +26,24 @@ class SyllabusPreparationController extends Controller
       })
       ->get()
       ->pluck('book');
-    return view('syllabus-preparation.list', ['books'=>$books]);
+    return view('syllabus-preparation.list', ['books' => $books]);
   }
+  public function fetchData($bookId, Request $request)
+  {
 
+    // Fetch chapters and topics based on the book ID
+    $chapters = Chapter::where('book_id', $bookId)->get();
+    $topics = Topic::whereIn('chapter_id', $chapters->pluck('id'))->get();
+
+    // Prepare the data to be sent as a response
+    $data = [
+      'chapters' => $chapters,
+      'topics' => $topics,
+    ];
+
+    // Return the data as JSON response
+    return response()->json($data);
+  }
   /**
    * Show the form for creating a new resource.
    */
@@ -41,6 +57,7 @@ class SyllabusPreparationController extends Controller
    */
   public function store(Request $request)
   {
+    return $request;
   }
 
   /**

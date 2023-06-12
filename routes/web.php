@@ -11,6 +11,7 @@ use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\McqChoiceController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\SyllabusPreparationController;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -40,6 +41,8 @@ Route::get('/us-clear', function () {
 Route::middleware([CommonRoutes::class])->group(function () {
 
   Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
+  Route::get('fetch-chapters-topics/{id}', [SyllabusPreparationController::class, 'fetchData'])->name('fetch-chapters-topics');
+  Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'store'])->name('get-test-for-preparation');
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
