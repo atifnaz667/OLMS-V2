@@ -52,14 +52,29 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <div class="col-4 mb-3">
+              <div class="col-sm-3 mb-3">
                 <label for="nameExLarge" class="form-label">Select Book</label>
-                <select name="book" id="book" class="form-select">
+                <select name="book" id="book" class="form-select" onchange="getChapters(this.value)">
                   <option value="">Select Book</option>
                 </select>
               </div>
+              <div class="col-sm-3 mb-3">
+                <label for="nameExLarge" class="form-label">Test Date</label>
+                <input type="date" class="form-control" name="testDate" value="{{ date("Y-m-d") }}" required>
+              </div>
+              <div class="col-sm-3 mb-3">
+                <label for="nameExLarge" class="form-label">Total Questions</label>
+                <input type="input" class="form-control" name="totalQuestions" placeholder="Enter Total Questions" required value="10">
+              </div>
               <input type="hidden" name="" id="testUserId">
+              <div class="col-sm-3 mb-3">
+                <label for="nameExLarge" class="form-label">Time For Each Question</label>
+                <select name="questionTime" id="questionTime" class="form-select">
+                  {!! $timeOptions !!}
+                </select>
+              </div>
             </div>
+            <div class="row px-3 mt-3 mb-5" id="chaptersRow"></div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="modal">Close</button>
@@ -76,7 +91,7 @@
       function getBooks(userId){
         $("#testUserId").val(userId);
         $.ajax({
-              url: '{{ route('parent/test/books') }}',
+              url: '{{ route('test/books') }}',
               method: 'get',
               data: {
                 userId:userId,
@@ -86,5 +101,35 @@
               }
           });
       }
+
+
+      function getChapters(bookId){
+        let userId = $("#testUserId").val();
+        $.ajax({
+              url: '{{ route('test/chapters') }}',
+              method: 'get',
+              data: {
+                userId:userId,
+                bookId:bookId,
+              },
+              success: function(response) {
+                $("#chaptersRow").html(response);
+              }
+          });
+      }
+
+        // Select All checkbox
+        function selectCheckboxes(isChecked){
+          var isChecked = $('#select-all').prop('checked');
+          $('.checkboxes').prop('checked', isChecked);
+        }
+
+        function selectCheckbox() {
+          if ($('.checkboxes:checked').length === $('.checkboxes').length) {
+            $('#select-all').prop('checked', true);
+          } else {
+            $('#select-all').prop('checked', false);
+          }
+        }
     </script>
 @endsection

@@ -39,7 +39,8 @@ Route::middleware([StudentMiddleware::class])->group(function () {
 });
 
 
-Route::prefix('parent')->middleware([ParentMiddleware::class])->group(function () {
+Route::middleware([ParentMiddleware::class])->group(function () {
   Route::get('test/create', [TestController::class, 'create']);
-  Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('parent/test/books');
+  Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('test/books');
+  Route::get('test/chapters', [TestController::class, 'getChaptersForTest'])->name('test/chapters');
 });

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Models\AssignUser;
 use App\Models\Book;
+use App\Models\Chapter;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestChild;
@@ -33,7 +35,9 @@ class TestController extends Controller
       $parent_id = Auth::user()->id;
       $students = AssignUser::with('child')->where('parent_id',$parent_id)->get();
     }
-    return view('test.add',['students'=>$students]);
+
+    $timeOptions = Helpers::getTimeForQuestions();
+    return view('test.add',['students'=>$students,'timeOptions'=>$timeOptions]);
 	}
 
 	/**
@@ -128,5 +132,21 @@ class TestController extends Controller
       $options = $options.' <option value="'.$book->id.'">'.$book->name.'</option>';
     }
     return $options;
+  }
+
+  public function getChaptersForTest(Request $req){
+    $user = User::find($req->userId);
+    $chapters = Chapter::where([['book_id',$req->bookId],['board_id',$user->board_id],['class_id',$user->class_id]])->get();
+    $cols = ' <div class="col-12 mb-2"> <input id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All</div>';
+    foreach ($chapters as $chapter) {
+      $cols = $cols.' <div class="col-sm-3 col-6 mb-2"> <input onclick="selectCheckbox()" type="checkBox" class="checkboxes" value="'.$chapter->id.'"> '.$chapter->name.'</div>';
+    }
+    if (count($chapters) == 0) {
+      $cols = ' <div class="col-12"> <h6>No Chapters found against this book </h6></div>';
+    }
+    if (!$req->bookId) {
+      $cols = ' <div class="col-12"> <h6>Please select book </h6></div>';
+    }
+    return $cols;
   }
 }

@@ -182,4 +182,9 @@ class Helpers
       }
     }
   }
+
+  public static function getTimeForQuestions(){
+    $options = "<option value='60'> 60 Sec</option> <option value='90' selected> 90 Sec</option> <option value='120'> 120 Sec</option>";
+    return $options;
+  }
 }
