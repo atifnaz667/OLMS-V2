@@ -172,7 +172,7 @@
                     },
                     data: data,
                     success: function(response) {
-                        console.log(response);
+
                     }
                 });
                 $('#chapterModal').modal('hide');
