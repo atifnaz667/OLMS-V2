@@ -139,7 +139,7 @@ class QuestionController extends Controller
   {
     $validator = Validator::make($request->all(), [
       'question' => 'sometimes|string|max:255',
-      'answer' => 'sometimes|string|max:500',
+      'answer' => 'required',
     ]);
 
     if ($validator->fails()) {
