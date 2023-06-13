@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\Topic;
 use App\Models\Chapter;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,15 +59,38 @@ class SyllabusPreparationController extends Controller
    */
   public function store(Request $request)
   {
-    return $request;
   }
 
   /**
    * Display the specified resource.
    */
-  public function show()
+
+  public function show(Request $request)
   {
-    //
+    $book_id = $request->bookId;
+    $book = Book::findorfail($book_id);
+    $test_type = $request->testType;
+    $totalQuestions = $request->totalQuestions;
+    $topics = $request->topics;
+
+    // Retrieve random questions from the specified topics
+    $questions = Question::whereIn('topic_id', $topics)
+      ->inRandomOrder()
+      ->take($totalQuestions)
+      ->with('mcqChoices')
+      ->get();
+
+    $response = response()->view('syllabus-preparation.view', [
+      'test_type' => $test_type,
+      'book_name' => $book->name,
+      'totalQuestions' => $totalQuestions,
+      'questions' => $questions
+    ]);
+    $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    $response->header('Pragma', 'no-cache');
+    $response->header('Expires', '0');
+
+    return $response;
   }
 
   /**

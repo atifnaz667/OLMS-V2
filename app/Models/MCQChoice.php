@@ -14,4 +14,8 @@ class McqChoice extends Model
     'is_true',
     'reason'
   ];
+  public function question()
+  {
+    return $this->belongsTo(Question::class, 'question_id');
+  }
 }

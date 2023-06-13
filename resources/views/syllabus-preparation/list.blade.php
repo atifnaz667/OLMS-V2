@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveSelection">Start Preparation</button>
+                    <button type="button" class="btn btn-primary" id="startPreparation">Start Preparation</button>
                 </div>
             </div>
         </div>
@@ -58,13 +58,13 @@
                             </div>
                             <div class="card-title-elements ms-auto">
                                 <select id="test-type" name="test-type" class="form-select form-select-sm w-auto">
-                                    <option selected="">Option 1</option>
-                                    <option>Option 2</option>
-                                    <option>Option 3</option>
+                                    <option value="Objective">Objective</option>
+                                    <option value="Subjective">Subjective</option>
+                                    <option value="Objective">Option 3</option>
                                 </select>
                                 <button type="button" class="btn btn-sm btn-primary waves-effect waves-light"
-                                    data-bs-toggle="modal" data-bs-target="#chapterModal"
-                                    data-book-id="{{ $book->id }}">Go</button>
+                                    data-bs-toggle="modal" data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                    data-book-name="{{ $book->name }}">Go</button>
                             </div>
                         </div>
                         <p class="card-text">{{ Auth::user()->class->name }}</p>
@@ -94,6 +94,9 @@
                             chapterList +=
                                 '<input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' +
                                 chapter.id + '">';
+                            chapterList +=
+                                '<input type="hidden" id="book_id" value="' +
+                                chapter.book_id + '">';
                             chapterList +=
                                 '<h5 class="form-check-h5" for="chapter_' +
                                 chapter.id + '">' + chapter.name + '</h5>';
@@ -126,15 +129,13 @@
                 });
             });
 
-
             $('#checkAllChapters').change(function() {
                 var isChecked = $(this).prop('checked');
                 $('.chapter-checkbox').prop('checked', isChecked);
                 $('.topic-checkbox').prop('checked', isChecked);
             });
 
-
-            $('#saveSelection').click(function() {
+            $('#startPreparation').click(function() {
                 var selectedChapters = [];
                 var selectedTopics = [];
                 var testType = $('#test-type').val();
@@ -158,26 +159,61 @@
                     return;
                 }
 
-                var data = {
-                    totalQuestions: totalQuestions,
-                    testType: testType,
-                    chapters: selectedChapters,
-                    topics: selectedTopics
-                };
-                $.ajax({
-                    url: "{{ route('get-test-for-preparation') }}",
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    data: data,
-                    success: function(response) {
-
-                    }
+                var form = $('<form>', {
+                    'action': "{{ route('get-test-for-preparation') }}",
+                    'method': 'POST'
                 });
-                $('#chapterModal').modal('hide');
-            });
 
+                var csrfToken = $('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': "{{ csrf_token() }}"
+                });
+
+                var totalQuestionsInput = $('<input>', {
+                    'type': 'hidden',
+                    'name': 'totalQuestions',
+                    'value': totalQuestions
+                });
+
+                var testTypeInput = $('<input>', {
+                    'type': 'hidden',
+                    'name': 'testType',
+                    'value': testType
+                });
+
+                $.each(selectedChapters, function(index, chapterId) {
+                    var chapterInput = $('<input>', {
+                        'type': 'hidden',
+                        'name': 'chapters[]',
+                        'value': chapterId
+                    });
+                    form.append(chapterInput);
+                });
+                var bookId = $('#book_id').val();
+                alert(bookId)
+                var bookIdInput = $('<input>', {
+                    'type': 'hidden',
+                    'name': 'bookId',
+                    'value': bookId
+                });
+                form.append(bookIdInput);
+                $.each(selectedTopics, function(index, topicId) {
+                    var topicInput = $('<input>', {
+                        'type': 'hidden',
+                        'name': 'topics[]',
+                        'value': topicId
+                    });
+                    form.append(topicInput);
+                });
+
+                form.append(csrfToken);
+                form.append(totalQuestionsInput);
+                form.append(testTypeInput);
+
+                $('body').append(form);
+                form.submit();
+            });
         });
     </script>
 @endsection

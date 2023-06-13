@@ -27,8 +27,8 @@ class Question extends Model
   {
     return $this->hasOne(SlAnswer::class);
   }
-  public function mcq()
+  public function mcqChoices()
   {
-    return $this->hasMany(McqChoice::class);
+    return $this->hasMany(McqChoice::class, 'question_id');
   }
 }

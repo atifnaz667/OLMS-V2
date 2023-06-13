@@ -42,7 +42,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
 
   Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
   Route::get('fetch-chapters-topics/{id}', [SyllabusPreparationController::class, 'fetchData'])->name('fetch-chapters-topics');
-  Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'store'])->name('get-test-for-preparation');
+  Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'show'])->name('get-test-for-preparation');
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route

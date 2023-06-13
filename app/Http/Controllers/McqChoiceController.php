@@ -83,7 +83,7 @@ class McqChoiceController extends Controller
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
-      'questions.*.description' => 'required|string|max:255',
+      'questions.*.description' => 'required|string',
       'questions.*.option-a' => 'required|string',
       'questions.*.option-b' => 'required|string',
       'questions.*.option-c' => 'required|string',
