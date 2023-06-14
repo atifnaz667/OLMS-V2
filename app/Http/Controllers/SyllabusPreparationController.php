@@ -32,10 +32,58 @@ class SyllabusPreparationController extends Controller
   }
   public function fetchData($bookId, Request $request)
   {
+    $questionType = $request->questionType;
+    if ($questionType === 'Objective') {
+      $chapters = Chapter::whereHas('topics', function ($query) {
+        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+          ->where('questions.question_type', 'mcq');
+      })->where('book_id', $bookId)->get();
+
+      $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+        ->where('questions.question_type', 'mcq')
+        ->distinct()
+        ->get();
+    } elseif ($questionType === 'Conceptual') {
+      $chapters = Chapter::whereHas('topics', function ($query) {
+        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+          ->where('questions.question_nature', 'Conceptual');
+      })->where('book_id', $bookId)->get();
+
+      $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+        ->where('questions.question_nature', 'Conceptual')
+        ->distinct()
+        ->get();
+    } elseif ($questionType === 'Exercise') {
+      $chapters = Chapter::whereHas('topics', function ($query) {
+        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+          ->where('questions.question_nature', '!=', 'Exercise');
+      })->where('book_id', $bookId)->get();
+
+      $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+        ->where('questions.question_nature', '!=', 'Exercise')
+        ->distinct()
+        ->get();
+    } else {
+      $chapters = Chapter::whereHas('topics', function ($query) {
+        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+          ->where('questions.question_type', '!=', 'mcq');
+      })->where('book_id', $bookId)->get();
+
+      $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+        ->where('questions.question_type', '!=', 'mcq')
+        ->distinct()
+        ->get();
+    }
 
     // Fetch chapters and topics based on the book ID
-    $chapters = Chapter::where('book_id', $bookId)->get();
-    $topics = Topic::whereIn('chapter_id', $chapters->pluck('id'))->get();
 
     // Prepare the data to be sent as a response
     $data = [
@@ -64,21 +112,69 @@ class SyllabusPreparationController extends Controller
   /**
    * Display the specified resource.
    */
-
   public function show(Request $request)
   {
     $book_id = $request->bookId;
-    $book = Book::findorfail($book_id);
+    $book = Book::findOrFail($book_id);
     $test_type = $request->testType;
     $totalQuestions = $request->totalQuestions;
+    $totalLongQuestions = $request->totalLongQuestions;
+    $totalShortQuestions = $request->totalShortQuestions;
     $topics = $request->topics;
 
+    if ($test_type === 'Objective') {
+      $questions = Question::whereIn('topic_id', $topics)
+        ->where('question_type', 'mcq')
+        ->inRandomOrder()
+        ->take($totalQuestions)
+        ->with('mcqChoices')
+        ->get();
+    } elseif ($test_type === 'Conceptual') {
+      $longQuestions = Question::where('question_nature', 'Conceptual')
+        ->where('question_type', 'long')
+        ->whereIn('topic_id', $topics)
+        ->inRandomOrder()
+        ->take($totalLongQuestions)
+        ->with('answer')
+        ->get();
+
+      $shortQuestions = Question::where('question_nature', 'Conceptual')
+        ->where('question_type', 'short')
+        ->whereIn('topic_id', $topics)
+        ->inRandomOrder()
+        ->take($totalShortQuestions)
+        ->with('answer')
+        ->get();
+
+      $questions = $longQuestions->concat($shortQuestions);
+    } elseif ($test_type === 'Exercise') {
+      $longQuestions = Question::where('question_nature', 'Exercise')
+        ->where('question_type', 'long')
+        ->whereIn('topic_id', $topics)
+        ->inRandomOrder()
+        ->take($totalLongQuestions)
+        ->with('answer')
+        ->get();
+
+      $shortQuestions = Question::where('question_nature', 'Exercise')
+        ->where('question_type', 'short')
+        ->whereIn('topic_id', $topics)
+        ->inRandomOrder()
+        ->take($totalShortQuestions)
+        ->with('answer')
+        ->get();
+
+      $questions = $longQuestions->concat($shortQuestions);
+    } else {
+      $questions = Question::whereIn('topic_id', $topics)
+        ->where('question_type', '!=', 'mcq')
+        ->inRandomOrder()
+        ->take(2)
+        ->with('answer')
+        ->get();
+    }
+
     // Retrieve random questions from the specified topics
-    $questions = Question::whereIn('topic_id', $topics)
-      ->inRandomOrder()
-      ->take($totalQuestions)
-      ->with('mcqChoices')
-      ->get();
 
     $response = response()->view('syllabus-preparation.view', [
       'test_type' => $test_type,
@@ -92,6 +188,8 @@ class SyllabusPreparationController extends Controller
 
     return $response;
   }
+
+
 
   /**
    * Show the form for editing the specified resource.

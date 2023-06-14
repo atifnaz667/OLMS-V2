@@ -14,7 +14,7 @@
 
     <!-- The modal -->
     <div class="modal fade" id="chapterModal" tabindex="-1" aria-labelledby="chapterModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="chapterModalLabel">Select Chapters and Topics</h5>
@@ -25,6 +25,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="checkAllChapters">
                             <label class="form-check-label" for="checkAllChapters">Check All</label>
+                            <input type="hidden" class="form-control" required id="test-type" name="test-type">
                         </div>
                     </div>
 
@@ -37,6 +38,22 @@
                         <div class="mb-3">
                             <label class="form-label" for="class-name">Total Questions</label>
                             <input type="text" class="form-control" required id="total-questions" name="total-questions">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label" for="class-name">Total Long Questions</label>
+                            <input type="text" class="form-control" required id="total-long-questions"
+                                name="total-long-questions">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label" for="class-name">Total Short Questions</label>
+                            <input type="text" class="form-control" required id="total-short-questions"
+                                name="total-short-questions">
                         </div>
                     </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -52,19 +69,35 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="card-title header-elements">
-                            <h5 class="m-0 me-2"><i class="fa-solid fa-book fa-2xl" style="margin-right:1em"></i>
+                            <h5 class="m-0 me-2"><i class="fa-solid fa-book fa-2xl" style="margin-right:.5em"></i>
                                 {{ $book->name }}</h5>
                             <div class="card-title-elements">
                             </div>
                             <div class="card-title-elements ms-auto">
-                                <select id="test-type" name="test-type" class="form-select form-select-sm w-auto">
-                                    <option value="Objective">Objective</option>
-                                    <option value="Subjective">Subjective</option>
-                                    <option value="Objective">Option 3</option>
-                                </select>
-                                <button type="button" class="btn btn-sm btn-primary waves-effect waves-light"
-                                    data-bs-toggle="modal" data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
-                                    data-book-name="{{ $book->name }}">Go</button>
+                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                                    <button type="button" class="btn btn-outline-primary waves-effect"
+                                        data-bs-toggle="modal" data-bs-target="#chapterModal"
+                                        data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
+                                        data-question-type="Objective">Objective</button>
+                                    <div class="btn-group" role="group">
+                                        <button id="btnGroupDrop1" type="button"
+                                            class="btn btn-outline-danger dropdown-toggle waves-effect"
+                                            data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">Subjective</button>
+                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#chapterModal"
+                                                data-book-id="{{ $book->id }}" data-question-type="Subjective"
+                                                href="javascript:void(0);">Conceptual &
+                                                Exercise</a>
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#chapterModal"
+                                                data-book-id="{{ $book->id }}" data-question-type="Conceptual"
+                                                href="javascript:void(0);">Conceptual</a>
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                                data-question-type="Exercise" href="javascript:void(0);">Exercise</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <p class="card-text">{{ Auth::user()->class->name }}</p>
@@ -79,12 +112,30 @@
     <script>
         $(document).ready(function() {
             $('#chapterModal').on('show.bs.modal', function(event) {
+                $('#test-type').val("");
                 var button = $(event.relatedTarget);
                 var bookId = button.data('book-id');
+                var questionType = button.data('question-type');
+                $('#test-type').val(questionType);
+                var totalQuestionsField = $('#total-questions').closest('.row');
+                var totalLongQuestionsField = $('#total-long-questions').closest('.row');
+                var totalShortQuestionsField = $('#total-short-questions').closest('.row');
 
+                if (questionType === 'Objective') {
+                    totalQuestionsField.show();
+                    totalLongQuestionsField.hide();
+                    totalShortQuestionsField.hide();
+                } else {
+                    totalQuestionsField.hide();
+                    totalLongQuestionsField.show();
+                    totalShortQuestionsField.show();
+                }
                 // Fetch chapter and topic data using AJAX based on bookId
                 $.ajax({
                     url: "{{ route('fetch-chapters-topics', '') }}" + "/" + bookId,
+                    data: {
+                        questionType: questionType
+                    },
                     method: "GET",
                     success: function(response) {
                         // Build the chapter and topic checkboxes dynamically
@@ -140,6 +191,8 @@
                 var selectedTopics = [];
                 var testType = $('#test-type').val();
                 var totalQuestions = $('#total-questions').val();
+                var totalLongQuestions = $('#total-long-questions').val();
+                var totalShortQuestions = $('#total-short-questions').val();
 
                 $('.chapter-checkbox:checked').each(function() {
                     selectedChapters.push($(this).attr('id').split('_')[1]);
@@ -150,13 +203,22 @@
                 });
 
                 if (selectedTopics.length === 0) {
-                    alert('Please select at least one chapter and one topic.');
+                    alert('Please select at least  one topic.');
                     return;
                 }
+                var questionType = $('#test-type').val();
+                if (questionType === 'Objective') {
+                    if (totalQuestions.trim() === '') {
+                        alert('Please enter the total number of questions.');
+                        return;
+                    }
 
-                if (totalQuestions.trim() === '') {
-                    alert('Please enter the total number of questions.');
-                    return;
+                } else {
+                    if (totalLongQuestions.trim() === '' || totalShortQuestions.trim() === '') {
+                        alert('Please enter the total number of both questions.');
+                        return;
+                    }
+
                 }
 
                 var form = $('<form>', {
@@ -176,6 +238,18 @@
                     'value': totalQuestions
                 });
 
+                var totalLongQuestionsInput = $('<input>', {
+                    'type': 'hidden',
+                    'name': 'totalLongQuestions',
+                    'value': totalLongQuestions
+                });
+
+                var totalShortQuestionsInput = $('<input>', {
+                    'type': 'hidden',
+                    'name': 'totalShortQuestions',
+                    'value': totalShortQuestions
+                });
+
                 var testTypeInput = $('<input>', {
                     'type': 'hidden',
                     'name': 'testType',
@@ -191,7 +265,6 @@
                     form.append(chapterInput);
                 });
                 var bookId = $('#book_id').val();
-                alert(bookId)
                 var bookIdInput = $('<input>', {
                     'type': 'hidden',
                     'name': 'bookId',
@@ -209,6 +282,8 @@
 
                 form.append(csrfToken);
                 form.append(totalQuestionsInput);
+                form.append(totalLongQuestionsInput);
+                form.append(totalShortQuestionsInput);
                 form.append(testTypeInput);
 
                 $('body').append(form);

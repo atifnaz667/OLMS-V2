@@ -62,7 +62,8 @@
                                         @if ($key % 2 == 1)
                                             <li class="list-group-item">
                                                 <label class="form-check-label">
-                                                    <span class="option-label">{{ $choiceNames[($key - 1) / 2 + 2] }})</span>
+                                                    <span
+                                                        class="option-label">{{ $choiceNames[($key - 1) / 2 + 2] }})</span>
                                                     {{ $choice->choice }}
                                                 </label>
                                             </li>
@@ -71,6 +72,17 @@
                                 </ul>
                             </div>
                         </div>
+                        @if ($test_type !== 'Objective')
+                            <button class="btn btn-primary mt-3"
+                                onclick="toggleAnswer({{ $questionIndex }})">Answer</button>
+                            <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
+                                <h6>Answer:</h6>
+                                {!! $question->answer->answer !!}
+                                @if ($question->answer->image)
+                                    <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -82,4 +94,10 @@
 @endsection
 
 @section('page2-script')
+    <script>
+        function toggleAnswer(questionIndex) {
+            var answerText = document.getElementById('answer' + questionIndex);
+            answerText.classList.toggle('d-none');
+        }
+    </script>
 @endsection
