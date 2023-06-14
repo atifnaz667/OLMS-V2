@@ -44,4 +44,6 @@ Route::middleware([ParentMiddleware::class])->group(function () {
   Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('test/books');
   Route::get('test/chapters', [TestController::class, 'getChaptersForTest'])->name('test/chapters');
   Route::post('test/store', [TestController::class, 'store'])->name('test/store');
+  Route::get('test/list', [TestController::class, 'index'])->name('test/list');
+  Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
 });

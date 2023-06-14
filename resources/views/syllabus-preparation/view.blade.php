@@ -75,8 +75,8 @@
                         @if ($test_type !== 'Objective')
                             <button class="btn btn-primary mt-3"
                                 onclick="toggleAnswer({{ $questionIndex }})">Answer</button>
-                            <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
-                                <h6>Answer:</h6>
+                            <div class="card-text answer-text d-none mb-5" id="answer{{ $questionIndex }}">
+<br>
                                 {!! $question->answer->answer !!}
                                 @if ($question->answer->image)
                                     <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">

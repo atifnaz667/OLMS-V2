@@ -12,5 +12,8 @@ $configData = Helper::appClasses();
   <div class="col-sm-3">
     <a href="test/create" class="form-control btn btn-primary">Create Test</a>
   </div>
+  <div class="col-sm-3">
+    <a href="test/list" class="form-control btn btn-primary">Tests List</a>
+  </div>
 </div>
 @endsection

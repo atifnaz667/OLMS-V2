@@ -23,7 +23,15 @@ class TestController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 */
-	public function index(Request $request)
+	public function index()
+	{
+    return view('test.list');
+
+  }
+	/**
+	 * Display a listing of the resource.
+	 */
+	public function fetchTestsRecords(Request $request)
 	{
     $rules = [
       'perPage' => 'integer|min:1',
@@ -43,30 +51,47 @@ class TestController extends Controller
       $from = $request->input('from');
       $to = $request->input('to');
       $status = $request->input('status');
+      $test_type = $request->input('type');
 
-      $tests = Test::
-        when($from, function ($query) use ($from) {
-          $query->where('created_at', '>',$from);
+      $user_id = Auth::user()->id;
+      $created_for = null;
+      $created_by = null;
+      if(Auth::user()->role_id == 4){
+        $created_for = $user_id;
+      }else{
+        $created_by = $user_id;
+      }
+      $tests = Test::when($from, function ($query) use ($from) {
+          $query->where('created_at', '>',$from. " 00:00:00");
         })
         ->when($to, function ($query) use ($to) {
-          $query->where('created_at', '<',$to);
+          $query->where('created_at', '<',$to. " 23:59:59");
         })
         ->when($status, function ($query) use ($status) {
           $query->where('status',$status);
         })
+        ->when($test_type, function ($query) use ($test_type) {
+          $query->where('test_type',$test_type);
+        })
+        ->when($created_by, function ($query) use ($created_by) {
+          $query->where('created_by',$created_by);
+        })
+        ->when($created_for, function ($query) use ($created_for) {
+          $query->where('created_for',$created_for);
+        })
         ->orderBy($sorting, $sort_order)->paginate($perPage);
-
-      $data = $tests->map(function ($chapter) {
+      $data = $tests->map(function ($tests) {
         return [
-          'id' => $chapter->id,
-          'board' => $chapter->board->name,
-          'book' => $chapter->book->name,
-          'class' => $chapter->class->name,
-          'book_edition' => $chapter->book_edition,
-          'chapter_no' => $chapter->chapter_no,
-          'name' => $chapter->name,
-          'created_at' => $chapter->created_at,
-          'updated_at' => $chapter->updated_at,
+          'id' => $tests->id,
+          'user' => Auth::user()->role_id == 4 ? $tests->createdBy->name : $tests->createdFor->name,
+          'book' => $tests->book->name,
+          'status' => $tests->status,
+          'obtained_marks' => $tests->obtained_marks,
+          'total_marks' => $tests->total_questions,
+          'test_type' => $tests->test_type,
+          'attempted_at' => $tests->attempted_at,
+          'test_date' => $tests->test_date,
+          'created_at' => $tests->created_at,
         ];
       });
 
@@ -115,6 +140,7 @@ class TestController extends Controller
       'totalQuestions' => 'required|int|max:100',
       'chapters' => 'required',
       'testUserId' => 'required',
+      'book' => 'required',
     );
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -126,6 +152,7 @@ class TestController extends Controller
         $testDate = $request->testDate ?? Date('Y-m-d');
         $totalQuestions = $request->totalQuestions ?? 10;
         $chapters = $request->chapters;
+        $book = $request->book;
         $questionTime = $request->questionTime;
         $users = $this->getUsersForTest($request);
         foreach ($users as $user) {
@@ -134,7 +161,7 @@ class TestController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Invalid User provided for test creation'], 422);
           }
-          $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $user->id, $testDate,$questionTime);
+          $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $user->id, $testDate,$questionTime,$book);
           if (!$storeTest) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
@@ -182,7 +209,7 @@ class TestController extends Controller
 		//
 	}
 
-  public function storeTest($chapters, $totalQuestions, $createdBy, $createdFor,$testDate,$questionTime){
+  public function storeTest($chapters, $totalQuestions, $createdBy, $createdFor,$testDate,$questionTime, $book){
     $topics = Topic::whereIn('chapter_id',$chapters)->get()->pluck('id');
     $questions = Question::inRandomOrder()->where('question_type','mcq')->whereIn('topic_id',$topics)->limit($totalQuestions)->get();
     if (count($questions) == 0) {
@@ -194,6 +221,8 @@ class TestController extends Controller
     $test->status = 'Pending';
     $test->test_date = $testDate;
     $test->question_time = $questionTime;
+    $test->total_questions = $totalQuestions;
+    $test->book_id = $book;
     $test->save();
     foreach ($questions as $question) {
       $testChild = new TestChild;
@@ -201,6 +230,7 @@ class TestController extends Controller
       $testChild->question_id = $question->id;
       $testChild->save();
     }
+    return true;
   }
 
   public function getUsersForTest($req){

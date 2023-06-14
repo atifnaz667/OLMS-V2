@@ -60,13 +60,13 @@ class SyllabusPreparationController extends Controller
     } elseif ($questionType === 'Exercise') {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', '!=', 'Exercise');
+          ->where('questions.question_nature', '=', 'Exercise');
       })->where('book_id', $bookId)->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
-        ->where('questions.question_nature', '!=', 'Exercise')
+        ->where('questions.question_nature', '=', 'Exercise')
         ->distinct()
         ->get();
     } else {
@@ -169,7 +169,7 @@ class SyllabusPreparationController extends Controller
       $questions = Question::whereIn('topic_id', $topics)
         ->where('question_type', '!=', 'mcq')
         ->inRandomOrder()
-        ->take(2)
+        ->take($totalLongQuestions+$totalShortQuestions)
         ->with('answer')
         ->get();
     }
