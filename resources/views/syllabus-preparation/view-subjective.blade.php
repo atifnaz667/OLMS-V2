@@ -15,11 +15,24 @@
             color: #7367F0
         }
     </style>
-
-    <h4 class="fw-bold py-3 mb-2">
+    <h4 class="fw-bold py-3 mb-3">
         <span class="text-muted fw-light">Syllabus/</span>
         Preparation
     </h4>
+  <div class="row">
+    <div class="col-6">
+          <h5>Subject: {{ $book_name }}</h5>
+      </div>
+      <div class="col-6 text-end">
+          <h5><span>Class: {{ Auth::user()->class->name }}</span></h5>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col text-center">
+        <h2 class="fw-bold">{{ $test_type }} Paper</h2>
+      </div>
+    </div>
 
     @php
         $questionIndex = 1;
@@ -43,20 +56,6 @@
         <div class="tab-content">
             <!-- Short Question -->
             <div class="tab-pane fade active show" id="form-tabs-short" role="tabpanel">
-              <div class="row">
-                <div class="col-6">
-                      <h5>Subject: {{ $book_name }}</h5>
-                  </div>
-                  <div class="col-6 text-end">
-                      <h5><span>Class: {{ Auth::user()->class->name }}</span></h5>
-                  </div>
-                </div>
-
-                <div class="row mt-4">
-                  <div class="col text-center">
-                    <h2 class="fw-bold">{{ $test_type }} Paper</h2>
-                  </div>
-                </div>
                 @foreach ($questions as $question)
                     <div class="row mt-4">
                         <div class="col">
@@ -121,25 +120,6 @@
             </div>
             <!-- Long Question -->
             <div class="tab-pane fade" id="form-tabs-long" role="tabpanel">
-              <div class="row">
-                <div class="col-6">
-                    <h5>Subject: {{ $book_name }}</span>
-                    </h5>
-                </div>
-                <div class="col-6 text-end">
-                  <h5><span>Class:
-                    {{ Auth::user()->class->name }}</span>
-            </h5>
-
-                </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col text-center">
-                    <h2 class="fw-bold">{{ $test_type }} Paper</h2>
-                </div>
-            </div>
-
             @foreach ($questions as $question)
             <div class="row mt-4">
                 <div class="col">

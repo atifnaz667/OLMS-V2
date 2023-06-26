@@ -1,0 +1,40 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "pages-home"
+    },
+    {
+      "url": "book",
+      "icon": "menu-icon tf-icons ti ti-file",
+      "name": "Board Book Class",
+      "slug": "pages-page-2"
+    },
+    {
+      "url": "chapter",
+      "name": "Chapters",
+      "icon": "menu-icon tf-icons ti ti-alert-triangle",
+      "slug": "pages-misc-error"
+    },
+    {
+      "url": "topic",
+      "name": "Topics",
+      "icon": "menu-icon tf-icons ti ti-login",
+      "slug": "auth-login-basic"
+    },
+    {
+      "url": "question",
+      "name": "Questions",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "auth-register-basic"
+    },
+    {
+      "url": "mcq-choice",
+      "name": "Multiple Choices",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "auth-register-basic"
+    }
+  ]
+}
