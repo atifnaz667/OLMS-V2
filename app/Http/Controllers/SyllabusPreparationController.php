@@ -60,13 +60,13 @@ class SyllabusPreparationController extends Controller
     } elseif ($questionType === 'Exercise') {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', '=', 'Exercise');
+          ->where('questions.question_nature', 'Exercise');
       })->where('book_id', $bookId)->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
-        ->where('questions.question_nature', '=', 'Exercise')
+        ->where('questions.question_nature', 'Exercise')
         ->distinct()
         ->get();
     } else {
@@ -166,17 +166,30 @@ class SyllabusPreparationController extends Controller
 
       $questions = $longQuestions->concat($shortQuestions);
     } else {
-      $questions = Question::whereIn('topic_id', $topics)
-        ->where('question_type', '!=', 'mcq')
+      $longQuestions = Question::where('question_type', 'long')
+        ->whereIn('topic_id', $topics)
         ->inRandomOrder()
-        ->take($totalLongQuestions+$totalShortQuestions)
+        ->take($totalLongQuestions)
         ->with('answer')
         ->get();
+
+      $shortQuestions = Question::where('question_type', 'short')
+        ->whereIn('topic_id', $topics)
+        ->inRandomOrder()
+        ->take($totalShortQuestions)
+        ->with('answer')
+        ->get();
+
+      $questions = $longQuestions->concat($shortQuestions);
     }
 
     // Retrieve random questions from the specified topics
+    if ($test_type === 'Objective')
+      $view = 'syllabus-preparation.view-objective';
+    else
+      $view = 'syllabus-preparation.view-subjective';
 
-    $response = response()->view('syllabus-preparation.view', [
+    $response = response()->view($view, [
       'test_type' => $test_type,
       'book_name' => $book->name,
       'totalQuestions' => $totalQuestions,
