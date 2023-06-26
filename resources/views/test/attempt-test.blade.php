@@ -46,10 +46,9 @@ $customizerHidden = ($customizerHidden ?? '');
 
       var timeLeft = 90; // Set the initial time in seconds
       var timerElement = $('#timer'); // Get the timer element
-        $(document).ready(function() {
 
-          // Function to update the timer display
-          function updateTimer() {
+      // Function to update the timer display
+      function updateTimer() {
             timerElement.text(timeLeft);
              // Update the timer display
 
@@ -64,8 +63,6 @@ $customizerHidden = ($customizerHidden ?? '');
             }
           }
 
-          // Call the updateTimer function every second
-          fetchTestRecords();
           var timer = setInterval(updateTimer, 1000);
           function fetchTestRecords() {
               var test_id = $('#test_id').val();
@@ -87,7 +84,8 @@ $customizerHidden = ($customizerHidden ?? '');
                   }
               });
           }
-
+        $(document).ready(function() {
+          fetchTestRecords();
         });
 
         function submitAnswer(){
