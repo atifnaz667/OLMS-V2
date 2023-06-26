@@ -1,0 +1,34 @@
+{
+  "menu": [
+    {
+      "url": "/",
+      "name": "Dashboard",
+      "icon": "menu-icon tf-icons ti ti-layout-dashboard",
+      "slug": "pages-home"
+    },
+    {
+      "url": "syllabus-preparation",
+      "icon": "menu-icon tf-icons ti ti-book",
+      "name": "Full Syllabus Preparation",
+      "slug": "pages-page-2"
+    },
+    {
+      "url": "",
+      "name": "Student Self Test",
+      "icon": "menu-icon tf-icons ti ti-clipboard-text",
+      "slug": "pages-misc-error"
+    },
+    {
+      "url": "test/list",
+      "name": "Attempt Daily Test",
+      "icon": "menu-icon tf-icons ti ti-file-certificate",
+      "slug": "auth-login-basic"
+    },
+    {
+      "url": "",
+      "name": "Result Reports",
+      "icon": "menu-icon tf-icons ti ti-chart-infographic",
+      "slug": "auth-register-basic"
+    }
+  ]
+}

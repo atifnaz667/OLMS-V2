@@ -37,12 +37,12 @@
         data-bs-delay="2000">
         <div class="toast-header">
             <i class="ti ti-bell ti-xs me-2"></i>
-            <div class="me-auto fw-semibold">Bootstrap</div>
-            <small class="text-muted">11 mins ago</small>
+            <div class="me-auto fw-semibold">Error</div>
+            <small class="text-muted"></small>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-            Hello, world! This is a toast messagesss.
+          There is some error
         </div>
     </div>
     <!-- Layout Content -->
