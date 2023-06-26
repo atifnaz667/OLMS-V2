@@ -24,4 +24,8 @@ class Test extends Model
     public function testChildren(){
       return $this->hasMany(TestChild::class);
     }
+
+    public function childToAttempt(){
+      return $this->hasOne(TestChild::class)->where('is_viewed',0);
+    }
 }

@@ -29,6 +29,6 @@ class Question extends Model
   }
   public function mcqChoices()
   {
-    return $this->hasMany(McqChoice::class, 'question_id');
+    return $this->hasMany(McqChoice::class, 'question_id')->inRandomOrder();
   }
 }

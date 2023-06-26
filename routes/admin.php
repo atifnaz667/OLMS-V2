@@ -46,6 +46,7 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   Route::post('test/instructions', [AttemptTestController::class, 'create'])->name('test/instructions');
   Route::post('test/attempt', [AttemptTestController::class, 'show'])->name('test/attempt');
   Route::post('attempt-test-ajax', [AttemptTestController::class, 'attemptTestAjax'])->name('attempt-test-ajax');
+  Route::post('store-test-answer', [AttemptTestController::class, 'store'])->name('store-test-answer');
 });
 
 

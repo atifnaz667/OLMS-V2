@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\McqChoice;
 use App\Models\Test;
+use App\Models\TestChild;
 use App\Services\CustomErrorMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,14 +33,35 @@ class AttemptTestController extends Controller
       if ($test->attempted_child_count == 0) {
         return view('test.Instructions',['test'=>$test]);
       }else{
-        return view('test.attempt-test');
+        return view('test.attempt-test',['test_id'=>$req->test->id]);
       }
     }
 
 
-    public function attemptTestAjax()
+    public function attemptTestAjax(Request $req)
     {
-      return view('test.attempt-test-ajax');
+      $test = Test::find($req->test_id);
+      $attemptedCount = TestChild::where([['test_id',$req->test_id],['is_viewed',1]])->count();
+      if ($attemptedCount == 0) {
+        $testChild = TestChild::where('test_id',$test->id)->first();
+        $testChild->is_viewed = 1;
+        $testChild->viewed_at = date("Y-m-d H:i:s");
+        $testChild->save();
+        $childToAttempt = TestChild::with('question.mcqChoices')->find($testChild->id);
+      }else{
+        $testChild = TestChild::with('question.mcqChoices')->where([['test_id',$req->test_id],['is_viewed',1]])->orderBy('id','desc')->first();
+        if ($test->question_time >  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )) {
+          $childToAttempt = $testChild;
+        }else{
+          $testChild = TestChild::where([['test_id',$req->test_id],['is_viewed',0]])->first();
+          $testChild->is_viewed = 1;
+          $testChild->viewed_at = date("Y-m-d H:i:s");
+          $testChild->save();
+          $childToAttempt = TestChild::with('question.mcqChoices')->find($testChild->id);
+        }
+
+      }
+      return view('test.attempt-test-ajax',['test'=>$test, 'attemptedCount'=>$attemptedCount,'childToAttempt'=>$childToAttempt]);
         //
     }
 
@@ -47,7 +70,18 @@ class AttemptTestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $testChild = TestChild::with('test')->find($request->test_child_id);
+        $mcq_id = null;
+        if ($testChild->test->question_time >=  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )) {
+          $mcq_id = $request->mcq_id;
+        }
+        $mcq = McqChoice::find($mcq_id);
+        $testChild->mcq_choice_id;
+        $testChild->is_correct = $mcq->is_true ?? 0;
+        $testChild->save();
+
+      return view('test.attempt-test',['test_id'=>$request->test_id]);
+
     }
 
     /**
@@ -55,7 +89,7 @@ class AttemptTestController extends Controller
      */
     public function show(Request $req)
     {
-      return view('test.attempt-test');
+      return view('test.attempt-test',['test_id'=>$req->test_id]);
     }
 
     /**

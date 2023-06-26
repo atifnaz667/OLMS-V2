@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class TestChild extends Model
 {
     use HasFactory;
+
+    public function question(){
+      return $this->belongsTo(Question::class);
+    }
+
+    public function test(){
+      return $this->belongsTo(Test::class);
+    }
 }
