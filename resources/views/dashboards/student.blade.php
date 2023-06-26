@@ -17,7 +17,7 @@ $configData = Helper::appClasses();
     <a href="syllabus-preparation" class="form-control btn btn-primary">Student Self Tests</a>
   </div>
   <div class="col-sm-3">
-    <a href="syllabus-preparation" class="form-control btn btn-primary">Attempt Daily Tests</a>
+    <a href="test/list" class="form-control btn btn-primary">Attempt Daily Tests</a>
   </div>
   <div class="col-sm-3">
     <a href="syllabus-preparation" class="form-control btn btn-primary">Results Reports</a>

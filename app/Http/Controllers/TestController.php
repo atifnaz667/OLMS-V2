@@ -85,13 +85,13 @@ class TestController extends Controller
           'id' => $tests->id,
           'user' => Auth::user()->role_id == 4 ? $tests->createdBy->name : $tests->createdFor->name,
           'book' => $tests->book->name,
-          'status' => $tests->status,
+          'status' => $tests->status == 'Pending' ? '<span class="badge rounded bg-label-warning">'.$tests->status.'</span>' : '<span class="badge rounded bg-label-success">'.$tests->status.'</span>',
           'obtained_marks' => $tests->obtained_marks,
           'total_marks' => $tests->total_questions,
           'test_type' => $tests->test_type,
-          'attempted_at' => $tests->attempted_at,
-          'test_date' => $tests->test_date,
-          'created_at' => $tests->created_at,
+          'attempted_at' => Helpers::formatDate($tests->attempted_at),
+          'test_date' => Helpers::formatDate($tests->test_date),
+          'created_at' => Helpers::formatDate($tests->created_at),
         ];
       });
 

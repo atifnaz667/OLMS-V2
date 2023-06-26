@@ -20,4 +20,8 @@ class Test extends Model
     public function book(){
       return $this->belongsTo(Book::class);
     }
+
+    public function testChildren(){
+      return $this->hasMany(TestChild::class);
+    }
 }

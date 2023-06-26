@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AssignUserController;
+use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\SyllabusPreparationController;
@@ -20,6 +21,9 @@ Route::middleware([AlreadyLoggedIn::class])->group(function () {
 //------------------------------Common Routes--------------------------
 Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+  Route::get('test/list', [TestController::class, 'index'])->name('test/list');
+  Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
+
 });
 
 
@@ -36,6 +40,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
 Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('syllabus-preparation', [SyllabusPreparationController::class, 'index']);
+
+  //----------------------------Attempt Test ROutes--------------------------------
+  Route::get('tests', [AttemptTestController::class, 'index']);
+  Route::post('test/instructions', [AttemptTestController::class, 'create'])->name('test/instructions');
+  Route::post('test/attempt', [AttemptTestController::class, 'show'])->name('test/attempt');
+  Route::post('attempt-test-ajax', [AttemptTestController::class, 'attemptTestAjax'])->name('attempt-test-ajax');
 });
 
 
@@ -44,6 +54,4 @@ Route::middleware([ParentMiddleware::class])->group(function () {
   Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('test/books');
   Route::get('test/chapters', [TestController::class, 'getChaptersForTest'])->name('test/chapters');
   Route::post('test/store', [TestController::class, 'store'])->name('test/store');
-  Route::get('test/list', [TestController::class, 'index'])->name('test/list');
-  Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
 });

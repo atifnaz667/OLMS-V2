@@ -14,19 +14,16 @@
 
 @section('content')
 
-    <h4 class="fw-bold py-3 mb-4">
+    <h4 class="fw-bold py-1 ">
         <span class="text-muted fw-light">Home/</span>
         Tests
     </h4>
     <!-- Sticky Actions -->
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div
-                    class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                    <h5 class="card-title mb-sm-0 me-2">Listing</h5>
-                </div>
+            <div class="card" style="border-top: 3px solid #7367f0">
                 <div class="card-body">
+
                     <div class="row">
                         <div class="col-md">
                             <label class="form-label" for="board_id">Date From</label>
@@ -147,10 +144,12 @@
                                     '<td>' + test.created_at + '</td>' +
                                     '<td>' + test.test_date + '</td>' +
                                     '<td>' + test.attempted_at  + '</td>' +
-                                    "<td>" +
-                                    "<a class=\"btn-icon delete-test\" data-id='" +
+                                    "<td> @if(Auth::user()->role_id == 4)" +
+                                    "@if("+test.test_date+" <= date('Y-m-d'))"+
+                                    ' <form action="instructions" method="post"> @csrf <input value="'+test.id+'" type="hidden" name="test_id"> <button class="btn btn-sm btn-primary mt-1" type="submit" >Attempt</button> </form> @endif' +
+                                    "@else <a class=\"btn-icon delete-test\" data-id='" +
                                     test.id +
-                                    "'><i class=\"ti ti-trash\"></i></a>" +
+                                    "'><i class=\"ti ti-trash\"></i></a> @endif" +
                                     "</td>" +
                                     '</tr>';
                                 tableBody.append(row);
@@ -162,7 +161,7 @@
                         tableBody.append(row);
                         }
                     } else {
-                      console.log(error)
+                      console.log('Record not found')
                     }
 
                     updatePaginationUI();
