@@ -28,4 +28,8 @@ class Test extends Model
     public function childToAttempt(){
       return $this->hasOne(TestChild::class)->where('is_viewed',0);
     }
+
+    public function obtainedMarks(){
+      return $this->hasMany(TestChild::class)->where('is_correct',1);
+    }
 }

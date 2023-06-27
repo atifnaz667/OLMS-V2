@@ -144,13 +144,7 @@
                                     '<td>' + test.created_at + '</td>' +
                                     '<td>' + test.test_date + '</td>' +
                                     '<td>' + test.attempted_at  + '</td>' +
-                                    "<td> @if(Auth::user()->role_id == 4)" +
-                                    "@if("+test.test_date+" <= date('Y-m-d'))"+
-                                    ' <form action="instructions" method="post"> @csrf <input value="'+test.id+'" type="hidden" name="test_id"> <button class="btn btn-sm btn-primary mt-1" type="submit" >Attempt</button> </form> @endif' +
-                                    "@else <a class=\"btn-icon delete-test\" data-id='" +
-                                    test.id +
-                                    "'><i class=\"ti ti-trash\"></i></a> @endif" +
-                                    "</td>" +
+                                    '<td> '+ test.formStart +' @csrf '+ test.formEnd +'</td>' +
                                     '</tr>';
                                 tableBody.append(row);
                             });

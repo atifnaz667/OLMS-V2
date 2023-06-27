@@ -17,15 +17,15 @@ class HomePage extends Controller
 
     }elseif ($role_id == 4) {
 
-      return view('dashboards.Student');
+      return view('dashboards.student');
 
     }elseif ($role_id == 2) {
 
-      return view('dashboards.Parent');
+      return view('dashboards.parent');
 
     }elseif ($role_id == 3) {
 
-      return view('dashboards.Teacher');
+      return view('dashboards.teacher');
     }
   }
 

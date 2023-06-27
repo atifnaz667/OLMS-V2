@@ -8,6 +8,7 @@ use App\Models\TestChild;
 use App\Services\CustomErrorMessages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AttemptTestController extends Controller
@@ -40,6 +41,13 @@ class AttemptTestController extends Controller
 
     public function attemptTestAjax(Request $req)
     {
+      $rules = array(
+        'test_id' => 'required|int|exists:tests,id',
+      );
+      $validator = Validator::make($req->all(), $rules);
+      if ($validator->fails()) {
+        return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+      }
       $test = Test::find($req->test_id);
       $attemptedCount = TestChild::where([['test_id',$req->test_id],['is_viewed',1]])->count();
       if ($attemptedCount == 0) {
@@ -73,21 +81,52 @@ class AttemptTestController extends Controller
      */
     public function store(Request $request)
     {
-        $testChild = TestChild::with('test')->find($request->test_child_id);
-        $mcq_id = null;
-        if ($testChild->test->question_time >=  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )) {
-          $mcq_id = $request->mcq_id;
+        $rules = array(
+          'test_child_id' => 'required|int|exists:test_children,id',
+          'test_id' => 'required|int|exists:tests,id',
+        );
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+          return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
         }
-        $mcq = McqChoice::find($mcq_id);
 
-        $testChild = TestChild::find($request->test_child_id);
-        $testChild->mcq_choice_id = $mcq_id;
-        $testChild->is_correct = $mcq->is_true ?? 0;
-        $testChild->is_attempted = 1;
-        $testChild->save();
+        $result = $this->validateTest($request);
+        if ($result['status'] == 'error') {
+          return response()->json(['status' => 'error', 'message' => $result['message']], 422);
+        }
+        try{
+          $isExpired = 1;
+          DB::transaction(function () use($request, &$isExpired){
+            $testChild = TestChild::with('test')->find($request->test_child_id);
+            $mcq_id = null;
+            if ($testChild->test->question_time >=  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )) {
+              $mcq_id = $request->mcq_id;
+              $isExpired = 0;
+            }
+            $mcq = McqChoice::find($mcq_id);
 
-      return true;
+            $testChild = TestChild::find($request->test_child_id);
+            $testChild->mcq_choice_id = $mcq_id;
+            $testChild->is_correct = $mcq->is_true ?? 0;
+            $testChild->is_attempted = 1;
+            $testChild->save();
 
+            $nextChild = TestChild::where([['test_id',$testChild->test_id],['id','>',$testChild->id]])->first();
+            if (!$nextChild) {
+              $test = Test::find($testChild->test_id);
+              $test->status = 'Attempted';
+              $test->save();
+            }
+          });
+
+          if ($isExpired == 1) {
+            return response()->json(['status' => 'error', 'message' => 'Time limit for the question exceeded.']);
+          }
+          return response()->json(['status' => 'success', 'message' => 'Answer stored successfully']);
+        } catch (\Exception $e) {
+        $message = CustomErrorMessages::getCustomMessage($e);
+        return response()->json(['status' => 'error', 'message' => $message], 500);
+      }
     }
 
     /**
@@ -140,6 +179,8 @@ class AttemptTestController extends Controller
           return ['status' => 'error', 'message' => "You can't attempt test before test date"];
         }elseif($test->status == 'Completed'){
           return ['status' => 'error', 'message' => "You have already taken the test"];
+        }elseif($test->expiry_date != null && $test->expiry_date < date('Y-m-d')){
+          return ['status' => 'error', 'message' => "This test is expired now"];
         }
         return ['status'=>'success', 'test'=>$test];
       } catch (\Exception $e) {

@@ -89,6 +89,7 @@ $customizerHidden = ($customizerHidden ?? '');
         });
 
         function submitAnswer(){
+          const toastAnimationExample = document.querySelector('.toast-ex');
             var checkboxes = document.getElementsByName("checkboxGroup");
             var selectedValue = '';
             for (var i = 0; i < checkboxes.length; i++) {
@@ -112,6 +113,18 @@ $customizerHidden = ($customizerHidden ?? '');
                   },
                   success: function(response) {
                     fetchTestRecords();
+                    var status = response.status;
+                        var message = response.message;
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+
+                        // Show the toast notification
+                        selectedType = "text-success";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
                   },
                   error: function(xhr, status, error) {
                       console.error(error);

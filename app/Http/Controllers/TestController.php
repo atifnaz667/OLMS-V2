@@ -61,7 +61,7 @@ class TestController extends Controller
       }else{
         $created_by = $user_id;
       }
-      $tests = Test::when($from, function ($query) use ($from) {
+      $tests = Test::withCount('obtainedMarks')->when($from, function ($query) use ($from) {
           $query->where('created_at', '>',$from. " 00:00:00");
         })
         ->when($to, function ($query) use ($to) {
@@ -80,17 +80,33 @@ class TestController extends Controller
           $query->where('created_for',$created_for);
         })
         ->orderBy($sorting, $sort_order)->paginate($perPage);
-      $data = $tests->map(function ($tests) {
+        $data = $tests->map(function ($tests) {
+        $formStart = '';
+        $formEnd = '';
+        if (Auth::user()->role_id == 4 && $tests->status == 'Pending' && $tests->test_date <= date('Y-m-d') && ($tests->expiry_date == null || $tests->expiry_date >= date("Y-m-d"))) {
+          $formStart = "<form action='instructions' method='post'> ";
+          $formEnd = "<input value='".$tests->id."' type='hidden' name='test_id'> <button class='btn btn-sm btn-primary mt-1' type='submit' >Attempt</button> </form>";
+        }
+        if ($tests->expiry_date != null && $tests->expiry_date < date("Y-m-d")) {
+          $status = '<span class="badge rounded bg-label-danger">Expired</span>';
+        }elseif ($tests->status == 'Pending') {
+          $status = '<span class="badge rounded bg-label-warning">'.$tests->status.'</span>';
+        }elseif ($tests->status == 'Attempted') {
+          $status = '<span class="badge rounded bg-label-success">'.$tests->status.'</span>';
+        }
         return [
           'id' => $tests->id,
           'user' => Auth::user()->role_id == 4 ? $tests->createdBy->name : $tests->createdFor->name,
           'book' => $tests->book->name,
-          'status' => $tests->status == 'Pending' ? '<span class="badge rounded bg-label-warning">'.$tests->status.'</span>' : '<span class="badge rounded bg-label-success">'.$tests->status.'</span>',
-          'obtained_marks' => $tests->obtained_marks,
+          'status' =>  $status,
+          'formStart' => $formStart,
+          'formEnd' => $formEnd,
+          'obtained_marks' => $tests->status == 'Attempted' ? $tests->obtained_marks_count : 0,
           'total_marks' => $tests->total_questions,
           'test_type' => $tests->test_type,
           'attempted_at' => Helpers::formatDate($tests->attempted_at),
           'test_date' => Helpers::formatDate($tests->test_date),
+          'expiry_date' => Helpers::formatDate($tests->expiry_date),
           'created_at' => Helpers::formatDate($tests->created_at),
         ];
       });

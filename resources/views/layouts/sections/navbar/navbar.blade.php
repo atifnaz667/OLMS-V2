@@ -83,13 +83,27 @@ $navbarDetached = ($navbarDetached ?? '');
               <li>
                 <div class="dropdown-divider"></div>
               </li>
+              @if (Auth::user()->role_id == 4)
+                <li>
+                <a class="dropdown-item" href="#">
+                  <i class="menu-icon tf-icons ti ti-clipboard-text"></i>
+                  <span class="align-middle">{{ Auth::user()->board->name }}</span>
+                </a>
+                </li>
+                <li>
+                <a class="dropdown-item" href="#">
+                  <i class="menu-icon tf-icons ti ti-file-certificate"></i>
+                  <span class="align-middle">{{ Auth::user()->class->name }} Class</span>
+                </a>
+                </li>
+              @endif
               <li>
                 <a class="dropdown-item" href="{{ route('logout') }}">
                   <i class='ti ti-logout me-2'></i>
                   <span class="align-middle">Logout</span>
                 </a>
+              </li>
             </ul>
-          </li>
           <!--/ User -->
         </ul>
       </div>

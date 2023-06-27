@@ -50,4 +50,7 @@ class User extends Authenticatable
     public function class(){
       return $this->belongsTo(Classes::class);
     }
+    public function board(){
+      return $this->belongsTo(Board::class);
+    }
 }
