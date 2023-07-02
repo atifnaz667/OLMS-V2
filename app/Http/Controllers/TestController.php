@@ -99,6 +99,7 @@ class TestController extends Controller
           'user' => Auth::user()->role_id == 4 ? $tests->createdBy->name : $tests->createdFor->name,
           'book' => $tests->book->name,
           'status' =>  $status,
+          'status2' =>  $tests->status,
           'formStart' => $formStart,
           'formEnd' => $formEnd,
           'obtained_marks' => $tests->status == 'Attempted' ? $tests->obtained_marks_count : 0,
@@ -294,5 +295,29 @@ class TestController extends Controller
       $cols = ' <div class="col-12"> <h6>Please select book </h6></div>';
     }
     return $cols;
+  }
+
+
+  public function getTestResult(Request $req){
+      $rules = array(
+        'test_id' => 'required|exists:tests,id'
+      );
+      $validator = Validator::make($req->all(), $rules);
+      if ($validator->fails()) {
+        return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+      }
+      $test = Test::with('book','obtainedMarks','testChildren.question.mcqChoices')->find($req->test_id);
+      $role_id = Auth::user()->role_id;
+      $loggedInUserId = Auth::user()->id;
+      if ($role_id == 4 && $loggedInUserId != $test->created_for) {
+        return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
+      }elseif ($role_id == 2 || $role_id == 3) {
+        $assignedUser = AssignUser::where([['parent_id'=>$loggedInUserId],['child_id',$test->created_for]])->first();
+        if (!$assignedUser) {
+          return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
+        }
+      }
+      return view('test.result',['test'=>$test]);
+
   }
 }

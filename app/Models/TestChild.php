@@ -16,4 +16,8 @@ class TestChild extends Model
     public function test(){
       return $this->belongsTo(Test::class);
     }
+
+    public function selectedAnswer(){
+      return $this->belongsTo(McqChoice::class,'');
+    }
 }

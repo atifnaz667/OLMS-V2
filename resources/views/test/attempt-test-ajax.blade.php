@@ -36,7 +36,7 @@
                     </table>
                   </div>
                 <button type="button" onclick="validate()" class="btn btn-primary "
-                    id="filterButton">Save</button>
+                    id="save" disabled>Save</button>
               </div>
             </div>
           </div>

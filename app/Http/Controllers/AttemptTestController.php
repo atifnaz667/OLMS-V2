@@ -49,6 +49,9 @@ class AttemptTestController extends Controller
         return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
       }
       $test = Test::find($req->test_id);
+      if ($test->status == 'Attempted') {
+        return view('test.test-completed');
+      }
       $attemptedCount = TestChild::where([['test_id',$req->test_id],['is_viewed',1]])->count();
       if ($attemptedCount == 0) {
         $testChild = TestChild::where('test_id',$test->id)->first();
@@ -115,12 +118,13 @@ class AttemptTestController extends Controller
             if (!$nextChild) {
               $test = Test::find($testChild->test_id);
               $test->status = 'Attempted';
+              $test->attempted_at = date('Y-m-d H:i:s');
               $test->save();
             }
           });
 
           if ($isExpired == 1) {
-            return response()->json(['status' => 'error', 'message' => 'Time limit for the question exceeded.']);
+            return response()->json(['status' => 'success', 'message' => 'Time limit for the question exceeded.']);
           }
           return response()->json(['status' => 'success', 'message' => 'Answer stored successfully']);
         } catch (\Exception $e) {

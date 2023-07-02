@@ -50,14 +50,10 @@ $customizerHidden = ($customizerHidden ?? '');
       // Function to update the timer display
       function updateTimer() {
             timerElement.text(timeLeft);
-             // Update the timer display
-
+            console.log(timeLeft)
             if (timeLeft === 0) {
-              // Timer has reached 0, do something (e.g., display a message)
               submitAnswer();
               timerElement.text("Time's up!");
-              // Stop the timer
-              clearInterval(timer);
             } else {
               timeLeft--; // Decrease the time left by 1 second
             }
@@ -157,6 +153,7 @@ $customizerHidden = ($customizerHidden ?? '');
           }
 
           checkbox.checked = true;
+          $("#save").removeAttr('disabled');
         }
 
     </script>

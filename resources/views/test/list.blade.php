@@ -132,7 +132,14 @@
                         lastPage = response.last_page;
 
                         if (tests && tests.length > 0) {
+
                             $.each(tests, function(index, test) {
+                              let td = '';
+                              if (test.status2 == 'Pending') {
+                                td = '<td> '+ test.formStart +' @csrf '+ test.formEnd +'</td>';
+                              }else{
+                                td = '<td> <a href="result?test_id='+test.id+'" class="btn btn-sm btn-primary px-3">Result</a> </td>';
+                              }
                                 var row = '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +
                                     '<td>' + test.user + '</td>' +
@@ -144,7 +151,7 @@
                                     '<td>' + test.created_at + '</td>' +
                                     '<td>' + test.test_date + '</td>' +
                                     '<td>' + test.attempted_at  + '</td>' +
-                                    '<td> '+ test.formStart +' @csrf '+ test.formEnd +'</td>' +
+                                    td+
                                     '</tr>';
                                 tableBody.append(row);
                             });

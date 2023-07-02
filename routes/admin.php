@@ -23,6 +23,8 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('logout', [LoginController::class, 'logout'])->name('logout');
   Route::get('test/list', [TestController::class, 'index'])->name('test/list');
   Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
+  Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
+
 
 });
 
@@ -31,6 +33,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // --------------------------------------- Test Routes---------------------------------------
   Route::get('add-test', [TestController::class, 'store'])->name('add-test');
+
 
 
   // --------------------------------------- Assign user Routes---------------------------------------
