@@ -10,31 +10,37 @@
       "url": "book",
       "icon": "menu-icon tf-icons ti ti-school",
       "name": "Board Book Class",
-      "slug": "pages-page-2"
+      "slug": "book.index"
     },
     {
       "url": "chapter",
       "name": "Chapters",
       "icon": "menu-icon tf-icons ti ti-book",
-      "slug": "pages-misc-error"
+      "slug": "chapter.index"
     },
     {
       "url": "topic",
       "name": "Topics",
       "icon": "menu-icon tf-icons ti ti-presentation",
-      "slug": "auth-login-basic"
+      "slug": "topic.index"
     },
     {
       "url": "question",
       "name": "Questions",
       "icon": "menu-icon tf-icons ti ti-question-mark",
-      "slug": "auth-register-basic"
+      "slug": "question.index"
     },
     {
       "url": "mcq-choice",
       "name": "Multiple Choices",
       "icon": "menu-icon tf-icons ti ti-checkbox",
-      "slug": "auth-register-basic"
+      "slug": "mcq-choice.index"
+    },
+    {
+      "url": "user",
+      "name": "Users",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "user.index"
     }
   ]
 }

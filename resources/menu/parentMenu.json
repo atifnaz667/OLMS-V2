@@ -7,34 +7,16 @@
       "slug": "pages-home"
     },
     {
-      "url": "book",
+      "url": "test/create",
       "icon": "menu-icon tf-icons ti ti-file",
-      "name": "Board Book Class",
-      "slug": "pages-page-2"
+      "name": "Create Test",
+      "slug": "test/create"
     },
     {
-      "url": "chapter",
-      "name": "Chapters",
+      "url": "test/list",
+      "name": "Test Lists",
       "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error"
-    },
-    {
-      "url": "topic",
-      "name": "Topics",
-      "icon": "menu-icon tf-icons ti ti-login",
-      "slug": "auth-login-basic"
-    },
-    {
-      "url": "question",
-      "name": "Questions",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic"
-    },
-    {
-      "url": "mcq-choice",
-      "name": "Multiple Choices",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic"
+      "slug": "test/list"
     }
   ]
 }

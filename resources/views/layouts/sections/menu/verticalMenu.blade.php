@@ -34,11 +34,11 @@
             @endphp
         @elseif (Auth::user()->role_id == 3)
             @php
-                $menuData = $menuData[2]->menu;
+                $menuData = $menuData[1]->menu;
             @endphp
         @elseif (Auth::user()->role_id == 2)
             @php
-                $menuData = $menuData[1]->menu;
+                $menuData = $menuData[2]->menu;
             @endphp
         @else
             @php
