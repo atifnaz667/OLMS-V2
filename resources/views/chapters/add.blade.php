@@ -2,11 +2,11 @@
     $configData = Helper::appClasses();
 @endphp
 @extends('layouts/layoutMaster')
-@section('title', 'Add Chapters')
+@section('title', 'Add Units')
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Home/Chapters/</span>
-        Add Chapters
+        <span class="text-muted fw-light">Home/Units/</span>
+        Add Units
     </h4>
 
     <form id="chapterForm" class="form-repeater">
@@ -16,7 +16,7 @@
                 <div class="card">
                     <div
                         class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                        <h5 class="card-title mb-sm-0 me-2">Add Chapter</h5>
+                        <h5 class="card-title mb-sm-0 me-2">Add Unit</h5>
                         <div class="action-btns">
                             <a href="{{ route('chapter.index') }}" class="btn btn-label-primary me-3">Back</a>
                         </div>
@@ -76,7 +76,7 @@
                         <div data-repeater-item>
                             <div
                                 class="card-header d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                                <h5 class="card-title"> Chapter</h5>
+                                <h5 class="card-title"> Unit</h5>
                                 <button class="btn btn-label-danger" data-repeater-delete>
                                     <i class="ti ti-x ti-xs me-1"></i>
                                     <span class="align-middle">Delete</span>
@@ -84,11 +84,11 @@
                             </div>
                             <div class="row">
                                 <div class="mb-12 col-lg-6 col-xl-6 col-6 mb-0">
-                                    <label class="form-label" for="chapter_no">Chapter Number</label>
+                                    <label class="form-label" for="chapter_no">Unit Number</label>
                                     <textarea id="chapter_no" required name="chapter_no" rows="3" class="form-control"></textarea>
                                 </div>
                                 <div class="mb-12 col-lg-6 col-xl-6 col-6 mb-0">
-                                    <label class="form-label" for="name">Chapter Name</label>
+                                    <label class="form-label" for="name">Unit Name</label>
                                     <textarea id="name" name="name" required rows="3" class="form-control" autocomplete="off"></textarea>
                                 </div>
                             </div>

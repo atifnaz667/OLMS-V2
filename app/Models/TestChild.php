@@ -18,6 +18,6 @@ class TestChild extends Model
     }
 
     public function selectedAnswer(){
-      return $this->belongsTo(McqChoice::class,'');
+      return $this->belongsTo(McqChoice::class,'mcq_choice_id');
     }
 }

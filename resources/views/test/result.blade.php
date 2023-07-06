@@ -1,5 +1,5 @@
 @extends('layouts/layoutMaster')
-@section('title', 'Questions')
+@section('title', 'Test Result')
 <style>
   .true-option {
       border: 2px solid green !important;
@@ -49,7 +49,22 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="p-4">
-                        <h5>{{ $key+1 }}) {{ $child->question->description }}</h5>
+                      <div class="row">
+                        <div class="col-11">
+                          <h5>{{ $key+1 }}) {{ $child->question->description }}</h5>
+                        </div>
+                        <div class="col-1 ">
+                          @if ($child->is_correct == 1)
+                            <h5 class="mt-3 text-center" style="color:green;">
+                              <i class="fa-solid fa-check fa-xl"></i>
+                            </h5>
+                          @else
+                            <h5 class="mt-3 text-center" style="color:red;">
+                              <i class="fa-solid fa-xmark fa-xl"></i>
+                            </h5>
+                          @endif
+                        </div>
+                      </div>
                         <ul class="list-group
                         @if ($child->is_correct == 1)
                           true-option

@@ -4,6 +4,7 @@ use App\Http\Controllers\AssignUserController;
 use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
+use App\Http\Controllers\SelfAssessmentController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TestController;
 
@@ -50,6 +51,13 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   Route::post('test/attempt', [AttemptTestController::class, 'show'])->name('test/attempt');
   Route::post('attempt-test-ajax', [AttemptTestController::class, 'attemptTestAjax'])->name('attempt-test-ajax');
   Route::post('store-test-answer', [AttemptTestController::class, 'store'])->name('store-test-answer');
+
+  //---------------------------------Self Assessment routes-------------------
+  Route::get('self/assessment', [SelfAssessmentController::class, 'create'])->name('self/assessment');
+  Route::post('self/assessment', [SelfAssessmentController::class, 'store'])->name('self/assessment');
+  Route::get('self/assessment/chapters', [SelfAssessmentController::class, 'getChaptersForTest'])->name('self/assessment/chapters');
+
+
 });
 
 

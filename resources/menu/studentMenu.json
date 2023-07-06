@@ -13,8 +13,8 @@
       "slug": "pages-page-2"
     },
     {
-      "url": "",
-      "name": "Student Self Test",
+      "url": "self/assessment",
+      "name": "Self Assessment",
       "icon": "menu-icon tf-icons ti ti-clipboard-text",
       "slug": "pages-misc-error"
     },

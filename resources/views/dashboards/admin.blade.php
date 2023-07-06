@@ -7,6 +7,5 @@ $configData = Helper::appClasses();
 @section('title', 'Home')
 
 @section('content')
-<h4> {{ Auth::user()->role->role }} Home Page</h4>
 
 @endsection

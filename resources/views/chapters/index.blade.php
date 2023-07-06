@@ -16,7 +16,7 @@
 
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">Home/</span>
-        Chapters
+        Unit
     </h4>
     <!-- Sticky Actions -->
     <div class="row">
@@ -88,8 +88,8 @@
                                 {{-- <th>Board</th>
                                 <th>Book</th>
                                 <th>Class</th> --}}
-                                <th>Chapter No.</th>
-                                <th>Chapter Name</th>
+                                <th>Unit No.</th>
+                                <th>Unit Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

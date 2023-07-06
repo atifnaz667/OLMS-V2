@@ -237,6 +237,7 @@ class TestController extends Controller
     $test->created_by = $createdBy;
     $test->status = 'Pending';
     $test->test_date = $testDate;
+    $test->test_type = 'Parent';
     $test->question_time = $questionTime;
     $test->total_questions = $totalQuestions;
     $test->book_id = $book;
@@ -273,7 +274,8 @@ class TestController extends Controller
   }
 
   public function getBooksForTest(Request $req){
-    $books =  Book::getBooksForParent($req->userId);
+    $user_id = $req->userId ?? Auth::user()->id;
+    $books =  Book::getBooksForParent($user_id);
     $options = '<option value="">Select Book</option>';
     foreach ($books as $book) {
       $options = $options.' <option value="'.$book->id.'">'.$book->name.'</option>';
@@ -282,7 +284,9 @@ class TestController extends Controller
   }
 
   public function getChaptersForTest(Request $req){
-    $user = User::find($req->userId);
+    $user_id = $req->userId ?? Auth::user()->id;
+
+    $user = User::find($user_id);
     $chapters = Chapter::where([['book_id',$req->bookId],['board_id',$user->board_id],['class_id',$user->class_id]])->get();
     $cols = ' <div class="col-12 mb-2"> <input class="form-check-input " style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All</div>';
     foreach ($chapters as $chapter) {
@@ -306,7 +310,7 @@ class TestController extends Controller
       if ($validator->fails()) {
         return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 422);
       }
-      $test = Test::with('book','obtainedMarks','testChildren.question.mcqChoices')->find($req->test_id);
+      $test = Test::with('book','obtainedMarks','testChildren.question.mcqChoices', 'testChildren.selectedAnswer')->find($req->test_id);
       $role_id = Auth::user()->role_id;
       $loggedInUserId = Auth::user()->id;
       if ($role_id == 4 && $loggedInUserId != $test->created_for) {
