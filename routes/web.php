@@ -12,8 +12,8 @@ use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\McqChoiceController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SyllabusPreparationController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -26,23 +26,23 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-
 Route::get('/us-clear', function () {
-
   Artisan::call('view:clear');
   Artisan::call('route:clear');
   Artisan::call('config:clear');
   Artisan::call('cache:clear');
   // Artisan::call('config:cache');
-  return "Cleared!";
+  return 'Cleared!';
 });
 
-
 Route::middleware([CommonRoutes::class])->group(function () {
-
   Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
-  Route::get('fetch-chapters-topics/{id}', [SyllabusPreparationController::class, 'fetchData'])->name('fetch-chapters-topics');
-  Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'show'])->name('get-test-for-preparation');
+  Route::get('fetch-chapters-topics/{id}', [SyllabusPreparationController::class, 'fetchData'])->name(
+    'fetch-chapters-topics'
+  );
+  Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'show'])->name(
+    'get-test-for-preparation'
+  );
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
@@ -53,29 +53,26 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   Route::resource('board', BoardController::class);
 
-
   Route::resource('class', ClassesController::class);
-
 
   Route::resource('book', BookController::class);
   Route::get('getBoardBookClass', [BookController::class, 'getBoardBookClass']);
-
 
   Route::resource('chapter', ChapterControlloer::class);
   Route::get('/chapterDropDown', [ChapterControlloer::class, 'chapterDropDown'])->name('chapterDropDown');
   Route::get('/fetchChapterRecords', [ChapterControlloer::class, 'getChapters'])->name('fetchChapterRecords');
   Route::get('add-chapter', [ChapterControlloer::class, 'addChapter'])->name('add-chapter');
 
-
   Route::apiResource('topic', TopicController::class);
   Route::get('topicDropDown', [TopicController::class, 'topics'])->name('topicDropDown');
   Route::get('add-topic', [TopicController::class, 'addTopic'])->name('add-topic');
 
-
   Route::apiResource('question', QuestionController::class);
   Route::get('add-question', [QuestionController::class, 'addQuestion'])->name('add-question');
 
-
   Route::apiResource('mcq-choice', McqChoiceController::class);
   Route::get('add-mcq-choice', [McqChoiceController::class, 'addMcqChoioce'])->name('add-mcq-choice');
+  Route::resource('user', UserController::class);
+  Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');
+  Route::post('assign-user', [UserController::class, 'assignUser'])->name('assign-user');
 });

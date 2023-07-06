@@ -10,7 +10,7 @@
       "url": "syllabus-preparation",
       "icon": "menu-icon tf-icons ti ti-book",
       "name": "Full Syllabus Preparation",
-      "slug": "pages-page-2"
+      "slug": "syllabus-preparation"
     },
     {
       "url": "self/assessment",
@@ -22,7 +22,7 @@
       "url": "test/list",
       "name": "Attempt Daily Test",
       "icon": "menu-icon tf-icons ti ti-file-certificate",
-      "slug": "auth-login-basic"
+      "slug": "test/list"
     },
     {
       "url": "",
