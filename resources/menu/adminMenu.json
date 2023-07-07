@@ -43,10 +43,10 @@
       "slug": "user.index"
     },
     {
-      "url": "admin/create/test",
-      "name": "Create Test",
+      "url": "admin/test/list",
+      "name": "Test List",
       "icon": "menu-icon tf-icons ti ti-book",
-      "slug": "admin/create/test.create"
+      "slug": "admin/test/list.index"
     }
   ]
 }

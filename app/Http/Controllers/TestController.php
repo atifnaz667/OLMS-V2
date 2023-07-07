@@ -55,11 +55,11 @@ class TestController extends Controller
 
       $user_id = Auth::user()->id;
       $created_for = null;
-      $created_by = null;
       if(Auth::user()->role_id == 4){
         $created_for = $user_id;
       }else{
-        $created_by = $user_id;
+        $created_for = AssignUser::where('parent_id',$user_id)->first();
+        $created_for = $created_for->child_id;
       }
       $tests = Test::withCount('obtainedMarks')->when($from, function ($query) use ($from) {
           $query->where('created_at', '>',$from. " 00:00:00");
@@ -72,9 +72,6 @@ class TestController extends Controller
         })
         ->when($test_type, function ($query) use ($test_type) {
           $query->where('test_type',$test_type);
-        })
-        ->when($created_by, function ($query) use ($created_by) {
-          $query->where('created_by',$created_by);
         })
         ->when($created_for, function ($query) use ($created_for) {
           $query->where('created_for',$created_for);
@@ -316,7 +313,7 @@ class TestController extends Controller
       if ($role_id == 4 && $loggedInUserId != $test->created_for) {
         return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
       }elseif ($role_id == 2 || $role_id == 3) {
-        $assignedUser = AssignUser::where([['parent_id'=>$loggedInUserId],['child_id',$test->created_for]])->first();
+        $assignedUser = AssignUser::where([['parent_id',$loggedInUserId],['child_id',$test->created_for]])->first();
         if (!$assignedUser) {
           return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
         }

@@ -18,7 +18,7 @@
         <div class="col-12">
             <div class="card">
               <h5 class="card-header">Create Test</h5>
-              <form id="createTestForm" method="post" action="assessment">
+              <form id="createTestForm" method="post" action="{{ url('admin/store/test') }}">
                 @csrf
                 <div class="row px-4">
                   <div class="col-sm-3 mb-3">
@@ -45,6 +45,7 @@
                       <option value="">Select Book</option>
                     </select>
                   </div>
+
                   <div class="col-sm-3 mb-3">
                     <label for="nameExLarge" class="form-label">Total Questions</label>
                     <input type="input" class="form-control" name="totalQuestions" placeholder="Enter Total Questions" required value="10">
@@ -54,6 +55,15 @@
                     <select name="questionTime" id="questionTime" class="form-select" required>
                       {!! $timeOptions !!}
                     </select>
+                  </div>
+                  <div class="col-sm-3 mb-3">
+                    <label for="nameExLarge" class="form-label">Select Students</label>
+                    <select id="students" name="students[]" class="select2 form-select" multiple  >
+                    </select>
+                  </div>
+                  <div class="col-sm-3 mb-3">
+                    <label for="nameExLarge" class="form-label">Test Date</label>
+                    <input type="date" name="testDate" id="testDate" value="{{ date("Y-m-d") }}" class="form-control">
                   </div>
                 </div>
                 <div class="row px-4 mt-3 mb-5" id="chaptersRow">
@@ -120,21 +130,8 @@
         $(document).ready(function() {
           var status = $("#tostStatus").val();
           if (status) {
-            if (status == 'success') {
-              document.getElementById('redirectForm').submit();
-            }
-            const toastAnimationExample = document.querySelector('.toast-ex');
             var message = $("#tostMessage").val();
-            $('.toast-ex .fw-semibold').text(status);
-            $('.toast-ex .toast-body').text(message);
-
-            // Show the toast notification
-            selectedType = $("#tostType").val();
-            selectedAnimation = "animate__fade";
-            toastAnimationExample.classList.add(selectedAnimation);
-            toastAnimationExample.querySelector('.ti').classList.add(selectedType);
-            toastAnimation = new bootstrap.Toast(toastAnimationExample);
-            toastAnimation.show();
+            showNotification(status,message);
           }
         });
 
@@ -152,26 +149,51 @@
                 success: function(response) {
                   if (response.status == 'success') {
                     $("#book").html(response.books);
+                    if (response.books == '<option value="">Select Book</option>') {
+                      showNotification('error','Books not found against this board and class');
+                    }
+                    getStudents(board_id,class_id);
                   }else{
-                    const toastAnimationExample = document.querySelector('.toast-ex');
                     var message = response.message;
                     var status = response.status;
-                    $('.toast-ex .fw-semibold').text(status);
-                    $('.toast-ex .toast-body').text(message);
-
-                    // Show the toast notification
-                    selectedType = $("#tostType").val();
-                    selectedAnimation = "animate__fade";
-                    toastAnimationExample.classList.add(selectedAnimation);
-                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
-                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
-                    toastAnimation.show();
+                    showNotification(status,message);
                   }
                 }
             });
           }else{
             $("#book").html('');
           }
+        }
+
+        function showNotification(status,message){
+          const toastAnimationExample = document.querySelector('.toast-ex');
+          $('.toast-ex .fw-semibold').text(status);
+          $('.toast-ex .toast-body').text(message);
+
+          // Show the toast notification
+          selectedType = $("#tostType").val();
+          selectedAnimation = "animate__fade";
+          toastAnimationExample.classList.add(selectedAnimation);
+          toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+          toastAnimation = new bootstrap.Toast(toastAnimationExample);
+          toastAnimation.show();
+        }
+
+        function getStudents(board_id, class_id){
+          $.ajax({
+              url: '{{ route('admin/test/students') }}',
+              method: 'get',
+              data: {
+                board_id:board_id,
+                class_id:class_id,
+              },
+              success: function(response) {
+                $("#students").html(response.students);
+                if (response.students == '<option value="">Select Students</option>') {
+                  showNotification('error','Students not found against this board and class');
+                }
+              }
+          });
         }
     </script>
 @endsection

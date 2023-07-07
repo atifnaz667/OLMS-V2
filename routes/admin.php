@@ -32,8 +32,14 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // ---------------------------------------Create Test Routes---------------------------------------
   Route::get('admin/create/test', [AdminTestController::class, 'create'])->name('admin/create/test');
+  Route::get('admin/test/list', [AdminTestController::class, 'index'])->name('admin/test/list');
   Route::get('get/books/ajax', [AdminTestController::class, 'getBooksAjax'])->name('get/books/ajax');
   Route::get('admin/test/chapters', [AdminTestController::class, 'getChaptersForTest'])->name('admin/test/chapters');
+  Route::get('admin/test/students', [AdminTestController::class, 'getStudentsForTest'])->name('admin/test/students');
+  Route::post('admin/store/test', [AdminTestController::class, 'store'])->name('admin/store/test');
+  Route::get('fetchTestsRecordsAdmin', [AdminTestController::class, 'fetchTestsRecords'])->name('fetchTestsRecordsAdmin');
+
+
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
