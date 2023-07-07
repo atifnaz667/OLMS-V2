@@ -1,21 +1,16 @@
 @extends('layouts/layoutMaster')
-@section('title', 'Self Assesment')
+@section('title', 'Create Test')
 @section('content')
     @if (Session::has('status'))
       <input type="hidden" name="" id="tostStatus" value="{{ Session::get('status') }}">
       <input type="hidden" name="" id="tostMessage" value="{{ Session::get('message') }}">
       <input type="hidden" name="" id="tostType" value="{{ Session::get('status') == 'Success' ? 'text-success' : 'text-warning' }}">
 
-      <form id="redirectForm" action="{{ url('test/instructions') }}" method="POST">
-        @csrf
-        <input type="hidden" name="test_id" value="{{ Session::get('test_id') ?? '' }}">
-      </form>
       {{ Session::forget('status') }}
       {{ Session::forget('message') }}
-      {{ Session::forget('test_id') }}
     @endif
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Self Assesment/</span>
+        <span class="text-muted fw-light">Test/</span>
         Create
     </h4>
 
@@ -27,12 +22,27 @@
                 @csrf
                 <div class="row px-4">
                   <div class="col-sm-3 mb-3">
-                    <label for="nameExLarge" class="form-label">Select Book</label>
-                    <select name="book" id="book" class="form-select" onchange="getChapters(this.value)" required>
-                      <option value="">Select Book</option>
-                      @foreach ($books as $book)
-                        <option value="{{ $book->id }}">{{ $book->name }}</option>
+                    <label for="nameExLarge" class="form-label">Select Board</label>
+                    <select name="board" id="board" class="select2 form-select" onchange="getBooks(this.value)" required>
+                      <option value="">Select Board</option>
+                      @foreach ($boards as $board)
+                        <option value="{{ $board->id }}">{{ $board->name }}</option>
                       @endforeach
+                    </select>
+                  </div>
+                  <div class="col-sm-3 mb-3">
+                    <label for="nameExLarge" class="form-label">Select Class</label>
+                    <select name="class" id="class" class="select2 form-select" onchange="getBooks(this.value)" required>
+                      <option value="">Select Class</option>
+                      @foreach ($classes as $class)
+                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="col-sm-3 mb-3">
+                    <label for="nameExLarge" class="form-label">Select Book</label>
+                    <select name="book" id="book" class="select2 form-select" onchange="getChapters(this.value)" required>
+                      <option value="">Select Book</option>
                     </select>
                   </div>
                   <div class="col-sm-3 mb-3">
@@ -66,11 +76,15 @@
     <script>
 
       function getChapters(bookId){
+        let board_id = $("#board").val();
+        let class_id = $("#class").val();
         $.ajax({
-              url: '{{ route('self/assessment/chapters') }}',
+              url: '{{ route('admin/test/chapters') }}',
               method: 'get',
               data: {
-                bookId:bookId,
+                book_id:bookId,
+                board_id:board_id,
+                class_id:class_id,
               },
               success: function(response) {
                 $("#chaptersRow").html(response);
@@ -124,5 +138,40 @@
           }
         });
 
+        function getBooks(){
+          let board_id = $("#board").val();
+          let class_id = $("#class").val();
+          if (board_id != '' && class_id != '') {
+            $.ajax({
+                url: '{{ route('get/books/ajax') }}',
+                method: 'get',
+                data: {
+                  board_id:board_id,
+                  class_id:class_id,
+                },
+                success: function(response) {
+                  if (response.status == 'success') {
+                    $("#book").html(response.books);
+                  }else{
+                    const toastAnimationExample = document.querySelector('.toast-ex');
+                    var message = response.message;
+                    var status = response.status;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+
+                    // Show the toast notification
+                    selectedType = $("#tostType").val();
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                  }
+                }
+            });
+          }else{
+            $("#book").html('');
+          }
+        }
     </script>
 @endsection

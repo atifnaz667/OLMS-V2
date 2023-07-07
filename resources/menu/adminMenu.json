@@ -41,6 +41,12 @@
       "name": "Users",
       "icon": "menu-icon tf-icons ti ti-user",
       "slug": "user.index"
+    },
+    {
+      "url": "admin/create/test",
+      "name": "Create Test",
+      "icon": "menu-icon tf-icons ti ti-book",
+      "slug": "admin/create/test.create"
     }
   ]
 }

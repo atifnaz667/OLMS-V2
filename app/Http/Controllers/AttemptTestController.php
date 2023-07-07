@@ -171,7 +171,7 @@ class AttemptTestController extends Controller
       );
       $validator = Validator::make($req->all(), $rules);
       if ($validator->fails()) {
-        return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+        return ['status' => 'error', 'message' => $validator->errors()->first()];
       }
       try {
         $test  = Test::withCount(['testChildren as attempted_child_count' => function ($query) {

@@ -45,7 +45,8 @@
                             <label class="form-label" for="class_id">Test Type</label>
                             <select id="type" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select Test Type</option>
-                                <option value="Daily">Daily</option>
+                                <option value="Self">Self</option>
+                                <option value="Parent">Parent</option>
                                 <option value="Monthly">Monthly</option>
                             </select>
                         </div>
@@ -138,7 +139,7 @@
                               if (test.status2 == 'Pending') {
                                 td = '<td> '+ test.formStart +' @csrf '+ test.formEnd +'</td>';
                               }else{
-                                td = '<td> <a href="result?test_id='+test.id+'" class="btn btn-sm btn-primary px-3">Result</a> </td>';
+                                td = '<td> <a href="result?test_id='+test.id+'" class="btn btn-sm btn-success px-3">  Result &nbsp;</a> </td>';
                               }
                                 var row = '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +

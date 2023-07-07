@@ -16,10 +16,10 @@ $configData = Helper::appClasses();
     <a href="self/assessment" class="form-control btn btn-primary">Self Assessment</a>
   </div>
   <div class="col-sm-3">
-    <a href="test/list" class="form-control btn btn-primary">Attempt Daily Tests</a>
+    <a href="test/list" class="form-control btn btn-primary">Attempt Test</a>
   </div>
   <div class="col-sm-3">
-    <a href="syllabus-preparation" class="form-control btn btn-primary">Results Reports</a>
+    <a href="syllabus-preparation" class="form-control btn btn-primary">Complaints & Suggestions</a>
   </div>
 </div>
 @endsection

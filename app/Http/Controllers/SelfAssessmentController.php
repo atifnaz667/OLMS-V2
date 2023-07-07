@@ -112,7 +112,7 @@ class SelfAssessmentController extends Controller
         }
 
       DB::commit();
-      return back()->with(['status' => 'success', 'message' => 'Test created successfully'], 200);
+      return back()->with(['status' => 'success', 'message' => 'Test created successfully' , 'test_id' => $storeTest], 200);
     } catch (\Exception $e) {
       DB::rollBack();
       $message = CustomErrorMessages::getCustomMessage($e);
@@ -142,6 +142,6 @@ class SelfAssessmentController extends Controller
         $testChild->question_id = $question->id;
         $testChild->save();
       }
-      return true;
+      return $test->id;
     }
 }

@@ -20,13 +20,13 @@
     },
     {
       "url": "test/list",
-      "name": "Attempt Daily Test",
+      "name": "Attempt Test",
       "icon": "menu-icon tf-icons ti ti-file-certificate",
       "slug": "test/list"
     },
     {
       "url": "",
-      "name": "Result Reports",
+      "name": "Complaints & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",
       "slug": "auth-register-basic"
     }

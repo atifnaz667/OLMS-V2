@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminTestController;
 use App\Http\Controllers\AssignUserController;
 use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,11 @@ Route::middleware([CommonRoutes::class])->group(function () {
 Route::middleware([AdminMiddleware::class])->group(function () {
   // --------------------------------------- Test Routes---------------------------------------
   Route::get('add-test', [TestController::class, 'store'])->name('add-test');
+
+  // ---------------------------------------Create Test Routes---------------------------------------
+  Route::get('admin/create/test', [AdminTestController::class, 'create'])->name('admin/create/test');
+  Route::get('get/books/ajax', [AdminTestController::class, 'getBooksAjax'])->name('get/books/ajax');
+  Route::get('admin/test/chapters', [AdminTestController::class, 'getChaptersForTest'])->name('admin/test/chapters');
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
