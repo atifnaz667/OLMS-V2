@@ -56,8 +56,8 @@
                                             <li
                                                 class="list-group-item @if ($choice->is_true) true-option @endif">
                                                 <label class="form-check-label">
-                                                    <span class="option-label">{{ $choiceNames[$key / 2] }}</span>
-                                                    {{ $choice->choice }}
+                                                    <span class="option-label"><strong>{{ $choiceNames[$key / 2] }}
+                                                            &nbsp;&nbsp;</strong></span> {{ $choice->choice }}
                                                 </label>
                                             </li>
                                         @endif
@@ -71,7 +71,8 @@
                                             <li
                                                 class="list-group-item @if ($choice->is_true) true-option @endif">
                                                 <label class="form-check-label">
-                                                    <span class="option-label">{{ $choiceNames[($key - 1) / 2 + 2] }}</span>
+                                                    <span class="option-label"><strong>{{ $choiceNames[($key - 1) / 2 + 2] }}
+                                                            &nbsp;&nbsp;</strong></span>
                                                     {{ $choice->choice }}
                                                 </label>
                                             </li>

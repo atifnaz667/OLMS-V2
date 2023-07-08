@@ -16,6 +16,7 @@ $controller_path = 'App\Http\Controllers';
 Route::middleware([AlreadyLoggedIn::class])->group(function () {
   Route::get('/', [LoginController::class, 'index']);
   Route::post('login', [LoginController::class, 'login']);
+  Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 });
 
 //------------------------------Common Routes--------------------------
@@ -24,6 +25,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/list', [TestController::class, 'index'])->name('test/list');
   Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
+  Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
