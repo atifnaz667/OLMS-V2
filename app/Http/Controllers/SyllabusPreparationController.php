@@ -20,7 +20,8 @@ class SyllabusPreparationController extends Controller
     $class_id = Auth::user()->class_id;
     $books = Chapter::with('book')
       ->whereIn('id', function ($query) use ($board_id, $class_id) {
-        $query->selectRaw('MIN(id)')
+        $query
+          ->selectRaw('MIN(id)')
           ->from('chapters')
           ->where('board_id', $board_id)
           ->where('class_id', $class_id)
@@ -32,12 +33,17 @@ class SyllabusPreparationController extends Controller
   }
   public function fetchData($bookId, Request $request)
   {
+    $board_id = Auth::user()->board_id;
+    $class_id = Auth::user()->class_id;
     $questionType = $request->questionType;
     if ($questionType === 'Objective') {
       $chapters = Chapter::whereHas('topics', function ($query) {
-        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_type', 'mcq');
-      })->where('book_id', $bookId)->get();
+        $query->join('questions', 'questions.topic_id', '=', 'topics.id')->where('questions.question_type', 'mcq');
+      })
+        ->where('book_id', $bookId)
+        ->where('board_id', $board_id)
+        ->where('class_id', $class_id)
+        ->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
@@ -47,9 +53,14 @@ class SyllabusPreparationController extends Controller
         ->get();
     } elseif ($questionType === 'Conceptual') {
       $chapters = Chapter::whereHas('topics', function ($query) {
-        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+        $query
+          ->join('questions', 'questions.topic_id', '=', 'topics.id')
           ->where('questions.question_nature', 'Conceptual');
-      })->where('book_id', $bookId)->get();
+      })
+        ->where('book_id', $bookId)
+        ->where('board_id', $board_id)
+        ->where('class_id', $class_id)
+        ->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
@@ -59,9 +70,14 @@ class SyllabusPreparationController extends Controller
         ->get();
     } elseif ($questionType === 'Exercise') {
       $chapters = Chapter::whereHas('topics', function ($query) {
-        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+        $query
+          ->join('questions', 'questions.topic_id', '=', 'topics.id')
           ->where('questions.question_nature', 'Exercise');
-      })->where('book_id', $bookId)->get();
+      })
+        ->where('book_id', $bookId)
+        ->where('board_id', $board_id)
+        ->where('class_id', $class_id)
+        ->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
@@ -71,9 +87,14 @@ class SyllabusPreparationController extends Controller
         ->get();
     } else {
       $chapters = Chapter::whereHas('topics', function ($query) {
-        $query->join('questions', 'questions.topic_id', '=', 'topics.id')
+        $query
+          ->join('questions', 'questions.topic_id', '=', 'topics.id')
           ->where('questions.question_type', '!=', 'mcq');
-      })->where('book_id', $bookId)->get();
+      })
+        ->where('book_id', $bookId)
+        ->where('board_id', $board_id)
+        ->where('class_id', $class_id)
+        ->get();
 
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
@@ -184,16 +205,17 @@ class SyllabusPreparationController extends Controller
     }
 
     // Retrieve random questions from the specified topics
-    if ($test_type === 'Objective')
+    if ($test_type === 'Objective') {
       $view = 'syllabus-preparation.view-objective';
-    else
+    } else {
       $view = 'syllabus-preparation.view-subjective';
+    }
 
     $response = response()->view($view, [
       'test_type' => $test_type,
       'book_name' => $book->name,
       'totalQuestions' => $totalQuestions,
-      'questions' => $questions
+      'questions' => $questions,
     ]);
     $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     $response->header('Pragma', 'no-cache');
@@ -201,8 +223,6 @@ class SyllabusPreparationController extends Controller
 
     return $response;
   }
-
-
 
   /**
    * Show the form for editing the specified resource.
@@ -215,7 +235,7 @@ class SyllabusPreparationController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request,)
+  public function update(Request $request)
   {
     //
   }

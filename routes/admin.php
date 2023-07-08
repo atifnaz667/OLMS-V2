@@ -17,6 +17,7 @@ $controller_path = 'App\Http\Controllers';
 Route::middleware([AlreadyLoggedIn::class])->group(function () {
   Route::get('/', [LoginController::class, 'index']);
   Route::post('login', [LoginController::class, 'login']);
+  Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 });
 
 //------------------------------Common Routes--------------------------
@@ -27,6 +28,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
   Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
   Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
+  Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
