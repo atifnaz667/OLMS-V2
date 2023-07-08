@@ -6,6 +6,7 @@ use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\SelfAssessmentController;
+use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TestController;
 
@@ -24,6 +25,8 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/list', [TestController::class, 'index'])->name('test/list');
   Route::get('fetchTestsRecords', [TestController::class, 'fetchTestsRecords'])->name('fetchTestsRecords');
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
+  Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
+  Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -39,6 +42,10 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::post('admin/store/test', [AdminTestController::class, 'store'])->name('admin/store/test');
   Route::get('fetchTestsRecordsAdmin', [AdminTestController::class, 'fetchTestsRecords'])->name('fetchTestsRecordsAdmin');
 
+  //---------------------------------------------Suggestion Routes------------------------------------
+  Route::get('suggestion/list', [SuggestionController::class, 'index'])->name('suggestion/list');
+  Route::get('fetchSuggestionRecords', [SuggestionController::class, 'getSuggestions'])->name('fetchSuggestionRecords');
+  Route::get('suggestion/destroy/{id}', [SuggestionController::class, 'destroy'])->name('suggestion.destroy');
 
 
   // --------------------------------------- Assign user Routes---------------------------------------

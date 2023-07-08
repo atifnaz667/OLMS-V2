@@ -47,6 +47,12 @@
       "name": "Test List",
       "icon": "menu-icon tf-icons ti ti-book",
       "slug": "admin/test/list.index"
+    },
+    {
+      "url": "suggestion/list",
+      "name": "Complaints & Suggestions",
+      "icon": "menu-icon tf-icons ti ti-chart-infographic",
+      "slug": "auth-register-basic"
     }
   ]
 }

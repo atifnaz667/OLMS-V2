@@ -17,6 +17,12 @@
       "name": "Test Lists",
       "icon": "menu-icon tf-icons ti ti-alert-triangle",
       "slug": "test/list"
+    },
+    {
+      "url": "suggestion/create",
+      "name": "Complaints & Suggestions",
+      "icon": "menu-icon tf-icons ti ti-chart-infographic",
+      "slug": "auth-register-basic"
     }
   ]
 }
