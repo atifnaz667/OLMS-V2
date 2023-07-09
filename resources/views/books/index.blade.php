@@ -103,15 +103,22 @@
                     </div>
                     <!-- Social Links -->
                     <div class="tab-pane fade" id="form-tabs-social" role="tabpanel">
-
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <label class="col-sm-3 col-form-label text-sm-end" for="book-name">Book
-                                        Name</label>
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="book-name">Book Name</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="book-name" name="book-name" required class="form-control"
                                             placeholder="Enter Book Name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="book-icon">Book Icon</label>
+                                    <div class="col-sm-9">
+                                        <input type="file" id="book-icon" name="book-icon" class="form-control"
+                                            accept="image/*">
                                     </div>
                                 </div>
                             </div>
@@ -127,8 +134,8 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </div>
@@ -207,6 +214,7 @@
                                     <tr>
                                         <th>SR#</th>
                                         <th>Book</th>
+                                        <th>Icon</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -508,13 +516,17 @@
         function addBook() {
             const toastAnimationExample = document.querySelector('.toast-ex');
             var bookName = $('#book-name').val();
+            var formData = new FormData();
+            formData.append('name', bookName);
+            formData.append('book-icon', $('#book-icon')[0].files[0]);
+            formData.append('_token', '{{ csrf_token() }}');
+
             $.ajax({
                 type: 'POST',
                 url: '{{ route('book.store') }}',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    name: bookName
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     var status = response.status;
                     var message = response.message;
@@ -530,6 +542,7 @@
                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                     toastAnimation.show();
                     $('#book-name').val('');
+                    $('#book-icon').val('');
                     getData();
                 },
                 error: function(xhr) {
@@ -830,9 +843,11 @@
                         var row = "<tr>" +
                             "<td>" + (index + 1) + "</td>" +
                             "<td>" + book.name + "</td>" +
+                            "<td>" + (book.file != null ? "<img src='files/books/" + book.file +
+                                "' alt='Book Icon' width='50' height='50'>" : "") + "</td>" +
                             "<td>" +
-                            "<button  onclick=\"editBook('" + book.id +
-                            "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + book.id +
+                            "<button onclick=\"editBook('" + book.id +
+                            "')\" class=\"btn btn-sm btn-icon edit-record\" data-id='" + book.id +
                             "'><i class=\"ti ti-edit\"></i></button>" +
                             "<button class=\"btn btn-sm btn-icon delete-book\" data-id='" + book.id +
                             "'><i class=\"ti ti-trash\"></i></button>" +

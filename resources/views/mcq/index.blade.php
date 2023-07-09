@@ -3,6 +3,10 @@
 @endphp
 @extends('layouts/layoutMaster')
 @section('title', 'Multiple Choices')
+@section('vendor-script')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+@endsection
 <style>
     .pagination-nav {
         display: flex;
@@ -124,7 +128,7 @@
                 @csrf
                 <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
                     <label class="form-label" for="update-question">Question</label>
-                    <textarea required id="update-question" name="update-question" rows="3" class="form-control"></textarea>
+                    <textarea required id="update-question" name="update-question" rows="3" class="form-control update-question"></textarea>
                 </div>
 
                 <div class="row">
@@ -174,6 +178,28 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
+            initializeSummernote();
+            $('button[data-repeater-create]').click(function() {
+                setTimeout(function() {
+                    initializeSummernote();
+                }, 100); // Delay the initialization to ensure the DOM is updated
+            });
+
+            function initializeSummernote() {
+                $('.update-question').summernote({
+                    tabsize: 4,
+                    height: 100,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        // ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+            }
             $('#board_id, #book_id, #class_id').change(function() {
                 var boardId = $('#board_id').val();
                 var bookId = $('#book_id').val();
@@ -245,6 +271,7 @@
         var currentPage = 1;
         var lastPage = 1;
         var perPage = 10;
+        var numbering = 1;
         const toastAnimationExample = document.querySelector('.toast-ex');
         var offcanvasElementview = document.getElementById('offcanvasViewQuestion');
         var offcanvas = new bootstrap.Offcanvas(offcanvasElementview);
@@ -259,11 +286,12 @@
                 type: 'GET',
                 success: function(response) {
                     // Update the form fields with the fetched data
-                    $('#update-question').val(response.Question.description);
+                    $('#update-question').summernote('code', response.Question.description);
+                    // $('#update-question').val(response.Question.description);
                     $('#questionId').val(response.Question.id);
 
                     // Loop through the mcq choices and populate the options
-                    $.each(response.Question.mcq, function(index, choice) {
+                    $.each(response.Question.mcq_choices, function(index, choice) {
                         var optionName = 'option-' + String.fromCharCode(97 +
                             index); // Convert index to corresponding character code (a, b, c, d)
                         var inputElement = $('input[name="' + optionName + '"]');
@@ -286,7 +314,7 @@
                     });
 
                     // Populate the reason field with the correct option's reason
-                    $('textarea[name="answer"]').val(response.Question.mcq.find(function(choice) {
+                    $('textarea[name="answer"]').val(response.Question.mcq_choices.find(function(choice) {
                         return choice.is_true === 1;
                     }).reason);
 
@@ -391,11 +419,11 @@
                         var questions = response.data;
                         currentPage = response.current_page;
                         lastPage = response.last_page;
-
+                        numbering = (currentPage - 1) * response.per_page;
                         if (questions && questions.length > 0) {
                             $.each(questions, function(index, question) {
                                 var row = '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + (++numbering) + '</td>' +
                                     // '<td>' + question.board + '</td>' +
                                     // '<td>' + question.book + '</td>' +
                                     // '<td>' + question.class + '</td>' +

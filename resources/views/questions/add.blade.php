@@ -125,7 +125,7 @@
                             <div class="row">
                                 <div class="mb-3 col-lg-12 col-xl-12 col-12">
                                     <label class="form-label" for="form-repeater-1-1">Question</label>
-                                    <textarea id="autosize-demo" name="description" rows="3" class="form-control"></textarea>
+                                    <textarea class="form-control summernote-1" name="description" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
 
@@ -168,6 +168,19 @@
                 $('.summernote').summernote({
                     tabsize: 4,
                     height: 260,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        // ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+                $('.summernote-1').summernote({
+                    tabsize: 2,
+                    height: 100,
                     toolbar: [
                         ['style', ['style']],
                         ['font', ['bold', 'underline', 'clear']],

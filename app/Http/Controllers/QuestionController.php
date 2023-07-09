@@ -25,7 +25,7 @@ class QuestionController extends Controller
   {
     $rules = [
       'perPage' => 'integer|min:1',
-      'sort_by' => 'in:description,id'
+      'sort_by' => 'in:description,id',
     ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -34,12 +34,20 @@ class QuestionController extends Controller
     $perPage = $request->input('perPage', 10);
     $sort = $request->input('sort_by', 'description');
     $sort_order = $request->input('sort_order', 'asc');
-    $topicId = $request->input('topic_id'); // Get the topic ID from the request
+    $topicId = $request->input('topic_id');
+    $question_type = $request->input('type');
+    $question_nature = $request->input('nature');
 
     $query = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq');
 
     if ($topicId) {
-      $query->where('topic_id', $topicId); // Apply the filter by topic ID
+      $query->where('topic_id', $topicId);
+    }
+    if ($question_type) {
+      $query->where('question_type', $question_type);
+    }
+    if ($question_nature) {
+      $query->where('question_nature', $question_nature);
     }
 
     $questions = $query->paginate($perPage);
@@ -108,32 +116,39 @@ class QuestionController extends Controller
 
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 
-
   public function show($id)
   {
-    $validator = Validator::make(['id' => $id], [
-      'id' => 'required|int|exists:questions,id',
-    ]);
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:questions,id',
+      ]
+    );
 
     if ($validator->fails()) {
-      return response()->json([
-        'status' => 'error',
-        'message' => $validator->errors()->first(),
-      ], 400);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
     }
 
     $question = Question::with('answer')->findOrFail($id);
 
     return response()->json(['Question' => $question], 200);
   }
-
 
   public function update(Request $request, $id)
   {
@@ -153,28 +168,40 @@ class QuestionController extends Controller
       $answer = $question->answer;
       $answer->update(['answer' => $request->input('answer')]);
 
-      return response()->json(['status' => 'success', 'message' => 'Question and answer updated successfully', 'data' => $question], 200);
+      return response()->json(
+        ['status' => 'success', 'message' => 'Question and answer updated successfully', 'data' => $question],
+        200
+      );
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 
   public function destroy($id)
   {
-    $validator = Validator::make(['id' => $id], [
-      'id' => 'required|int|exists:questions,id',
-    ]);
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:questions,id',
+      ]
+    );
 
     if ($validator->fails()) {
-      return response()->json([
-        'status' => 'error',
-        'message' => $validator->errors()->first(),
-      ], 400);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
     }
 
     try {
@@ -186,17 +213,23 @@ class QuestionController extends Controller
         Question::findOrFail($id)->delete();
       });
 
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Question and associated records deleted successfully',
-      ], 200);
+      return response()->json(
+        [
+          'status' => 'success',
+          'message' => 'Question and associated records deleted successfully',
+        ],
+        200
+      );
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 }
