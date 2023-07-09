@@ -9,15 +9,17 @@ use Illuminate\Support\Facades\Auth;
 class Book extends Model
 {
   use HasFactory;
-  protected $fillable = ['name'];
+  protected $fillable = ['name', 'file'];
 
-  public static function getBooksForParent($userId){
+  public static function getBooksForParent($userId)
+  {
     $user = User::find($userId);
     $board_id = $user->board_id;
     $class_id = $user->class_id;
     $books = Chapter::with('book')
       ->whereIn('id', function ($query) use ($board_id, $class_id) {
-        $query->selectRaw('MIN(id)')
+        $query
+          ->selectRaw('MIN(id)')
           ->from('chapters')
           ->where('board_id', $board_id)
           ->where('class_id', $class_id)
@@ -25,6 +27,6 @@ class Book extends Model
       })
       ->get()
       ->pluck('book');
-      return $books;
+    return $books;
   }
 }

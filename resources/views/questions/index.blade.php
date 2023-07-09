@@ -34,8 +34,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md">
+                    <div class="row m-3">
+                        <div class="col-md-3">
                             <label class="form-label" for="board_id">Board</label>
                             <select id="board_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
@@ -45,7 +45,7 @@
 
                             </select>
                         </div>
-                        <div class="col-md">
+                        <div class="col-md-3">
                             <label class="form-label" for="class_id">Class</label>
                             <select id="class_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
@@ -54,7 +54,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md">
+                        <div class="col-md-3">
                             <label class="form-label" for="book_id">Book</label>
                             <select id="book_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
@@ -63,16 +63,34 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md">
+                        <div class="col-md-3">
                             <label class="form-label" for="chapter_id">Chapter</label>
                             <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
-                        <div class="col-md">
+                    </div>
+                    <div class="row m-3">
+                        <div class="col-md-3">
                             <label class="form-label" for="topic_id">Topic</label>
                             <select id="topic_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="type">Type</label>
+                            <select id="type" class="select2 form-select" data-allow-clear="true">
+                                <option value="">All</option>
+                                <option value="long">Long</option>
+                                <option value="short">Short</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="nature">Nature</label>
+                            <select id="nature" class="select2 form-select" data-allow-clear="true">
+                                <option value="">All</option>
+                                <option value="exercise">Exercise</option>
+                                <option value="conceptual">Conceptual</option>
                             </select>
                         </div>
                     </div>
@@ -173,6 +191,20 @@
                     // ['view', ['fullscreen', 'codeview', 'help']]
                 ]
             });
+            $('#update-question').summernote({
+                // placeholder: 'Hello stand alone ui',
+                tabsize: 4,
+                height: 100,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    // ['view', ['fullscreen', 'codeview', 'help']]
+                ]
+            });
             $('#board_id, #book_id, #class_id').change(function() {
                 var boardId = $('#board_id').val();
                 var bookId = $('#book_id').val();
@@ -244,6 +276,7 @@
         var currentPage = 1;
         var lastPage = 1;
         var perPage = 10;
+        var numbering = 1;
         const toastAnimationExample = document.querySelector('.toast-ex');
 
         function viewQuestion(id) {
@@ -252,7 +285,8 @@
                 type: 'GET',
                 success: function(response) {
                     // Update the form fields with the fetched data
-                    $('#update-question').val(response.Question.description);
+                    // $('#update-question').val(response.Question.description);
+                    $('#update-question').summernote('code', response.Question.description);
                     $('#update-question-answer').summernote('code', response.Question.answer.answer);
                     $('#questionId').val(response.Question.id);
                     $('#largeModal').modal('show');
@@ -316,12 +350,16 @@
 
         function fetchQuestionRecords(page = 1) {
             var topicId = $('#topic_id').val();
+            var type = $('#type').val();
+            var nature = $('#nature').val();
             var check = "ajax";
             $.ajax({
                 url: '{{ route('question.index') }}',
                 method: 'GET',
                 data: {
                     topic_id: topicId,
+                    type: type,
+                    nature: nature,
                     check: check,
                     page: page,
                     perPage: perPage
@@ -334,11 +372,11 @@
                         var questions = response.data;
                         currentPage = response.current_page;
                         lastPage = response.last_page;
-
+                        numbering = (currentPage - 1) * response.per_page;
                         if (questions && questions.length > 0) {
                             $.each(questions, function(index, question) {
                                 var row = '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td>' + (++numbering) + '</td>' +
                                     // '<td>' + question.board + '</td>' +
                                     // '<td>' + question.book + '</td>' +
                                     // '<td>' + question.class + '</td>' +

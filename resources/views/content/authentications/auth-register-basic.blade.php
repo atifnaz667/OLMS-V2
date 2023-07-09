@@ -46,8 +46,8 @@
                         <h4 class="mb-1 pt-2">Adventure starts here 🚀</h4>
                         <p class="mb-4">Before Start please enter your basic info.</p>
 
-                        <form id="formAuthentication" class="mb-3" action="{{ url('store-pending-user') }}"
-                            method="POST">
+                        <form id="formAuthentication" class="mb-3" action="{{ url('store-pending-user') }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="fullName" class="form-label">Full Name</label>
@@ -81,7 +81,10 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                            <div class="mb-3">
+                                <label for="user-image" class="form-label">Image</label>
+                                <input class="form-control" name="user-image" type="file" id="user-image">
+                            </div>
                             <div class="mb-4">
                                 <div class="form-check">
                                     <input required class="form-check-input" type="checkbox" id="terms-conditions"

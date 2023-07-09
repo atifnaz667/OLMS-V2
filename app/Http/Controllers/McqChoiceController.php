@@ -21,7 +21,7 @@ class McqChoiceController extends Controller
   {
     $rules = [
       'perPage' => 'integer|min:1',
-      'sort_by' => 'in:description,id'
+      'sort_by' => 'in:description,id',
     ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -89,7 +89,7 @@ class McqChoiceController extends Controller
       'questions.*.option-c' => 'required|string',
       'questions.*.option-d' => 'required|string',
       'questions.*.correct-option' => 'required|in:a,b,c,d',
-      'questions.*.answer' => 'required|string',
+      // 'questions.*.answer' => 'required|string',
     ]);
 
     if ($validator->fails()) {
@@ -100,7 +100,7 @@ class McqChoiceController extends Controller
       DB::beginTransaction();
       $questions = $request->input('questions');
       $topic_id = $request->input('topic_id');
-      $mcq = "mcq";
+      $mcq = 'mcq';
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
@@ -145,10 +145,13 @@ class McqChoiceController extends Controller
 
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 
@@ -157,22 +160,27 @@ class McqChoiceController extends Controller
    */
   public function show($id)
   {
-    $validator = Validator::make(['id' => $id], [
-      'id' => 'required|int|exists:questions,id',
-    ]);
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:questions,id',
+      ]
+    );
 
     if ($validator->fails()) {
-      return response()->json([
-        'status' => 'error',
-        'message' => $validator->errors()->first(),
-      ], 400);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
     }
 
-    $question = Question::with('mcq')->findOrFail($id);
+    $question = Question::with('mcqChoices')->findOrFail($id);
 
     return response()->json(['Question' => $question], 200);
   }
-
 
   /**
    * Update the specified resource in storage.
@@ -187,7 +195,7 @@ class McqChoiceController extends Controller
       'option-c' => 'required',
       'option-d' => 'required',
       'correct-option' => 'required',
-      'answer' => 'required',
+      // 'answer' => 'required',
     ]);
 
     // Find the question by ID
@@ -202,25 +210,25 @@ class McqChoiceController extends Controller
       'a' => [
         'id' => $request->input('option-a-id'),
         'choice' => $request->input('option-a'),
-        'isTrue' => ($request->input('correct-option') === 'option-a') ? 1 : 0,
+        'isTrue' => $request->input('correct-option') === 'option-a' ? 1 : 0,
         'reason' => $request->input('answer'),
       ],
       'b' => [
         'id' => $request->input('option-b-id'),
         'choice' => $request->input('option-b'),
-        'isTrue' => ($request->input('correct-option') === 'option-b') ? 1 : 0,
+        'isTrue' => $request->input('correct-option') === 'option-b' ? 1 : 0,
         'reason' => $request->input('answer'),
       ],
       'c' => [
         'id' => $request->input('option-c-id'),
         'choice' => $request->input('option-c'),
-        'isTrue' => ($request->input('correct-option') === 'option-c') ? 1 : 0,
+        'isTrue' => $request->input('correct-option') === 'option-c' ? 1 : 0,
         'reason' => $request->input('answer'),
       ],
       'd' => [
         'id' => $request->input('option-d-id'),
         'choice' => $request->input('option-d'),
-        'isTrue' => ($request->input('correct-option') === 'option-d') ? 1 : 0,
+        'isTrue' => $request->input('correct-option') === 'option-d' ? 1 : 0,
         'reason' => $request->input('answer'),
       ],
     ];
@@ -252,15 +260,21 @@ class McqChoiceController extends Controller
    */
   public function destroy($id)
   {
-    $validator = Validator::make(['id' => $id], [
-      'id' => 'required|int|exists:questions,id',
-    ]);
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:questions,id',
+      ]
+    );
 
     if ($validator->fails()) {
-      return response()->json([
-        'status' => 'error',
-        'message' => $validator->errors()->first(),
-      ], 400);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
     }
 
     try {
@@ -272,17 +286,23 @@ class McqChoiceController extends Controller
         Question::findOrFail($id)->delete();
       });
 
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Mcq and associated records deleted successfully',
-      ], 200);
+      return response()->json(
+        [
+          'status' => 'success',
+          'message' => 'Mcq and associated records deleted successfully',
+        ],
+        200
+      );
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 }

@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-
   /**
    * Display a listing of the resource.
    *
@@ -57,17 +56,27 @@ class BookController extends Controller
    */
   public function store(Request $request)
   {
-    $rules = array(
+    $rules = [
       'name' => 'required|string|max:125|unique:books',
-    );
+    ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
     try {
       DB::transaction(function () use ($request) {
+        $filePath = 'NULL';
+        if ($request->hasFile('book-icon')) {
+          $file = $request->file('book-icon');
+          $ext = $file->getClientOriginalExtension();
+          $filename = time() . rand(1, 100) . '.' . $ext;
+          $file->move(public_path('files/books'), $filename);
+          $filePath = $filename;
+        }
+
         Book::create([
-          'name' => $request->name,
+          'name' => $request['name'],
+          'file' => $filePath,
         ]);
       });
       return response()->json(['status' => 'success', 'message' => 'Book stored successfully'], 200);
@@ -86,15 +95,14 @@ class BookController extends Controller
   public function show($id)
   {
     $data = ['id' => $id];
-    $rules = array(
+    $rules = [
       'id' => 'required|int|exists:books,id',
-    );
+    ];
     $validator = Validator::make($data, $rules);
     if ($validator->fails()) {
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
     try {
-
       $book = Book::where('id', $id)->first();
       return response()->json(['Book' => $book], 200);
     } catch (\Exception $e) {
@@ -114,10 +122,10 @@ class BookController extends Controller
   {
     $data = array_merge(['id' => $id], $request->all());
 
-    $rules = array(
+    $rules = [
       'id' => 'required|int|exists:books,id',
       'name' => 'required|string|max:125',
-    );
+    ];
 
     $validator = Validator::make($data, $rules);
 
@@ -144,15 +152,21 @@ class BookController extends Controller
    */
   public function destroy($id)
   {
-    $validator = Validator::make(['id' => $id], [
-      'id' => 'required|int|exists:books,id',
-    ]);
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:books,id',
+      ]
+    );
 
     if ($validator->fails()) {
-      return response()->json([
-        'status' => 'error',
-        'message' => $validator->errors()->first(),
-      ], 400);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
     }
 
     try {
@@ -160,28 +174,32 @@ class BookController extends Controller
         Book::findOrFail($id)->delete();
       });
 
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Book deleted successfully',
-      ], 200);
+      return response()->json(
+        [
+          'status' => 'success',
+          'message' => 'Book deleted successfully',
+        ],
+        200
+      );
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
-
-
 
   public function allBooks(Request $request)
   {
     // Validate input
     $rules = [
       'perPage' => 'integer|min:1',
-      'sort_by' => 'in:name,id'
+      'sort_by' => 'in:name,id',
     ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -204,10 +222,13 @@ class BookController extends Controller
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
-      return response()->json([
-        'status' => 'error',
-        'message' => $message,
-      ], 500);
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
     }
   }
 }

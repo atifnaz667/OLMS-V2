@@ -3,6 +3,10 @@
 @endphp
 @extends('layouts/layoutMaster')
 @section('title', 'Add Multiple Choices')
+@section('vendor-script')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+@endsection
 <style>
     .pagination-nav {
         display: flex;
@@ -104,7 +108,8 @@
                             <div class="row">
                                 <div class="mb-3 col-lg-12 col-xl-12 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-1">Question</label>
-                                    <input type="text" name="description" id="form-repeater-1-1" class="form-control" />
+                                    {{-- <input type="text" name="description" id="form-repeater-1-1" class="form-control" /> --}}
+                                    <textarea class="form-control summernote" name="description" id="form-repeater-1-1" rows="2" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="row">
@@ -160,6 +165,29 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
+            initializeSummernote();
+            $('button[data-repeater-create]').click(function() {
+                setTimeout(function() {
+                    initializeSummernote();
+                }, 100); // Delay the initialization to ensure the DOM is updated
+            });
+
+            function initializeSummernote() {
+                $('.summernote').summernote({
+                    tabsize: 4,
+                    height: 100,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        // ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
+            }
+
             function resetFormRepeater() {
                 var formRepeater = $('#questionForm .form-repeater');
 
