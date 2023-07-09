@@ -87,13 +87,13 @@ $navbarDetached = ($navbarDetached ?? '');
                 <li>
                 <a class="dropdown-item" href="#">
                   <i class="menu-icon tf-icons ti ti-clipboard-text"></i>
-                  <span class="align-middle">{{ Auth::user()->board->name }}</span>
+                  <span class="align-middle">{{ Auth::user()->board->name ?? '' }}</span>
                 </a>
                 </li>
                 <li>
                 <a class="dropdown-item" href="#">
                   <i class="menu-icon tf-icons ti ti-file-certificate"></i>
-                  <span class="align-middle">{{ Auth::user()->class->name }} Class</span>
+                  <span class="align-middle">{{ Auth::user()->class->name ?? '' }} Class</span>
                 </a>
                 </li>
               @endif
