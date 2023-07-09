@@ -115,7 +115,7 @@ class AttemptTestController extends Controller
               $test->status = 'Attempted';
               $test->attempted_at = date('Y-m-d H:i:s');
             }
-            if ($mcq->is_true == 1 && $isExpired == 0) {
+            if ($mcq && $mcq->is_true == 1 && $isExpired == 0) {
               $test->obtained_marks = $test->obtained_marks + 1;
             }
               $test->save();
