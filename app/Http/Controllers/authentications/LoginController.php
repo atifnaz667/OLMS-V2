@@ -65,8 +65,8 @@ class LoginController extends Controller
     $rules = [
       'fullName' => 'required',
       'email' => 'required',
-      'board_id' => 'required',
-      'class_id' => 'required',
+      // 'board_id' => 'required',
+      // 'class_id' => 'required',
       'user-image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ];
     $validator = Validator::make($request->all(), $rules);
@@ -75,25 +75,21 @@ class LoginController extends Controller
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
 
+    $class_id = $request->input('class_id');
+    $board_id = $request->input('board_id');
     $user = User::find(Auth::user()->id);
     $user->name = $request->fullName;
     $user->email = $request->email;
-    $user->board_id = $request->board_id;
-    $user->class_id = $request->class_id;
+    $user->board_id = $board_id;
+    $user->class_id = $class_id;
     if ($request->hasFile('user-image')) {
-      // $fileName = time() . '-' . $_FILES['user-image']['name'];
-      // $targetDir = 'public/files/userImages/';
-      // $path = $targetDir . $fileName;
-      // move_uploaded_file($_FILES['user-image']['tmp_name'], $path);
-      // $filePath = request()->root() . '/' . $path;
-
       $file = $request->file('user-image');
       $ext = $file->getClientOriginalExtension();
       $filename = time() . rand(1, 100) . '.' . $ext;
       $file->move(public_path('files/userImages'), $filename);
       $filePath = $filename;
     } else {
-      $filePath = 'NULL';
+      $filePath = '';
     }
     $user->image = $filePath;
 

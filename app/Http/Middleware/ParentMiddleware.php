@@ -19,6 +19,8 @@ class ParentMiddleware
   {
     if (!Auth::user() || Auth::user()->role_id != 2) {
       return redirect('/');
+    } elseif (Auth::user()->status == 'pending') {
+      return redirect('pending-user');
     }
 
     return $next($request);

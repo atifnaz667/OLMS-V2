@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
+use App\Helpers\DropdownHelper;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,10 @@ class UserController extends Controller
   public function index()
   {
     $users = User::with('role')->get();
-    return view('users.index', ['users' => $users]);
+    $results = DropdownHelper::getBoardBookClass();
+    $classes = $results['Classes'];
+    $boards = $results['Boards'];
+    return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards]);
   }
 
   /**
@@ -111,6 +115,12 @@ class UserController extends Controller
     // Update the password if it is provided
     if (!is_null($request->password)) {
       $user->password = Hash::make($request->password);
+    }
+    if (!is_null($request->board_id)) {
+      $user->board_id = $request->board_id;
+    }
+    if (!is_null($request->class_id)) {
+      $user->class_id = $request->class_id;
     }
 
     // Save the updated user

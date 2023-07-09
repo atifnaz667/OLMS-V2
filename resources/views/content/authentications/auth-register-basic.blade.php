@@ -60,27 +60,32 @@
                                 <input required type="email" class="form-control" id="email" name="email"
                                     placeholder="Enter your email" autofocus>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="board_id">Your Board?</label>
-                                <select required id="board_id" name="board_id" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="">Select</option>
-                                    @foreach ($boards as $board)
-                                        <option value="{{ $board->id }}">{{ $board->name }}</option>
-                                    @endforeach
 
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="class_id">Your Class?</label>
-                                <select required id="class_id" name="class_id" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="">Select</option>
-                                    @foreach ($classes as $class)
-                                        <option value="{{ $class->id }}">{{ $class->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @if (Auth::user()->role_id == 4)
+                                <div class="mb-3">
+                                    <label class="form-label" for="board_id">Your Board?</label>
+                                    <select required id="board_id" name="board_id" class="select2 form-select"
+                                        data-allow-clear="true">
+                                        <option value="">Select</option>
+                                        @foreach ($boards as $board)
+                                            <option value="{{ $board->id }}">{{ $board->name }}</option>
+                                        @endforeach
+
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="class_id">Your Class?</label>
+                                    <select required id="class_id" name="class_id" class="select2 form-select"
+                                        data-allow-clear="true">
+                                        <option value="">Select</option>
+                                        @foreach ($classes as $class)
+                                            <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            @endif
+
                             <div class="mb-3">
                                 <label for="user-image" class="form-label">Image</label>
                                 <input class="form-control" name="user-image" type="file" id="user-image">

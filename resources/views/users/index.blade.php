@@ -175,20 +175,37 @@
                         <input type="hidden" id="userId" name="userId" />
                     </div>
                     <div class="mb-3">
-                        <div class="form-password-toggle">
-                            <label class="form-label" for="multicol-password-1">Password</label>
-                            <div class="input-group input-group-merge">
-                                <input type="password" id="multicol-password-1" name="multicol-password-1"
-                                    class="form-control"
-                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                    aria-describedby="multicol-password-12" />
-                                <span class="input-group-text cursor-pointer" id="multicol-password-12"><i
-                                        class="ti ti-eye-off"></i></span>
-                            </div>
-                            <label class="form-label"> <span class="smaller">If
-                                    you
-                                    don't want to change password remain the field empty.</span></label>
+                        <label class="form-label" for="board_id">Board</label>
+                        <select id="board_id" name="board_id" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                            @foreach ($boards as $board)
+                                <option value="{{ $board->id }}">{{ $board->name }}</option>
+                            @endforeach
+
+
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="class_id">Class</label>
+                        <select id="class_id" name="class_id" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                            @foreach ($classes as $class)
+                                <option value="{{ $class->id }}">{{ $class->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        {{-- <div class="form-password-toggle"> --}}
+                        <label class="form-label" for="update-password">Password</label>
+                        <div class="input-group input-group">
+                            <input type="password" id="update-password" name="update-password" class="form-control"
+                                placeholder="" />
+                            <span class="input-group-text cursor-pointer" id="update-password2"><i
+                                    class="ti ti-eye-off"></i></span>
                         </div>
+                        <label class="form-label"> <span class="smaller">If you don't want to change Board Class and
+                                Password remain the field empty.</span></label>
+                        {{-- </div> --}}
                     </div>
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                     <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
@@ -417,10 +434,14 @@
 
                 var _token = $('input[name="_token"]').val();
                 var username = $('#update-user-name').val();
-                var password = $('#multicol-password-1').val();
+                var password = $('#update-password').val();
+                var board_id = $('#board_id').val();
+                var class_id = $('#class_id').val();
                 var formData = {
                     _token: _token,
                     password: password,
+                    board_id: board_id,
+                    class_id: class_id,
                     username: username
                 };
                 $.ajax({
