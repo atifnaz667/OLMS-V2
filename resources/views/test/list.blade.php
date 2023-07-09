@@ -139,7 +139,7 @@
                               if (test.status2 == 'Pending') {
                                 td = '<td> '+ test.formStart +' @csrf '+ test.formEnd +'</td>';
                               }else{
-                                td = '<td> <a href="result?test_id='+test.id+'" class="btn btn-sm btn-success px-3">  Result &nbsp;</a> </td>';
+                                td = '<td> <a href="result?test_id='+test.id+'" class="btn btn-sm btn-success " >  Result </a> </td>';
                               }
                                 var row = '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +

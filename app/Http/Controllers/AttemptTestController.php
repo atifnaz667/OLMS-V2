@@ -109,23 +109,28 @@ class AttemptTestController extends Controller
             $mcq = McqChoice::find($mcq_id);
 
             $testChild = TestChild::find($request->test_child_id);
+            $nextChild = TestChild::where([['test_id',$testChild->test_id],['id','>',$testChild->id]])->first();
+            $test = Test::find($testChild->test_id);
+            if (!$nextChild) {
+              $test->status = 'Attempted';
+              $test->attempted_at = date('Y-m-d H:i:s');
+            }
+            if ($mcq->is_true == 1 && $isExpired == 0) {
+              $test->obtained_marks = $test->obtained_marks + 1;
+            }
+              $test->save();
+
+            if ($isExpired == 1) {
+              return response()->json(['status' => 'success', 'message' => 'Time limit for the question exceeded.']);
+            }
             $testChild->mcq_choice_id = $mcq_id;
             $testChild->is_correct = $mcq->is_true ?? 0;
             $testChild->is_attempted = 1;
             $testChild->save();
 
-            $nextChild = TestChild::where([['test_id',$testChild->test_id],['id','>',$testChild->id]])->first();
-            if (!$nextChild) {
-              $test = Test::find($testChild->test_id);
-              $test->status = 'Attempted';
-              $test->attempted_at = date('Y-m-d H:i:s');
-              $test->save();
-            }
           });
 
-          if ($isExpired == 1) {
-            return response()->json(['status' => 'success', 'message' => 'Time limit for the question exceeded.']);
-          }
+
           return response()->json(['status' => 'success', 'message' => 'Answer stored successfully']);
         } catch (\Exception $e) {
         $message = CustomErrorMessages::getCustomMessage($e);

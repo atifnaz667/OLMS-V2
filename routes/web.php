@@ -37,6 +37,7 @@ Route::get('/us-clear', function () {
 
 Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('/home', [HomePage::class, 'index'])->name('pages-home');
+  Route::get('getGraphDataAjax', [HomePage::class, 'getGraphDataAjax'])->name('getGraphDataAjax');
   Route::get('fetch-chapters-topics/{id}', [SyllabusPreparationController::class, 'fetchData'])->name(
     'fetch-chapters-topics'
   );
