@@ -15,13 +15,13 @@ $configData = Helper::appClasses();
 @section('content')
 <div class="row mt-5">
   <div class="col-sm-3">
-    <a href="test/create" class="form-control btn btn-primary">Create Test</a>
+    <a href="test/create" class="form-control btn btn-info"><i class="menu-icon tf-icons ti ti-clipboard-text"></i>Create Test</a>
   </div>
   <div class="col-sm-3">
-    <a href="test/list" class="form-control btn btn-primary">Tests List</a>
+    <a href="test/list" class="form-control btn btn-warning"><i class="menu-icon tf-icons ti ti-file-certificate"></i>Tests List</a>
   </div>
   <div class="col-sm-3">
-    <a href="suggestion/create" class="form-control btn btn-primary">Complaints & Suggestions</a>
+    <a href="suggestion/create" class="form-control btn btn-danger"><i class="menu-icon tf-icons ti ti-chart-infographic"></i>Complaints & Suggestions</a>
   </div>
 </div>
 

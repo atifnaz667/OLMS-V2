@@ -21,6 +21,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                  <div class="px-2">
                     <div class="row">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="checkAllChapters">
@@ -31,6 +32,7 @@
 
                     <div id="chapterList" class="row">
                     </div>
+                  </div>
 
                 </div>
                 <div class="modal-footer">

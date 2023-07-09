@@ -150,6 +150,7 @@ class SyllabusPreparationController extends Controller
         ->take($totalQuestions)
         ->with('mcqChoices')
         ->get();
+        $shortQuestions =[];
     } elseif ($test_type === 'Conceptual') {
       $longQuestions = Question::where('question_nature', 'Conceptual')
         ->where('question_type', 'long')
@@ -167,7 +168,8 @@ class SyllabusPreparationController extends Controller
         ->with('answer')
         ->get();
 
-      $questions = $longQuestions->concat($shortQuestions);
+      $questions = $longQuestions;
+      $shortQuestions = $shortQuestions;
     } elseif ($test_type === 'Exercise') {
       $longQuestions = Question::where('question_nature', 'Exercise')
         ->where('question_type', 'long')
@@ -185,7 +187,8 @@ class SyllabusPreparationController extends Controller
         ->with('answer')
         ->get();
 
-      $questions = $longQuestions->concat($shortQuestions);
+        $questions = $longQuestions;
+        $shortQuestions = $shortQuestions;
     } else {
       $longQuestions = Question::where('question_type', 'long')
         ->whereIn('topic_id', $topics)
@@ -201,7 +204,8 @@ class SyllabusPreparationController extends Controller
         ->with('answer')
         ->get();
 
-      $questions = $longQuestions->concat($shortQuestions);
+        $questions = $longQuestions;
+        $shortQuestions = $shortQuestions;
     }
 
     // Retrieve random questions from the specified topics
@@ -216,6 +220,7 @@ class SyllabusPreparationController extends Controller
       'book_name' => $book->name,
       'totalQuestions' => $totalQuestions,
       'questions' => $questions,
+      'shortQuestions' => $shortQuestions,
     ]);
     $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     $response->header('Pragma', 'no-cache');

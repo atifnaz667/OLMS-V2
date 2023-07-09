@@ -154,7 +154,7 @@ class AdminTestController extends Controller
             }
           }
         DB::commit();
-        return back()->with(['status' => 'success', 'message' => 'Test created successfully'], 200);
+        return redirect('admin/test/list')->with(['status' => 'success', 'message' => 'Test created successfully'], 200);
       } catch (\Exception $e) {
         DB::rollBack();
         $message = CustomErrorMessages::getCustomMessage($e);

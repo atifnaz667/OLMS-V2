@@ -17,22 +17,22 @@
     <h4> {{ Auth::user()->role->role }} Home Page</h4>
 
     <div class="row mt-5">
-        <div class="col-sm-3">
-            <a href="syllabus-preparation" class="form-control btn btn-primary">Full Sylabus Preraration</a>
+        <div class="col-sm-3 mb-2">
+            <a href="syllabus-preparation" class="form-control btn btn-success"> <i class="menu-icon tf-icons ti ti-book"></i>Full Sylabus Preraration</a>
         </div>
-        <div class="col-sm-3">
-            <a href="self/assessment" class="form-control btn btn-primary">Self Assessment</a>
+        <div class="col-sm-3 mb-2">
+            <a href="self/assessment" class="form-control btn btn-info"><i class="menu-icon tf-icons ti ti-clipboard-text"></i>Self Assessment</a>
         </div>
-        <div class="col-sm-3">
-            <a href="test/list" class="form-control btn btn-primary">Attempt Test</a>
+        <div class="col-sm-3 mb-2">
+            <a href="test/list" class="form-control btn btn-warning"><i class="menu-icon tf-icons ti ti-file-certificate"></i>Attempt Test</a>
         </div>
-        <div class="col-sm-3">
-            <a href="suggestion/create" class="form-control btn btn-primary">Complaints & Suggestions</a>
+        <div class="col-sm-3 mb-2">
+            <a href="suggestion/create" class="form-control btn btn-danger"><i class="menu-icon tf-icons ti ti-chart-infographic"></i>Complaints & Suggestions</a>
         </div>
     </div>
 
      <!-- Earning Reports Tabs-->
-  <div class="col-12 mb-4 mt-5">
+  <div class="col-12 mb-4 mt-3">
     <div class="card">
       <div class="card-header d-flex justify-content-between">
         <div class="card-title mb-0">

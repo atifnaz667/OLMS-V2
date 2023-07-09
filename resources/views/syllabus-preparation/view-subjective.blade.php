@@ -56,7 +56,7 @@
         <div class="tab-content">
             <!-- Short Question -->
             <div class="tab-pane fade active show" id="form-tabs-short" role="tabpanel">
-                @foreach ($questions as $question)
+                @foreach ($shortQuestions as $question)
                     <div class="row mt-4">
                         <div class="col">
                             <div class="card">
@@ -99,7 +99,7 @@
 
 
                                         <button class="btn btn-primary mt-3 mb-3"
-                                            onclick="toggleAnswer({{ $questionIndex }})">Answer</button>
+                                            onclick="toggleAnswer({{ $questionIndex }})" id="btn{{ $questionIndex }}">Show Answer</button>
                                         <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
 
                                             {!! $question->answer->answer !!}
@@ -120,12 +120,18 @@
             </div>
             <!-- Long Question -->
             <div class="tab-pane fade" id="form-tabs-long" role="tabpanel">
+              @php
+                  $i = 0;
+              @endphp
             @foreach ($questions as $question)
+              @php
+                  $i++;
+              @endphp
             <div class="row mt-4">
                 <div class="col">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Q{{ $questionIndex }}. {{ $question->description }}</h5>
+                            <h5 class="card-title">Q{{ $i }}. {{ $question->description }}</h5>
                             <div class="row">
                                 <div class="col-6">
                                     <ul class="list-group">
@@ -146,7 +152,7 @@
 
 
                                 <button class="btn btn-primary mt-3 mb-3"
-                                    onclick="toggleAnswer({{ $questionIndex }})">Answer</button>
+                                    onclick="toggleAnswer({{ $questionIndex }})" id="btn{{ $questionIndex }}">Show Answer</button>
                                 <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
 
                                     {!! $question->answer->answer !!}
@@ -176,6 +182,12 @@
         function toggleAnswer(questionIndex) {
             var answerText = document.getElementById('answer' + questionIndex);
             answerText.classList.toggle('d-none');
+            let button = $('#btn' + questionIndex).text();
+            if (button == 'Show Answer') {
+              $('#btn' + questionIndex).text('Hide Answer');
+            }else{
+              $('#btn' + questionIndex).text('Show Answer');
+            }
         }
     </script>
 @endsection

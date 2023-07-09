@@ -8,14 +8,14 @@
     },
     {
       "url": "test/create",
-      "icon": "menu-icon tf-icons ti ti-file",
+      "icon": "menu-icon tf-icons ti ti-clipboard-text",
       "name": "Create Test",
       "slug": "test/create"
     },
     {
       "url": "test/list",
       "name": "Test Lists",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
+      "icon": "menu-icon tf-icons ti ti-file-certificate",
       "slug": "test/list"
     },
     {
