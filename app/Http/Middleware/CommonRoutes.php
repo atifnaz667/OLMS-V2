@@ -20,6 +20,7 @@ class CommonRoutes
         if(!Auth::user()){
             return redirect('/');
         }
+
         return $next($request);
     }
 }

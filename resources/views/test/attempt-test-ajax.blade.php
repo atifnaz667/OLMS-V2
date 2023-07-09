@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-12 ">
                   <h6 class="ml-2">Question:</h6>
-                  <h6>{{ ucFirst($childToAttempt->question->description) }}</h6>
+                  <h6>{!! ucFirst($childToAttempt->question->description) !!}</h6>
                 </div>
                 <div class="col-12 my-3">
                   <table class="table table-striped">

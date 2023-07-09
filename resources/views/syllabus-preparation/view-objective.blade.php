@@ -47,7 +47,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Q{{ $questionIndex }}. {{ $question->description }}</h5>
+                        <h5 class="card-title">Q{{ $questionIndex }}. {!! $question->description !!}</h5>
                         <div class="row">
                             <div class="col-6">
                                 <ul class="list-group">

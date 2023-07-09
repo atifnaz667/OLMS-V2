@@ -51,7 +51,7 @@
                     <div class="p-4">
                       <div class="row">
                         <div class="col-11">
-                          <h5>{{ $key+1 }}) {{ $child->question->description }}</h5>
+                          <h5>{{ $key+1 }}) {!! $child->question->description !!}</h5>
                         </div>
                         <div class="col-1 ">
                           @if ($child->is_correct == 1)
