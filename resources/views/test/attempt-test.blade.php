@@ -53,7 +53,7 @@ $customizerHidden = ($customizerHidden ?? '');
             console.log(timeLeft)
             if (timeLeft === 0) {
               submitAnswer();
-              timerElement.text("Time's up!");
+              timerElement.text("00");
             } else {
               timeLeft--; // Decrease the time left by 1 second
             }
@@ -109,18 +109,7 @@ $customizerHidden = ($customizerHidden ?? '');
                   },
                   success: function(response) {
                     fetchTestRecords();
-                    var status = response.status;
-                        var message = response.message;
-                        $('.toast-ex .fw-semibold').text(status);
-                        $('.toast-ex .toast-body').text(message);
 
-                        // Show the toast notification
-                        selectedType = "text-success";
-                        selectedAnimation = "animate__fade";
-                        toastAnimationExample.classList.add(selectedAnimation);
-                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
-                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
-                        toastAnimation.show();
                   },
                   error: function(xhr, status, error) {
                       console.error(error);
@@ -131,6 +120,8 @@ $customizerHidden = ($customizerHidden ?? '');
 
 
           function validate() {
+            $("#btn-div").html('<button style="float:right" class="btn btn-primary waves-effect waves-light px-4" type="button" disabled=""><span class="spinner-border me-1" role="status" aria-hidden="true"></span>Loading...</button>');
+
             var checkboxes = document.getElementsByName("checkboxGroup");
             var checkedCount = 0;
             for (var i = 0; i < checkboxes.length; i++) {

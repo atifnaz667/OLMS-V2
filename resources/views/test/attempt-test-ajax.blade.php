@@ -16,15 +16,20 @@
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                   <div >
-                    <h3 class="p-3" id="timer">{{ $test->question_time }}</h3>
+                    <h3 style="border: 1px solid #d4c0c0;" class="p-3" id="timer">{{ $test->question_time }}</h3>
                   </div>
                 </div>
                 <div class="col-12 ">
-                  <h6 class="ml-2">Question:</h6>
-                  <h6>{!! ucFirst($childToAttempt->question->description) !!}</h6>
                 </div>
                 <div class="col-12 my-3">
-                  <table class="table table-striped">
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <td colspan="2" class="py-4">
+                          <h6>{!! ucFirst($childToAttempt->question->description) !!}</h6>
+                        </td>
+                      </tr>
+                    </thead>
                     @foreach ($childToAttempt->question->mcqChoices as $mcqChoices)
                         <tr>
                           <td style="width:5%;  zoom: 1.5; "> <input class="form-check-input checkbox" type="checkbox" name="checkboxGroup" value="{{ $mcqChoices->id }}" onclick="handleCheckboxChange(this)" ></td>
@@ -35,8 +40,9 @@
                         @endforeach
                     </table>
                   </div>
-                <button type="button" onclick="validate()" class="btn btn-primary "
-                    id="save" disabled>Save</button>
+                  <div class="px-3" id="btn-div">
+                    <button type="button" disabled onclick="validate()" class="btn btn-primary px-4" style="float:right" id="save">Save &amp; Next</button>
+                  </div>
               </div>
             </div>
           </div>

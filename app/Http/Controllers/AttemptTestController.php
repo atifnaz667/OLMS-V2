@@ -50,7 +50,7 @@ class AttemptTestController extends Controller
       }
       $test = Test::find($req->test_id);
       if ($test->status == 'Attempted') {
-        return view('test.test-completed');
+        return view('test.test-completed',['test_id'=>$req->test_id]);
       }
       $attemptedCount = TestChild::where([['test_id',$req->test_id],['is_viewed',1]])->count();
       if ($attemptedCount == 0) {
@@ -61,8 +61,11 @@ class AttemptTestController extends Controller
         $childToAttempt = TestChild::with('question.mcqChoices')->find($testChild->id);
       }else{
         $testChild = TestChild::with('question.mcqChoices')->where([['test_id',$req->test_id],['is_viewed',1]])->orderBy('id','desc')->first();
-        if (!$testChild) {
-          return view('test.test-completed');
+        if ($attemptedCount == $test->total_questions && $test->question_time <  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )) {
+          $test->status = 'Attempted';
+          $test->attempted_at = date('Y-m-d H:i:s');
+          $test->save();
+          return view('test.test-completed',['test_id'=>$req->test_id]);
         }
         if ($test->question_time >  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )  && $testChild->is_attempted == 0) {
           $childToAttempt = $testChild;
