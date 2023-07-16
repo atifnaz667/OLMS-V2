@@ -42,13 +42,14 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('admin/test/chapters', [AdminTestController::class, 'getChaptersForTest'])->name('admin/test/chapters');
   Route::get('admin/test/students', [AdminTestController::class, 'getStudentsForTest'])->name('admin/test/students');
   Route::post('admin/store/test', [AdminTestController::class, 'store'])->name('admin/store/test');
-  Route::get('fetchTestsRecordsAdmin', [AdminTestController::class, 'fetchTestsRecords'])->name('fetchTestsRecordsAdmin');
+  Route::get('fetchTestsRecordsAdmin', [AdminTestController::class, 'fetchTestsRecords'])->name(
+    'fetchTestsRecordsAdmin'
+  );
 
   //---------------------------------------------Suggestion Routes------------------------------------
   Route::get('suggestion/list', [SuggestionController::class, 'index'])->name('suggestion/list');
   Route::get('fetchSuggestionRecords', [SuggestionController::class, 'getSuggestions'])->name('fetchSuggestionRecords');
   Route::get('suggestion/destroy/{id}', [SuggestionController::class, 'destroy'])->name('suggestion.destroy');
-
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
@@ -67,9 +68,9 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   //---------------------------------Self Assessment routes-------------------
   Route::get('self/assessment', [SelfAssessmentController::class, 'create'])->name('self/assessment');
   Route::post('self/assessment', [SelfAssessmentController::class, 'store'])->name('self/assessment');
-  Route::get('self/assessment/chapters', [SelfAssessmentController::class, 'getChaptersForTest'])->name('self/assessment/chapters');
-
-
+  Route::get('self/assessment/chapters', [SelfAssessmentController::class, 'getChaptersForTest'])->name(
+    'self/assessment/chapters'
+  );
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {

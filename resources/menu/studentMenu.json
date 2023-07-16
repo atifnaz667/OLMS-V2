@@ -9,7 +9,7 @@
     {
       "url": "syllabus-preparation",
       "icon": "menu-icon tf-icons ti ti-book",
-      "name": "Full Syllabus Preparation",
+      "name": "My Digital Bag",
       "slug": "syllabus-preparation"
     },
     {
@@ -26,7 +26,7 @@
     },
     {
       "url": "suggestion/create",
-      "name": "Complaints & Suggestions",
+      "name": "Human Error & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",
       "slug": "auth-register-basic"
     }

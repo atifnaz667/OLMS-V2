@@ -50,7 +50,7 @@
     },
     {
       "url": "suggestion/list",
-      "name": "Complaints & Suggestions",
+      "name": "Human Error & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",
       "slug": "auth-register-basic"
     }

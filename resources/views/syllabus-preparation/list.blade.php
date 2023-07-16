@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Syllabus Preparation')
+@section('title', 'My Digital Bag')
 
 @section('content')
     <h4 class="fw-bold py-3 mb-2">
@@ -21,18 +21,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <div class="px-2">
-                    <div class="row">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="checkAllChapters">
-                            <label class="form-check-label" for="checkAllChapters">Check All</label>
-                            <input type="hidden" class="form-control" required id="test-type" name="test-type">
+                    <div class="px-2">
+                        <div class="row">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="checkAllChapters">
+                                <label class="form-check-label" for="checkAllChapters">Check All</label>
+                                <input type="hidden" class="form-control" required id="test-type" name="test-type">
+                            </div>
+                        </div>
+
+                        <div id="chapterList" class="row">
                         </div>
                     </div>
-
-                    <div id="chapterList" class="row">
-                    </div>
-                  </div>
 
                 </div>
                 <div class="modal-footer">
@@ -71,8 +71,16 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="card-title header-elements">
-                            <h5 class="m-0 me-2"><i class="fa-solid fa-book fa-2xl" style="margin-right:.5em"></i>
-                                {{ $book->name }}</h5>
+                            <h5 class="m-0 me-2">
+                                @if ($book->file != null)
+                                    <img src="files/books/{{ $book->file }}" alt="Book Icon"
+                                        style="margin-right: 0.5em; height: 2em;">
+                                @else
+                                    <i class="fa-solid fa-book fa-2xl" style="margin-right: 0.5em;"></i>
+                                @endif
+                                {{ $book->name }}
+                            </h5>
+
                             <div class="card-title-elements">
                             </div>
                             <div class="card-title-elements ms-auto">
@@ -80,20 +88,20 @@
                                     <button type="button" class="btn btn-outline-primary waves-effect"
                                         data-bs-toggle="modal" data-bs-target="#chapterModal"
                                         data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
-                                        data-question-type="Objective">Objective</button>
+                                        data-question-type="Objective">Multiple Choice Questions</button>
                                     <div class="btn-group" role="group">
                                         <button id="btnGroupDrop1" type="button"
                                             class="btn btn-outline-danger dropdown-toggle waves-effect"
-                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">Subjective</button>
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Detailed
+                                            Questions</button>
                                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
                                             <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#chapterModal"
                                                 data-book-id="{{ $book->id }}" data-question-type="Subjective"
-                                                href="javascript:void(0);">Conceptual &
+                                                href="javascript:void(0);">SLO &
                                                 Exercise</a>
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#chapterModal"
-                                                data-book-id="{{ $book->id }}" data-question-type="Conceptual"
-                                                href="javascript:void(0);">Conceptual</a>
+                                            <a class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                                data-question-type="Conceptual" href="javascript:void(0);">SLO</a>
                                             <a class="dropdown-item" data-bs-toggle="modal"
                                                 data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
                                                 data-question-type="Exercise" href="javascript:void(0);">Exercise</a>

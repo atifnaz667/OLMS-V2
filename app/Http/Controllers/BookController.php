@@ -120,27 +120,41 @@ class BookController extends Controller
    */
   public function update(Request $request, $id)
   {
-    $data = array_merge(['id' => $id], $request->all());
+    // $data = array_merge(['id' => $id], $request->all());
 
     $rules = [
-      'id' => 'required|int|exists:books,id',
-      'name' => 'required|string|max:125',
+      'bookId' => 'required|int|exists:books,id',
+      'updateBookName' => 'required|string|max:125',
     ];
 
-    $validator = Validator::make($data, $rules);
+    $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
 
     try {
-      $book = Book::findOrFail($id);
-      $book->update($request->all());
+      $filePath = 'NULL';
+      $book = Book::findOrFail($request->bookId);
+      $book->name = $request->updateBookName;
+      if ($request->hasFile('updateBookIcon')) {
+        $file = $request->file('updateBookIcon');
+        $ext = $file->getClientOriginalExtension();
+        $filename = time() . rand(1, 100) . '.' . $ext;
+        $file->move(public_path('files/books'), $filename);
+        $filePath = $filename;
+        $book->file = $filePath;
+      }
+      $book->save();
 
-      return response()->json(['status' => 'success', 'message' => 'Book updated successfully', 'book' => $book], 200);
+      return redirect()
+        ->back()
+        ->with('success', 'Book updated successfully');
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
-      return response()->json(['status' => 'error', 'message' => $message], 500);
+      return redirect()
+        ->back()
+        ->with('error', $message);
     }
   }
 

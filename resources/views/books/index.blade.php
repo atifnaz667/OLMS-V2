@@ -21,7 +21,9 @@
         <span class="text-muted fw-light">Home/</span>
         Books
     </h4> --}}
-
+    @if (session('success'))
+        <input type="hidden" class="hidden" value=" {{ session('success') }}">
+    @endif
     <div class="row">
         <div class="col">
             <h6 class="mt-4"> Add Board Book Class </h6>
@@ -259,14 +261,22 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body mx-0 flex-grow-0">
-                            <form class="update-class pt-0" id="addBookForm">
+                            {{-- <form class="update-book pt-0" id="updateBookForm"> --}}
+                            <form action="{{ route('book.update', ['book' => 1]) }}" class="update-book pt-0"
+                                method="POST" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <div class="mb-3">
                                     <label class="form-label" for="class-name">Book Name</label>
-                                    <input type="text" class="form-control" required id="update-book-name"
-                                        placeholder="FBISE" name="update-book-name" aria-label="BOARD" />
+                                    <input type="text" class="form-control" required id="updateBookName"
+                                        placeholder="FBISE" name="updateBookName" aria-label="BOARD" />
                                     <input type="hidden" class="form-control" required id="bookId"
                                         placeholder="FBISE" name="bookId" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="updateBookIcon">Book Icon</label>
+                                    <input type="file" id="updateBookIcon" name="updateBookIcon" class="form-control"
+                                        accept="image/*">
                                 </div>
                                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                                 <button type="reset" class="btn btn-label-secondary"
@@ -309,6 +319,18 @@
     <script>
         $(document).ready(function() {
             getData();
+            if ($('.hidden').length > 0) {
+                var successMessage = $('.hidden').val();
+                var status = "success";
+                $('.toast-ex .fw-semibold').text(status);
+                $('.toast-ex .toast-body').text(successMessage);
+                selectedType = "text-success";
+                selectedAnimation = "animate__fade";
+                toastAnimationExample.classList.add(selectedAnimation);
+                toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                toastAnimation.show();
+            }
         });
         const toastAnimationExample = document.querySelector('.toast-ex');
         var offcanvasElementbook = document.getElementById('offcanvasUpdateBook');
@@ -323,7 +345,7 @@
                 url: "{{ route('book.show', '') }}" + "/" + id,
                 type: 'GET',
                 success: function(response) {
-                    $('#update-book-name').val(response.Book.name);
+                    $('#updateBookName').val(response.Book.name);
                     $('#bookId').val(response.Book.id);
                     offcanvasbook.show();
                 },
@@ -368,17 +390,22 @@
         }
 
         function updateBook(id) {
-            // Get the form data
-            var _token = $('input[name="_token"]').val();
-            var name = $('#update-book-name').val();
-            var formData = {
-                _token: _token,
-                name: name
-            };
+            var bookName = $('#updateBookName').val();
+            var formData = new FormData();
+            formData.append('name', bookName);
+            formData.append('book-icon', $('#updateBookIcon')[0].files[0]);
+            formData.append('bookId', id);
+            formData.append('_token', '{{ csrf_token() }}');
+            console.log(formData);
             $.ajax({
                 url: "{{ route('book.update', '') }}" + "/" + id,
                 type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 data: formData,
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     var status = response.status;
                     var message = response.message;
@@ -497,7 +524,11 @@
         }
 
         // Handle the form submission
-        $('#addBookForm').on('submit', function(event) {
+        function UpdateClick() {
+            var bookId = $('#bookId').val();
+            updateBook(bookId);
+        }
+        $('#updateBookForm').on('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
             var bookId = $('#bookId').val();
             updateBook(bookId);
