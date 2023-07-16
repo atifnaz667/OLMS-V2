@@ -71,20 +71,21 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="card-title header-elements">
-                            <h5 class="m-0 me-2">
+                          <div class="row">
+                            <div class="col-12 text-center">
+                              <h5 class="m-0 me-2">
                                 @if ($book->file != null)
                                     <img src="files/books/{{ $book->file }}" alt="Book Icon"
-                                        style="margin-right: 0.5em; height: 2em;">
+                                        style="margin-right: 0.5em; height: 2em; width:2em;">
                                 @else
                                     <i class="fa-solid fa-book fa-2xl" style="margin-right: 0.5em;"></i>
                                 @endif
                                 {{ $book->name }}
                             </h5>
-
-                            <div class="card-title-elements">
                             </div>
-                            <div class="card-title-elements ms-auto">
-                                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <div class="col-12 col-sm-9  mt-4 mx-auto">
+                              <div class="card-title-elements  ">
+                                <div class="btn-group " role="group" aria-label="Button group with nested dropdown">
                                     <button type="button" class="btn btn-outline-primary waves-effect"
                                         data-bs-toggle="modal" data-bs-target="#chapterModal"
                                         data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
@@ -109,8 +110,9 @@
                                     </div>
                                 </div>
                             </div>
+                            </div>
+                          </div>
                         </div>
-                        <p class="card-text">{{ Auth::user()->class->name }}</p>
                     </div>
                 </div>
             </div>

@@ -29,7 +29,7 @@
         </div>
         <div class="col-sm-3 mb-2">
             <a href="test/list" class="form-control btn btn-warning"><i
-                    class="menu-icon tf-icons ti ti-file-certificate"></i>Attempt Test</a>
+                    class="menu-icon tf-icons ti ti-file-certificate"></i>Digital Task</a>
         </div>
         <div class="col-sm-3 mb-2">
             <a href="suggestion/create" class="form-control btn btn-danger"><i
