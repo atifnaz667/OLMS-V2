@@ -44,7 +44,7 @@ class TestController extends Controller
     try {
       $perPage = $request->input('perPage', 10);
       $sort = $request->input('sort_by', 'id');
-      $sort_order = $request->input('sort_order', 'asc');
+      $sort_order = $request->input('sort_order', 'desc');
       $table = $request->input('table', 'tests');
       $sorting = $table . '.' . $sort;
 

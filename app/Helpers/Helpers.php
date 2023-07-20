@@ -199,4 +199,8 @@ class Helpers
     }
     return $date;
   }
+
+  public static function formatDateTime($date){
+    return $date != '' ? date("F j, Y, g:i a", strtotime($date)) : '';
+  }
 }

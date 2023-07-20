@@ -26,7 +26,7 @@
               </div>
               <div class="col-6">
                 <h6>
-                  Attempted At : {{ $test->attempted_at }}
+                  Attempted At : {{ app\Helpers\Helpers::formatDateTime($test->attempted_at) }}
                 </h6>
               </div>
             </div>
@@ -86,13 +86,15 @@
                                   <b> Correct Answer :  </b>
                                   {{ $correctAnswer->choice }}
                               </label>
-                          </li>
-                            <li class="list-group-item ">
-                              <label class="form-check-label">
-                                  <b> Reason :  </b>
-                                  {{ $correctAnswer->reason }}
-                              </label>
-                          </li>
+                            </li>
+                            @if ($correctAnswer->reason != '')
+                              <li class="list-group-item ">
+                                <label class="form-check-label">
+                                    <b> Reason :  </b>
+                                    {{ $correctAnswer->reason }}
+                                </label>
+                              </li>
+                            @endif
                         </ul>
                     </div>
                 </div>

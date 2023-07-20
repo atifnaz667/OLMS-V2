@@ -16,7 +16,7 @@
 
     <h4 class="fw-bold py-1 ">
         <span class="text-muted fw-light">Home/</span>
-        Tests
+        Digital task
     </h4>
     <!-- Sticky Actions -->
     <div class="row">
@@ -51,13 +51,11 @@
                             </select>
                         </div>
                     </div>
-                    <div
-                        class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                        <h5 class="card-title mb-sm-0 me-2"></h5>
-                        <div class="action-btns">
-                            <button type="button" onclick="fetchTestRecords()" class="btn btn-primary"
-                                id="filterButton">Filter</button>
-                        </div>
+                    <div class="row mt-4">
+                      <div class="col-12 d-flex justify-content-end">
+                        <button type="button" onclick="fetchTestRecords()" class="btn btn-primary"
+                            id="filterButton">Filter</button>
+                      </div>
                     </div>
                 </div>
                 <hr>

@@ -9,12 +9,15 @@
             <div class="px-3">
               <div class="row">
                 <div class="col-6">
-                  <h6> Question No ({{ $attemptedCount + 1 }})</h6>
+
                 </div>
                 <div class="col-6 d-flex justify-content-end">
-                  <h6>Total Questions ({{ $test->total_questions }})</h6>
+
                 </div>
-                <div class="col-12 d-flex justify-content-end">
+                <div class="col-6 d-flex justify-content-start">
+                  <h6 style="border: 1px solid #d4c0c0;" class="p-4">Total Questions ({{ $test->total_questions }})</h6>
+                </div>
+                <div class="col-6 d-flex justify-content-end">
                   <div >
                     <h3 style="border: 1px solid #d4c0c0;" class="p-3" id="timer">{{ $test->question_time }}</h3>
                   </div>
@@ -22,18 +25,18 @@
                 <div class="col-12 ">
                 </div>
                 <div class="col-12 my-3">
-                  <table class="table table-hover table-bordered">
-                    <thead>
-                      <tr>
-                        <td colspan="2" class="py-4">
-                          <h6>{!! ucFirst($childToAttempt->question->description) !!}</h6>
-                        </td>
-                      </tr>
-                    </thead>
+                  <table class="" style="width:100%">
+                    <tr style="border: 1px solid black;">
+                      <td colspan="2" class="py-4">
+                        <h6> Question No ({{ $attemptedCount + 1 }})</h6>
+                        <h6>{!! ucFirst($childToAttempt->question->description) !!}</h6>
+                      </td>
+                    </tr>
+
                     @foreach ($childToAttempt->question->mcqChoices as $mcqChoices)
-                        <tr>
-                          <td style="width:5%;  zoom: 1.5; "> <input class="form-check-input checkbox" type="checkbox" name="checkboxGroup" value="{{ $mcqChoices->id }}" onclick="handleCheckboxChange(this)" ></td>
-                          <td style="vertical-align: middle;">
+                        <tr style="border: 1px solid black;">
+                          <td style="width:5%;  zoom: 1.5; border: 1px solid black;"> <input class="form-check-input checkbox" type="checkbox" name="checkboxGroup" value="{{ $mcqChoices->id }}" onclick="handleCheckboxChange(this)" ></td>
+                          <td style="vertical-align: middle; border: 1px solid black;">
                             <h6>{{ ucFirst($mcqChoices->choice) }}</h6>
                           </td>
                         </tr>

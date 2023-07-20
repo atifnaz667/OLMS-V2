@@ -26,6 +26,13 @@ $customizerHidden = ($customizerHidden ?? '');
     padding: 20px; /* Adjust the padding as needed */
     font-size: 36px; /* Adjust the font size as needed */
   }
+
+  table, th, td {
+  border: 1px solid black;
+  }
+  th, td {
+    padding: 15px;
+  }
 </style>
 {{-- @endsection --}}
 @extends('layouts/commonMaster' )
@@ -52,7 +59,7 @@ $customizerHidden = ($customizerHidden ?? '');
             timerElement.text(timeLeft);
             console.log(timeLeft)
             if (timeLeft === 0) {
-              submitAnswer();
+              // submitAnswer();
               timerElement.text("00");
             } else {
               timeLeft--; // Decrease the time left by 1 second
