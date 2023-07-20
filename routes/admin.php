@@ -16,6 +16,7 @@ $controller_path = 'App\Http\Controllers';
 
 Route::middleware([AlreadyLoggedIn::class])->group(function () {
   Route::get('/', [LoginController::class, 'index']);
+  Route::get('/login/{type}', [LoginController::class, 'show']);
   Route::post('login', [LoginController::class, 'login']);
   Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 });

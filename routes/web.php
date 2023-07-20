@@ -76,4 +76,5 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::resource('user', UserController::class);
   Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');
   Route::post('assign-user', [UserController::class, 'assignUser'])->name('assign-user');
+  Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
 });

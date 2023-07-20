@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -55,6 +56,40 @@ class UserController extends Controller
         'status' => 'error',
         'message' => 'Failed to store username and password.',
       ]);
+    }
+  }
+
+  /**
+   * Display the specified resource.
+   */
+  public function editUser()
+  {
+    $user_id = Auth::user()->id;
+    $validator = Validator::make(
+      ['id' => $user_id],
+      [
+        'id' => 'required|exists:users,id',
+      ]
+    );
+
+    if ($validator->fails()) {
+      return redirect()
+        ->back()
+        ->withErrors($validator->errors()->first());
+    }
+
+    try {
+      $user = User::with('role')->findOrFail($user_id);
+      $results = DropdownHelper::getBoardBookClass();
+      $classes = $results['Classes'];
+      $boards = $results['Boards'];
+      return view('users.edit', ['user' => $user,'classes' => $classes,'boards' => $boards]);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return redirect()
+        ->back()
+        ->withErrors($message);
     }
   }
 
@@ -118,6 +153,12 @@ class UserController extends Controller
     }
     if (!is_null($request->board_id)) {
       $user->board_id = $request->board_id;
+    }
+    if (!is_null($request->name)) {
+      $user->name = $request->name;
+    }
+    if (!is_null($request->email)) {
+      $user->email = $request->email;
     }
     if (!is_null($request->class_id)) {
       $user->class_id = $request->class_id;
