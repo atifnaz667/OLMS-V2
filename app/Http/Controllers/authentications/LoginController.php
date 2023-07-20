@@ -16,7 +16,13 @@ class LoginController extends Controller
   public function index()
   {
     $pageConfigs = ['myLayout' => 'blank'];
-    return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs]);
+    return view('content.authentications.login-main', ['pageConfigs' => $pageConfigs]);
+  }
+
+  public function show($type)
+  {
+    $pageConfigs = ['myLayout' => 'blank'];
+    return view('content.authentications.auth-login-basic', ['pageConfigs' => $pageConfigs, 'type' => $type]);
   }
 
   public function login(Request $req)

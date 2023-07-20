@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ session()->get('locale') ?? app()->getLocale() }}"
-    class="{{ $configData['style'] }}-style {{ $navbarFixed ?? '' }} {{ $menuFixed ?? '' }} {{ $menuCollapsed ?? '' }} {{ $footerFixed ?? '' }} {{ $customizerHidden ?? '' }}"
+    class="{{ $configData['style'] }}-style {{ $navbarFixed ?? '' }} layout-menu-offcanvas  layout-menu-collapsed {{ $footerFixed ?? '' }} {{ $customizerHidden ?? '' }}"
     dir="{{ $configData['textDirection'] }}" data-theme="{{ $configData['theme'] }}"
     data-assets-path="{{ asset('/assets') . '/' }}" data-base-url="{{ url('/') }}" data-framework="laravel"
     data-template="{{ $configData['layout'] . '-menu-' . $configData['theme'] . '-' . $configData['style'] }}">
@@ -42,7 +42,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-          There is some error
+            There is some error
         </div>
     </div>
     <!-- Layout Content -->

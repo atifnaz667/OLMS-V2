@@ -6,6 +6,21 @@
 
 @section('vendor-style')
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
+    <style>
+        .custom-btn {
+            font-size: 20px;
+            height: 100px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .custom-btn i {
+            font-size: 40px;
+            margin-right: 10px;
+        }
+    </style>
 @endsection
 @section('vendor-script')
     <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
@@ -20,22 +35,27 @@
 
     <div class="row mt-5">
         <div class="col-sm-3 mb-2">
-            <a href="syllabus-preparation" class="form-control btn btn-success"> <i
-                    class="menu-icon tf-icons ti ti-book"></i>My Digital Bag</a>
+            <a href="syllabus-preparation" class="form-control btn btn-success custom-btn">
+                <i class="menu-icon tf-icons ti ti-book"></i> My Digital Bag
+            </a>
         </div>
         <div class="col-sm-3 mb-2">
-            <a href="self/assessment" class="form-control btn btn-info"><i
-                    class="menu-icon tf-icons ti ti-clipboard-text"></i>Self Assessment</a>
+            <a href="self/assessment" class="form-control btn btn-info custom-btn">
+                <i class="menu-icon tf-icons ti ti-clipboard-text"></i> Self Assessment
+            </a>
         </div>
         <div class="col-sm-3 mb-2">
-            <a href="test/list" class="form-control btn btn-warning"><i
-                    class="menu-icon tf-icons ti ti-file-certificate"></i>Digital Task</a>
+            <a href="test/list" class="form-control btn btn-warning custom-btn">
+                <i class="menu-icon tf-icons ti ti-file-certificate"></i> Digital Task
+            </a>
         </div>
         <div class="col-sm-3 mb-2">
-            <a href="suggestion/create" class="form-control btn btn-danger"><i
-                    class="menu-icon tf-icons ti ti-chart-infographic"></i>Human Error & Suggestions</a>
+            <a href="suggestion/create" class="form-control btn btn-danger custom-btn">
+                <i class="menu-icon tf-icons ti ti-chart-infographic"></i> Human Error & Suggestions
+            </a>
         </div>
     </div>
+
 
     <!-- Earning Reports Tabs-->
     <div class="col-12 mb-4 mt-3">
