@@ -75,7 +75,7 @@ class SelfAssessmentController extends Controller
       $chapters = Chapter::where([['book_id',$req->bookId],['board_id',$user->board_id],['class_id',$user->class_id]])->get();
       $cols = ' <div class="col-12 mb-2"> <input class="form-check-input " style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All</div>';
       foreach ($chapters as $chapter) {
-        $cols = $cols.' <div class="col-sm-3 col-6 mb-2"> <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" name="chapters[]" class="form-check-input checkboxes" value="'.$chapter->id.'"> '.$chapter->name.'</div>';
+        $cols = $cols.' <div class="col-sm-3 col-12 mb-2"> <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" name="chapters[]" class="form-check-input checkboxes" value="'.$chapter->id.'"> '.$chapter->name.'</div>';
       }
       if (count($chapters) == 0) {
         $cols = ' <div class="col-12"> <h6>No Chapters found against this book </h6></div>';

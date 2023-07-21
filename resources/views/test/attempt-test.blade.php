@@ -148,9 +148,11 @@ $customizerHidden = ($customizerHidden ?? '');
 
           for (var i = 0; i < checkboxes.length; i++) {
             checkboxes[i].checked = false;
+            $(checkboxes[i]).closest('tr').css('background-color', 'white');
           }
 
           checkbox.checked = true;
+          $(checkbox).closest('tr').css('background-color', '#6fe79540');
           $("#save").removeAttr('disabled');
         }
 

@@ -45,7 +45,6 @@
                             <label class="form-label" for="class_id">Test Type</label>
                             <select id="type" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select Test Type</option>
-                                <option value="Self">Self</option>
                                 <option value="Parent">Parent</option>
                                 <option value="Monthly">Monthly</option>
                             </select>

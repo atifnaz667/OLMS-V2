@@ -61,7 +61,9 @@ class TestController extends Controller
         $created_for = AssignUser::where('parent_id',$user_id)->first();
         $created_for = $created_for->child_id;
       }
-      $tests = Test::withCount('obtainedMarks')->when($from, function ($query) use ($from) {
+      $tests = Test::withCount('obtainedMarks')
+      ->where('test_type','!=','Self')
+      ->when($from, function ($query) use ($from) {
           $query->where('created_at', '>',$from. " 00:00:00");
         })
         ->when($to, function ($query) use ($to) {

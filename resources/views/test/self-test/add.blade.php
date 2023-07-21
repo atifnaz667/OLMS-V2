@@ -35,6 +35,11 @@
                       @endforeach
                     </select>
                   </div>
+                </div>
+                <div class="row px-4 mt-3 mb-5" id="chaptersRow">
+                  <h6>Please select book</h6>
+                </div>
+                <div class="row px-4">
                   <div class="col-sm-3 mb-3">
                     <label for="nameExLarge" class="form-label">Total Questions</label>
                     <input type="input" class="form-control" name="totalQuestions" placeholder="Enter Total Questions" required value="10">
@@ -45,9 +50,6 @@
                       {!! $timeOptions !!}
                     </select>
                   </div>
-                </div>
-                <div class="row px-4 mt-3 mb-5" id="chaptersRow">
-                  <h6>Please select book</h6>
                 </div>
                 <div class="row">
                   <div class="col-12 px-4 mb-4">

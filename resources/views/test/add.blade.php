@@ -59,6 +59,11 @@
                   <select name="book" id="book" class="form-select" onchange="getChapters(this.value)" required>
                   </select>
                 </div>
+              </div>
+              <div class="row px-3 mt-3 mb-5" id="chaptersRow">
+                <h6>Please select book</h6>
+              </div>
+              <div class="row px-4">
                 <div class="col-sm-3 mb-3">
                   <label for="nameExLarge" class="form-label">Test Date</label>
                   <input type="date" class="form-control" name="testDate" value="{{ date("Y-m-d") }}" required>
@@ -74,9 +79,6 @@
                     {!! $timeOptions !!}
                   </select>
                 </div>
-              </div>
-              <div class="row px-3 mt-3 mb-5" id="chaptersRow">
-                <h6>Please select book</h6>
               </div>
             </form>
           </div>
