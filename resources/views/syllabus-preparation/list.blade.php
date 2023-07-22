@@ -5,10 +5,27 @@
 @extends('layouts/layoutMaster')
 
 @section('title', 'My Digital Bag')
+<style>
+    .card-header.header-elements,
+    .card-title.header-elements {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: space-around !important;
+    }
 
+    .custom {
+        display: flex;
+        align-items: center !important;
+    }
+
+    .list-group-item:first-child {
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+    }
+</style>
 @section('content')
     <h4 class="fw-bold py-3 mb-2">
-        <span class="text-muted fw-light">Syllabus/</span>
+        <span class="text-muted fw-light">My digital Bag/</span>
         Preparation
     </h4>
 
@@ -17,7 +34,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="chapterModalLabel">Select Chapters and Topics</h5>
+                    <h5 class="modal-title" id="chapterModalLabel">Select Units and Topics</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -71,53 +88,60 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="card-title header-elements">
-                          <div class="row">
-                            <div class="col-12 text-center">
-                              <h5 class="m-0 me-2">
-                                @if ($book->file != null)
-                                    <img src="files/books/{{ $book->file }}" alt="Book Icon"
-                                        style="margin-right: 0.5em; height: 2em; width:2em;">
-                                @else
-                                    <i class="fa-solid fa-book fa-2xl" style="margin-right: 0.5em;"></i>
-                                @endif
-                                {{ $book->name }}
-                            </h5>
-                            </div>
-                            <div class="col-12 col-sm-9  mt-4 mx-auto">
-                              <div class="card-title-elements  ">
-                                <div class="btn-group " role="group" aria-label="Button group with nested dropdown">
-                                    <button type="button" class="btn btn-outline-primary waves-effect"
-                                        data-bs-toggle="modal" data-bs-target="#chapterModal"
-                                        data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
-                                        data-question-type="Objective">Multiple Choice Questions</button>
-                                    <div class="btn-group" role="group">
-                                        <button id="btnGroupDrop1" type="button"
-                                            class="btn btn-outline-danger dropdown-toggle waves-effect"
-                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Detailed
-                                            Questions</button>
-                                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
-                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#chapterModal"
-                                                data-book-id="{{ $book->id }}" data-question-type="Subjective"
-                                                href="javascript:void(0);">SLO &
-                                                Exercise</a>
-                                            <a class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
-                                                data-question-type="Conceptual" href="javascript:void(0);">SLO</a>
-                                            <a class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
-                                                data-question-type="Exercise" href="javascript:void(0);">Exercise</a>
+                            <div class="row">
+                                <!-- Left side: Book icon and name -->
+                                <div class="col-6 col-sm-6 text-center">
+                                    <h6 class="m-0"> {{ $book->name }}</h6>
+                                    <h5 class="m-0">
+                                        @if ($book->file != null)
+                                            <img src="files/books/{{ $book->file }}" alt="Book Icon"
+                                                style=" height: 8em; width:8em;">
+                                        @else
+                                            {{-- <i class="fa-solid fa-book fa-2xl" style=""></i> --}}
+                                        @endif
+                                        {{-- {{ $book->name }} --}}
+                                    </h5>
+                                </div>
+                                <!-- Right side: Paper type buttons -->
+                                <div class="col-6 col-sm-6 mt-4 custom text-center">
+                                    <div class="list-group">
+                                        <button type="button"
+                                            class="list-group-item list-group-item-action btn-outline-primary waves-effect mb-2"
+                                            data-bs-toggle="modal" data-bs-target="#chapterModal"
+                                            data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
+                                            data-question-type="Objective">Multiple Choice Questions</button>
+                                        <div class="btn-group" role="group">
+                                            <button id="btnGroupDrop1" type="button"
+                                                class="list-group-item list-group-item-action btn-outline-danger dropdown-toggle waves-effect"
+                                                data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">Detailed Questions</button>
+                                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
+                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                                    data-question-type="Subjective" href="javascript:void(0);">SLO Based
+                                                    &
+                                                    Exercise</a>
+                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                                    data-question-type="Conceptual" href="javascript:void(0);">SLO
+                                                    Based
+                                                    Questions</a>
+                                                <a class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
+                                                    data-question-type="Exercise" href="javascript:void(0);">Exercise
+                                                    Questions</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                          </div>
                         </div>
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
+
 @endsection
 
 @section('page2-script')
@@ -165,7 +189,7 @@
                                 chapter.id + '">' + chapter.name + '</h5>';
                             chapterList += '</div>';
                             chapterList += '<div id="topicList_' + chapter.id +
-                                '" class="row row-cols-4"></div>';
+                                '" class="row row-col-4"></div>';
                         });
                         $('#chapterList').html(chapterList);
 

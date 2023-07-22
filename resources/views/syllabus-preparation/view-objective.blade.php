@@ -5,7 +5,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Syllabus Preparation')
+@section('title', 'Multiple Choice Questions')
 
 @section('content')
     <style>
@@ -16,23 +16,28 @@
         }
     </style>
     <h4 class="fw-bold py-3 mb-2">
-        <span class="text-muted fw-light">Syllabus/</span>
-        Preparation
+        <span class="text-muted fw-light">My Digital Bag/</span>
+        Multiple Choice Questions
     </h4>
     <div class="row">
         <div class="col-6">
-            <h5>Subject: {{ $book_name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>Class:
-                    {{ Auth::user()->class->name }}</span>
+            <h5>Subject: {{ $book_name }}
             </h5>
         </div>
         <div class="col-6 text-end">
             <h5>Total Marks: {{ $totalQuestions }}x1={{ $totalQuestions * 1 }}</h5>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <h5>Class: {{ Auth::user()->class->name }}
+            </h5>
+        </div>
+    </div>
 
     <div class="row mt-4">
         <div class="col text-center">
-            <h2 class="fw-bold">{{ $test_type }} Paper</h2>
+            <h2 class="fw-bold">Multiple Choice Questions</h2>
         </div>
     </div>
 

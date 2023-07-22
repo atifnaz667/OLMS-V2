@@ -150,7 +150,8 @@ class SyllabusPreparationController extends Controller
         ->take($totalQuestions)
         ->with('mcqChoices')
         ->get();
-        $shortQuestions =[];
+      $totalQuestions = $questions->count();
+      $shortQuestions = [];
     } elseif ($test_type === 'Conceptual') {
       $longQuestions = Question::where('question_nature', 'Conceptual')
         ->where('question_type', 'long')
@@ -187,8 +188,8 @@ class SyllabusPreparationController extends Controller
         ->with('answer')
         ->get();
 
-        $questions = $longQuestions;
-        $shortQuestions = $shortQuestions;
+      $questions = $longQuestions;
+      $shortQuestions = $shortQuestions;
     } else {
       $longQuestions = Question::where('question_type', 'long')
         ->whereIn('topic_id', $topics)
@@ -204,8 +205,8 @@ class SyllabusPreparationController extends Controller
         ->with('answer')
         ->get();
 
-        $questions = $longQuestions;
-        $shortQuestions = $shortQuestions;
+      $questions = $longQuestions;
+      $shortQuestions = $shortQuestions;
     }
 
     // Retrieve random questions from the specified topics

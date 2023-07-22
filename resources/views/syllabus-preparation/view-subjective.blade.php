@@ -5,7 +5,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Syllabus Preparation')
+@section('title', 'Exercise Questions')
 
 @section('content')
     <style>
@@ -16,22 +16,22 @@
         }
     </style>
     <h4 class="fw-bold py-3 mb-3">
-        <span class="text-muted fw-light">Syllabus/</span>
-        Preparation
+        <span class="text-muted fw-light">My Digital Bag/</span>
+        Exercise Questions
     </h4>
-  <div class="row">
-    <div class="col-6">
-          <h5>Subject: {{ $book_name }}</h5>
-      </div>
-      <div class="col-6 text-end">
-          <h5><span>Class: {{ Auth::user()->class->name }}</span></h5>
-      </div>
+    <div class="row">
+        <div class="col">
+            <h6>Subject: {{ $book_name }}</h6>
+        </div>
+        <div class="col text-end">
+            <h6>Class: {{ Auth::user()->class->name }}</h6>
+        </div>
     </div>
 
     <div class="row mt-4">
-      <div class="col text-center">
-        <h2 class="fw-bold">{{ $test_type }} Paper</h2>
-      </div>
+        <div class="col text-center">
+            <h2 class="fw-bold">Exercise Questions</h2>
+        </div>
     </div>
 
     @php
@@ -97,18 +97,19 @@
                                         </div>
                                     </div>
 
+                                    <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
+                                        id="btn{{ $questionIndex }}">Show Answer</button>
+                                </div>
+                            </div>
 
-                                        <button class="btn btn-primary mt-3 mb-3"
-                                            onclick="toggleAnswer({{ $questionIndex }})" id="btn{{ $questionIndex }}">Show Answer</button>
-                                        <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
-
-                                            {!! $question->answer->answer !!}
-                                            @if ($question->answer->image)
-                                                <img src="data:image/png;base64,{{ $question->answer->image }}"
-                                                    alt="Answer Image">
-                                            @endif
-                                        </div>
-
+                            <!-- Answer Card (Hidden by default) -->
+                            <div class="card mt-3 d-none" id="answer{{ $questionIndex }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">Answer:</h5>
+                                    {!! $question->answer->answer !!}
+                                    @if ($question->answer->image)
+                                        <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -117,58 +118,63 @@
                         $questionIndex++;
                     @endphp
                 @endforeach
+
             </div>
             <!-- Long Question -->
             <div class="tab-pane fade" id="form-tabs-long" role="tabpanel">
-              @php
-                  $i = 0;
-              @endphp
-            @foreach ($questions as $question)
-              @php
-                  $i++;
-              @endphp
-            <div class="row mt-4">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Q{{ $i }}. {!! $question->description !!}</h5>
-                            <div class="row">
-                                <div class="col-6">
-                                    <ul class="list-group">
-                                        @foreach ($question->mcqChoices as $key => $choice)
-                                            @if ($key % 2 == 0)
-                                                <li
-                                                    class="list-group-item @if ($choice->is_true) true-option @endif">
-                                                    <label class="form-check-label">
-                                                        <span class="option-label">{{ $choiceNames[$key / 2] }}</span>
-                                                        {{ $choice->choice }}
-                                                    </label>
-                                                </li>
-                                            @endif
-                                        @endforeach
-                                    </ul>
+                @php
+                    $i = 0;
+                @endphp
+                @foreach ($questions as $question)
+                    @php
+                        $i++;
+                    @endphp
+                    <div class="row mt-4">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Q{{ $i }}. {!! $question->description !!}</h5>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <ul class="list-group">
+                                                @foreach ($question->mcqChoices as $key => $choice)
+                                                    @if ($key % 2 == 0)
+                                                        <li
+                                                            class="list-group-item @if ($choice->is_true) true-option @endif">
+                                                            <label class="form-check-label">
+                                                                <span
+                                                                    class="option-label">{{ $choiceNames[$key / 2] }}</span>
+                                                                {{ $choice->choice }}
+                                                            </label>
+                                                        </li>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
+                                        id="btn{{ $questionIndex }}">Show Answer</button>
                                 </div>
                             </div>
 
-
-                                <button class="btn btn-primary mt-3 mb-3"
-                                    onclick="toggleAnswer({{ $questionIndex }})" id="btn{{ $questionIndex }}">Show Answer</button>
-                                <div class="card-text answer-text d-none" id="answer{{ $questionIndex }}">
-
+                            <!-- Answer Card (Hidden by default) -->
+                            <div class="card mt-3 d-none" id="answer{{ $questionIndex }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">Answer:</h5>
                                     {!! $question->answer->answer !!}
                                     @if ($question->answer->image)
                                         <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
                                     @endif
                                 </div>
-
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            @php
-                $questionIndex++;
-            @endphp
-        @endforeach
+                    @php
+                        $questionIndex++;
+                    @endphp
+                @endforeach
+
             </div>
 
         </div>
@@ -184,9 +190,9 @@
             answerText.classList.toggle('d-none');
             let button = $('#btn' + questionIndex).text();
             if (button == 'Show Answer') {
-              $('#btn' + questionIndex).text('Hide Answer');
-            }else{
-              $('#btn' + questionIndex).text('Show Answer');
+                $('#btn' + questionIndex).text('Hide Answer');
+            } else {
+                $('#btn' + questionIndex).text('Show Answer');
             }
         }
     </script>
