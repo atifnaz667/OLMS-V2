@@ -20,10 +20,10 @@
         Exercise Questions
     </h4>
     <div class="row">
-        <div class="col">
+        <div class="col-8">
             <h6>Subject: {{ $book_name }}</h6>
         </div>
-        <div class="col text-end">
+        <div class="col-4 text-end">
             <h6>Class: {{ Auth::user()->class->name }}</h6>
         </div>
     </div>
@@ -103,7 +103,7 @@
                             </div>
 
                             <!-- Answer Card (Hidden by default) -->
-                            <div class="card mt-3 d-none" id="answer{{ $questionIndex }}">
+                            <div class="card mt-3 d-none" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
                                 <div class="card-body">
                                     <h5 class="card-title">Answer:</h5>
                                     {!! $question->answer->answer !!}
@@ -159,7 +159,7 @@
                             </div>
 
                             <!-- Answer Card (Hidden by default) -->
-                            <div class="card mt-3 d-none" id="answer{{ $questionIndex }}">
+                            <div class="card mt-3 d-none" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
                                 <div class="card-body">
                                     <h5 class="card-title">Answer:</h5>
                                     {!! $question->answer->answer !!}

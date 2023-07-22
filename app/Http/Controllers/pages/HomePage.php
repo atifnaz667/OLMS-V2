@@ -78,7 +78,7 @@ class HomePage extends Controller
       } else {
         $percentage = 0;
       }
-      $resultsArray['chart_data'][$i] = $percentage;
+      $resultsArray['chart_data'][$i] = round($percentage);
       $i++;
     }
     $highestValue = max($resultsArray['chart_data']);
