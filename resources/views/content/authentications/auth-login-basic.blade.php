@@ -28,6 +28,14 @@
 
 @section('content')
     <div class="container-xxl">
+      @if (Session::has('status'))
+        <input type="hidden" name="" id="tostStatus" value="{{ Session::get('status') }}">
+        <input type="hidden" name="" id="tostMessage" value="{{ Session::get('message') }}">
+        <input type="hidden" name="" id="tostType" value="{{ Session::get('status') == 'Success' ? 'text-success' : 'text-warning' }}">
+
+        {{ Session::forget('status') }}
+        {{ Session::forget('message') }}
+      @endif
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner py-4">
                 <!-- Login -->
@@ -49,6 +57,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">{{ $type }} Username</label>
+                                <input type="hidden" name="type" value="{{ $type }}">
                                 <input type="text" class="form-control" id="email" name="username"
                                     placeholder="Enter your username" autofocus>
                             </div>
@@ -84,4 +93,32 @@
             </div>
         </div>
     </div>
+@endsection
+
+
+@section('script')
+    <script>
+      $(document).ready(function() {
+          var status = $("#tostStatus").val();
+          if (status) {
+            var message = $("#tostMessage").val();
+            showNotification(status,message);
+          }
+
+        });
+
+        function showNotification(status,message){
+          const toastAnimationExample = document.querySelector('.toast-ex');
+          $('.toast-ex .fw-semibold').text(status);
+          $('.toast-ex .toast-body').text(message);
+
+          // Show the toast notification
+          selectedType = $("#tostType").val();
+          selectedAnimation = "animate__fade";
+          toastAnimationExample.classList.add(selectedAnimation);
+          toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+          toastAnimation = new bootstrap.Toast(toastAnimationExample);
+          toastAnimation.show();
+        }
+    </script>
 @endsection

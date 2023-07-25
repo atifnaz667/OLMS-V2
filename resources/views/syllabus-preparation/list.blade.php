@@ -90,7 +90,7 @@
                         <div class="card-title header-elements">
                             <div class="row">
                                 <!-- Left side: Book icon and name -->
-                                <div class="col-6 col-sm-6 text-center">
+                                <div class="col-12 col-sm-6 text-center">
                                     <h6 class="m-0"> {{ $book->name }}</h6>
                                     <h5 class="m-0">
                                         @if ($book->file != null)
@@ -103,7 +103,7 @@
                                     </h5>
                                 </div>
                                 <!-- Right side: Paper type buttons -->
-                                <div class="col-6 col-sm-6 mt-4 custom text-center">
+                                <div class="col-12 col-sm-6 mt-4 custom text-center d-flex justify-content-center">
                                     <div class="list-group">
                                         <button type="button"
                                             class="list-group-item list-group-item-action btn-outline-primary waves-effect mb-2"

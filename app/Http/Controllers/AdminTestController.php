@@ -273,14 +273,15 @@ class AdminTestController extends Controller
       }
     }
 
-    public function storeTest($chapters, $totalQuestions, $createdBy, $createdFor,$testDate,$questionTime, $book){
+    public function storeTest($chapters, $totalQuestions, $createdBy, $user,$testDate,$questionTime, $book){
+      $student = User::find($user);
       $topics = Topic::whereIn('chapter_id',$chapters)->get()->pluck('id');
       $questions = Question::inRandomOrder()->where('question_type','mcq')->whereIn('topic_id',$topics)->limit($totalQuestions)->get();
       if (count($questions) == 0) {
         return false;
       }
       $test = new Test();
-      $test->created_for = $createdFor;
+      $test->created_for = $student->id;
       $test->created_by = $createdBy;
       $test->status = 'Pending';
       $test->test_date = $testDate;
@@ -288,6 +289,8 @@ class AdminTestController extends Controller
       $test->question_time = $questionTime;
       $test->total_questions = $totalQuestions;
       $test->book_id = $book;
+      $test->class_id = $student->class_id;
+      $test->board_id = $student->board_id;
       $test->save();
       foreach ($questions as $question) {
         $testChild = new TestChild();

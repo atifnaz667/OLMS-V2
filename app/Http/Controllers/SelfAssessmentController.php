@@ -105,6 +105,11 @@ class SelfAssessmentController extends Controller
         $chapters = $request->chapters;
         $book = $request->book;
         $questionTime = $request->questionTime;
+        $oldAssessment = Test::where([['created_by',$createdBy],['test_type','self']])->first();
+        if ($oldAssessment) {
+            TestChild::where('test_id',$oldAssessment->id)->delete();
+            Test::find($oldAssessment->id)->delete();
+        }
         $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $createdBy, $testDate,$questionTime,$book);
         if (!$storeTest) {
           DB::rollBack();
@@ -135,6 +140,8 @@ class SelfAssessmentController extends Controller
       $test->question_time = $questionTime;
       $test->total_questions = $totalQuestions;
       $test->book_id = $book;
+      $test->class_id = Auth::user()->class_id;
+      $test->board_id = Auth::user()->board_id;
       $test->save();
       foreach ($questions as $question) {
         $testChild = new TestChild();

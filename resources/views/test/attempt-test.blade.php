@@ -59,7 +59,7 @@ $customizerHidden = ($customizerHidden ?? '');
             timerElement.text(timeLeft);
             console.log(timeLeft)
             if (timeLeft === 0) {
-              // submitAnswer();
+              submitAnswer();
               timerElement.text("00");
             } else {
               timeLeft--; // Decrease the time left by 1 second
@@ -153,7 +153,7 @@ $customizerHidden = ($customizerHidden ?? '');
 
           checkbox.checked = true;
           $(checkbox).closest('tr').css('background-color', '#6fe79540');
-          $("#save").removeAttr('disabled');
+          $("#save").attr('disabled',false);
         }
 
     </script>

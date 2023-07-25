@@ -36,19 +36,23 @@ class LoginController extends Controller
     if ($validator->fails()) {
       return back()
         ->withInput()
-        ->with(['status' => 'danger', 'message' => $validator->errors()->first()]);
+        ->with(['status' => 'error', 'message' => $validator->errors()->first()]);
+    }
+    $user = User::where('username',$req->username)->first();
+    if ($user && $user->role->name != $req->type) {
+      return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
+    }
+    if ($user && $user->status == 'deactive') {
+      return back()
+        ->withInput()
+        ->with(['status' => 'error', 'message' => 'Your account has been deactivated']);
     }
     $credentials = ['username' => $req->username, 'password' => $req->password];
     if (Auth::attempt($credentials)) {
-      $user = Auth::user();
-      if ($user->status == 'deactive') {
-        return back()
-          ->withInput()
-          ->with(['status' => 'danger', 'message' => 'Your account has been deactivated']);
-      }
+
       return redirect('home')->with(['status' => 'success', 'message' => 'Welcome..! ' . $user->name]);
     }
-    return back()->with(['status' => 'danger', 'message' => 'Wrong Credentials']);
+    return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
   }
 
   public function logout()

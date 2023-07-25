@@ -45,6 +45,9 @@
                         <h4 class="mb-1 pt-2">Welcome to {{ config('variables.templateName') }}! 👋</h4>
                         <p class="mb-4">Please select your account type to sign-in....</p>
                         <div class="mb-3">
+                            <a href="{{ url('/login/Admin') }}" class="btn btn-primary d-grid w-100">Admin</a>
+                        </div>
+                        <div class="mb-3">
                             <a href="{{ url('/login/Student') }}" class="btn btn-primary d-grid w-100">Student</a>
                         </div>
                         <div class="mb-3">
@@ -64,3 +67,4 @@
         </div>
     </div>
 @endsection
+

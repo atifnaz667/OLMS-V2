@@ -46,6 +46,7 @@
                     </table>
                   </div>
                   <div class="px-3" id="btn-div">
+                    <button type="button" onclick="submitAnswer()" class="btn btn-primary px-4" style="float:left" >Skip</button>
                     <button type="button" disabled onclick="validate()" class="btn btn-primary px-4" style="float:right" id="save">Save &amp; Next</button>
                   </div>
               </div>
