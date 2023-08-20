@@ -53,7 +53,7 @@
                 <div class="avatar avatar-online">
 
                     @if (Auth::user()->image == null)
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                        <img src="{{ asset('assets/img/avatars/1111.png') }}" alt class="w-px-40 h-auto rounded-circle">
                     @else
                         <img src="files/userImages/{{ Auth::user()->image }}" alt class="w-px-40 h-auto rounded-circle">
                     @endif
