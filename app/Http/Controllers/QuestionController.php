@@ -37,6 +37,7 @@ class QuestionController extends Controller
     $topicId = $request->input('topic_id');
     $question_type = $request->input('type');
     $question_nature = $request->input('nature');
+    $searchQuery = $request->input('searchQuery');
 
     $query = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq');
 
@@ -50,6 +51,9 @@ class QuestionController extends Controller
       $query->where('question_nature', $question_nature);
     }
 
+    if ($searchQuery) {
+      $query->where('description', 'like', '%' . $searchQuery . '%');
+    }
     $questions = $query->paginate($perPage);
 
     if ($request->check) {

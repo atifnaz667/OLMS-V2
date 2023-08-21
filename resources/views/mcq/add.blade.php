@@ -145,7 +145,8 @@
                             <i class="ti ti-plus me-1"></i>
                             <span class="align-middle">Add</span>
                         </button>
-                        <button type="button" id="submitQuestion" class="btn btn-primary " style="float: right">Submit</button>
+                        <button type="button" id="submitQuestion" class="btn btn-primary "
+                            style="float: right">Submit</button>
                     </div>
 
                 </div>

@@ -115,6 +115,11 @@
                     </div> --}}
 
                 {{-- table  --}}
+                <div class="row m-3">
+                    <div class="col-md">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search Question">
+                    </div>
+                </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead class="table-light">
@@ -197,6 +202,11 @@
 @section('page2-script')
     <script>
         $(document).ready(function() {
+
+            // $('#search-input').on('input', function() {
+            //     fetchQuestionRecords();
+            // });
+
             $('#update-question-answer').summernote({
                 // placeholder: 'Hello stand alone ui',
                 tabsize: 4,
@@ -384,6 +394,7 @@
             var topicId = $('#topic_id').val();
             var type = $('#type').val();
             var nature = $('#nature').val();
+            var searchQuery = $('#search-input').val();
             var check = "ajax";
             $.ajax({
                 url: '{{ route('question.index') }}',
@@ -394,6 +405,7 @@
                     nature: nature,
                     check: check,
                     page: page,
+                    searchQuery: searchQuery,
                     perPage: perPage
                 },
                 success: function(response) {
@@ -516,13 +528,14 @@
             }
         });
 
-        // Update pagination UI
         function updatePaginationUI() {
             var paginationContainer = $('.pagination');
             paginationContainer.empty();
 
             if (lastPage > 1) {
                 var paginationLinks = '';
+                var maxVisiblePages = 5; // Set the maximum number of visible page links
+
                 if (currentPage > 1) {
                     paginationLinks +=
                         '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
@@ -530,11 +543,16 @@
                         '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
                             currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
                 }
-                for (var i = 1; i <= lastPage; i++) {
+
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                var endPage = Math.min(lastPage, startPage + maxVisiblePages - 1);
+
+                for (var i = startPage; i <= endPage; i++) {
                     var activeClass = (i === currentPage) ? 'active' : '';
                     paginationLinks += '<li class="page-item ' + activeClass +
                         '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
                 }
+
                 if (currentPage < lastPage) {
                     paginationLinks +=
                         '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
@@ -543,9 +561,11 @@
                         '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' + lastPage +
                         '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
                 }
+
                 paginationContainer.append(paginationLinks);
             }
         }
+
 
         // Initial fetch and pagination UI update
         fetchQuestionRecords();
