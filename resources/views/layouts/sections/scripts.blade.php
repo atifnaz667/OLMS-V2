@@ -28,6 +28,18 @@
 <!-- BEGIN: Page JS-->
 <script src="{{ asset('assets/js/form-layouts.js') }}"></script>
 <script src="{{ asset('assets/js/forms-extras.js') }}"></script>
+  <script>
+
+    var $loading = $('#loadingDiv').hide();
+    $(document)
+      .ajaxStart(function () {
+        $loading.show();
+      })
+      .ajaxStop(function () {
+        $loading.hide();
+      });
+  </script>
+
 @yield('page-script')
 @yield('page2-script')
 <!-- END: Page JS-->
