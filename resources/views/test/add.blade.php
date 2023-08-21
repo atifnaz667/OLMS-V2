@@ -83,7 +83,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+
             <button type="button" id="submitTest" class="btn btn-primary waves-effect waves-light">Create Test</button>
           </div>
         </div>

@@ -16,8 +16,7 @@
         }
     </style>
     <h4 class="fw-bold py-3 mb-2">
-        <span class="text-muted fw-light">My Digital Bag/</span>
-        Multiple Choice Questions
+
     </h4>
     <div class="row">
         <div class="col-6">

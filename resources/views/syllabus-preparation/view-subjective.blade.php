@@ -16,8 +16,7 @@
         }
     </style>
     <h4 class="fw-bold py-3 mb-3">
-        <span class="text-muted fw-light">My Digital Bag/</span>
-        Exercise Questions
+
     </h4>
     <div class="row">
         <div class="col-8">
@@ -30,7 +29,7 @@
 
     <div class="row mt-4">
         <div class="col text-center">
-            <h2 class="fw-bold">Exercise Questions</h2>
+            <h2 class="fw-bold">Detailed Questions</h2>
         </div>
     </div>
 

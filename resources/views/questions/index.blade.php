@@ -147,6 +147,26 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                      <div class="row mb-3">
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label class="form-label" for="form-repeater-1-3">Question Type</label>
+                            <select id="question_type" required name="question_type" class="form-select">
+                                <option value="long">Long</option>
+                                <option value="short">Short</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label class="form-label" for="form-repeater-1-4">Question Nature</label>
+                            <select id="question_nature" required name="question_nature" class="form-select">
+                                <option value="Conceptual">Conceptual</option>
+                                <option value="Exercise ">Exercise</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
                         <div class="row">
                             <div class="col mb-3">
                                 <input type="hidden" id="questionId" name="questionId" />
@@ -162,7 +182,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+
                         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Save changes</button>
                     </div>
                 </div>
@@ -289,6 +309,14 @@
                     $('#update-question').summernote('code', response.Question.description);
                     $('#update-question-answer').summernote('code', response.Question.answer.answer);
                     $('#questionId').val(response.Question.id);
+                    let question_nature = '<option value="'+response.Question.question_nature+'">'+response.Question.question_nature+'</option>';
+                    question_nature+='<option value="Conceptual">Conceptual</option><option value="Exercise ">Exercise</option>';
+                    let q_type = response.Question.question_type;
+                    let question_type = '<option value="'+response.Question.question_type+'">'+q_type.charAt(0).toUpperCase() + q_type.slice(1)+'</option>';
+                    question_type+='<option value="long">Long</option><option value="short">Short</option>';
+                    $('#question_nature').html(question_nature);
+                    $('#question_type').html(question_type);
+                    $('#questionId').val(response.Question.id);
                     $('#largeModal').modal('show');
                 },
                 error: function(xhr, status, error) {
@@ -302,10 +330,14 @@
             var _token = $('input[name="_token"]').val();
             var question = $('#update-question').val();
             var answer = $('#update-question-answer').val();
+            var question_nature = $('#question_nature').val();
+            var question_type = $('#question_type').val();
             var formData = {
                 question: question,
                 _token: _token,
-                answer: answer
+                answer: answer,
+                question_type: question_type,
+                question_nature: question_nature,
             };
             $.ajax({
                 url: "{{ route('question.update', '') }}" + "/" + id,

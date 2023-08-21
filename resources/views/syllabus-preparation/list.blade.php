@@ -25,7 +25,7 @@
 </style>
 @section('content')
     <h4 class="fw-bold py-3 mb-2">
-        <span class="text-muted fw-light">My digital Bag/</span>
+
         Preparation
     </h4>
 
@@ -47,7 +47,7 @@
                             </div>
                         </div>
 
-                        <div id="chapterList" class="row">
+                        <div id="chapterList" class="row mt-3">
                         </div>
                     </div>
 
@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label" for="class-name">Total Long Questions</label>
-                            <input type="text" class="form-control" required id="total-long-questions"
+                            <input type="text" class="form-control"  id="total-long-questions"
                                 name="total-long-questions">
                         </div>
                     </div>
@@ -71,11 +71,11 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label" for="class-name">Total Short Questions</label>
-                            <input type="text" class="form-control" required id="total-short-questions"
+                            <input type="text" class="form-control"  id="total-short-questions"
                                 name="total-short-questions">
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                     <button type="button" class="btn btn-primary" id="startPreparation">Start Preparation</button>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
                                                     data-question-type="Subjective" href="javascript:void(0);">SLO Based
                                                     &
-                                                    Exercise</a>
+                                                    Detailed</a>
                                                 <a class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
                                                     data-question-type="Conceptual" href="javascript:void(0);">SLO
@@ -128,7 +128,7 @@
                                                     Questions</a>
                                                 <a class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
-                                                    data-question-type="Exercise" href="javascript:void(0);">Exercise
+                                                    data-question-type="Exercise" href="javascript:void(0);">Detailed
                                                     Questions</a>
                                             </div>
                                         </div>
@@ -177,7 +177,7 @@
                         // Build the chapter and topic checkboxes dynamically
                         var chapterList = "";
                         $.each(response.chapters, function(index, chapter) {
-                            chapterList += '<div class="form-check">';
+                            chapterList += '<div class="mb-2 p-2" ><div class="form-check">';
                             chapterList +=
                                 '<input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' +
                                 chapter.id + '">';
@@ -189,7 +189,7 @@
                                 chapter.id + '">' + chapter.name + '</h5>';
                             chapterList += '</div>';
                             chapterList += '<div id="topicList_' + chapter.id +
-                                '" class="row row-col-4"></div>';
+                                '" class="row mb-4 " ></div></div>';
                         });
                         $('#chapterList').html(chapterList);
 
@@ -203,13 +203,13 @@
 
                         // Build the topic checkboxes dynamically
                         $.each(response.topics, function(index, topic) {
-                            var topicList = '<div class="form-check">';
+                            var topicList = '<div class="col-sm-4"><div class="form-check">';
                             topicList +=
                                 '<input class="form-check-input topic-checkbox" type="checkbox" id="topic_' +
                                 topic.id + '">';
                             topicList += '<h6 class="form-check-h6" for="topic_' +
                                 topic.id + '">' + topic.name + '</h6>';
-                            topicList += '</div>';
+                            topicList += '</div></div>';
                             $('#topicList_' + topic.chapter_id).append(topicList);
                         });
                     }
@@ -250,7 +250,7 @@
                     }
 
                 } else {
-                    if (totalLongQuestions.trim() === '' || totalShortQuestions.trim() === '') {
+                    if (totalLongQuestions.trim() === '' && totalShortQuestions.trim() === '') {
                         alert('Please enter the total number of both questions.');
                         return;
                     }

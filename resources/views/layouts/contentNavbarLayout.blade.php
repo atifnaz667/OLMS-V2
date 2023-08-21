@@ -5,7 +5,36 @@
     $configData = Helper::appClasses();
 @endphp
 @extends('layouts/commonMaster')
+<style>
+  .loading-spinner {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
 
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #ffffff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+</style>
 @php
     /* Display elements */
     $contentNavbar = $contentNavbar ?? true;
@@ -29,6 +58,10 @@
 @endphp
 
 @section('layoutContent')
+
+  <div class="loading-spinner" id="loadingDiv">
+    <div class="spinner"></div>
+  </div>
     <div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
         <div class="layout-container">
             @if ($isMenu)
@@ -91,3 +124,5 @@
     </div>
     <!-- / Layout wrapper -->
 @endsection
+
+

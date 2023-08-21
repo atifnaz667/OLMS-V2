@@ -78,13 +78,6 @@
                             </div>
                         </div>
 
-                        <div
-                            class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                            <h5 class="card-title mb-sm-0 me-2"></h5>
-                            <div class="action-btns">
-                                <button type="button" id="submitQuestion" class="btn btn-primary">Submit</button>
-                            </div>
-                        </div>
                     </div>
                     <hr>
                 </div>
@@ -144,6 +137,7 @@
                             <i class="ti ti-plus me-1"></i>
                             <span class="align-middle">Add</span>
                         </button>
+                        <button type="button" id="submitQuestion" class="btn btn-primary" style="float: right">Submit</button>
                     </div>
                 </div>
             </div>

@@ -138,7 +138,7 @@ class SelfAssessmentController extends Controller
       $test->test_date = $testDate;
       $test->test_type = 'Self';
       $test->question_time = $questionTime;
-      $test->total_questions = $totalQuestions;
+      $test->total_questions = count($questions);
       $test->book_id = $book;
       $test->class_id = Auth::user()->class_id;
       $test->board_id = Auth::user()->board_id;

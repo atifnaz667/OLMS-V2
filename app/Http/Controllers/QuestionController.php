@@ -155,6 +155,8 @@ class QuestionController extends Controller
     $validator = Validator::make($request->all(), [
       'question' => 'sometimes|string|max:255',
       'answer' => 'required',
+      'question_nature' => 'required',
+      'question_type' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -163,7 +165,11 @@ class QuestionController extends Controller
 
     try {
       $question = Question::findOrFail($id);
-      $question->update(['description' => $request->input('question')]);
+      // $question->update(['description' => $request->input('question'),'question_nature' => $request->input('question_nature'),'question_type' => $request->input('question_type')]);
+      $question->description = $request->input('question');
+      $question->question_nature = $request->input('question_nature');
+      $question->question_type = $request->input('question_type');
+      $question->save();
 
       $answer = $question->answer;
       $answer->update(['answer' => $request->input('answer')]);

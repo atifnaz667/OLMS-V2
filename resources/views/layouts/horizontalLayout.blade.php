@@ -7,10 +7,10 @@
 
 @extends('layouts/commonMaster')
 @php
-    
+
     $menuHorizontal = true;
     $navbarFull = true;
-    
+
     /* Display elements */
     $isNavbar = $isNavbar ?? true;
     $isMenu = $isMenu ?? true;
@@ -18,17 +18,17 @@
     $isFooter = $isFooter ?? true;
     $customizerHidden = $customizerHidden ?? '';
     $pricingModal = $pricingModal ?? false;
-    
+
     /* HTML Classes */
     $menuFixed = isset($configData['menuFixed']) ? $configData['menuFixed'] : '';
     $navbarFixed = isset($configData['navbarFixed']) ? $configData['navbarFixed'] : '';
     $footerFixed = isset($configData['footerFixed']) ? $configData['footerFixed'] : '';
     $menuCollapsed = isset($configData['menuCollapsed']) ? $configData['menuCollapsed'] : '';
-    
+
     /* Content classes */
     $container = $container ?? 'container-xxl';
     $containerNav = $containerNav ?? 'container-xxl';
-    
+
 @endphp
 
 @section('layoutContent')

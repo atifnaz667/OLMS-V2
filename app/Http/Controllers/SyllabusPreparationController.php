@@ -139,8 +139,8 @@ class SyllabusPreparationController extends Controller
     $book = Book::findOrFail($book_id);
     $test_type = $request->testType;
     $totalQuestions = $request->totalQuestions;
-    $totalLongQuestions = $request->totalLongQuestions;
-    $totalShortQuestions = $request->totalShortQuestions;
+    $totalLongQuestions = $request->totalLongQuestions ?? 0;
+    $totalShortQuestions = $request->totalShortQuestions ?? 0;
     $topics = $request->topics;
 
     if ($test_type === 'Objective') {
