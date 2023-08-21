@@ -30,14 +30,18 @@ class McqChoiceController extends Controller
     $perPage = $request->input('perPage', 10);
     $sort = $request->input('sort_by', 'description');
     $sort_order = $request->input('sort_order', 'asc');
-    $topicId = $request->input('topic_id'); // Get the topic ID from the request
+    $topicId = $request->input('topic_id');
+    $searchQuery = $request->input('searchQuery');
+
 
     $query = Question::orderBy($sort, $sort_order)->where('question_type', 'mcq');
 
     if ($topicId) {
-      $query->where('topic_id', $topicId); // Apply the filter by topic ID
+      $query->where('topic_id', $topicId);
     }
-
+    if ($searchQuery) {
+      $query->where('description', 'like', '%' . $searchQuery . '%');
+    }
     $questions = $query->paginate($perPage);
 
     if ($request->check) {

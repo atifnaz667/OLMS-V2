@@ -96,6 +96,11 @@
                     </div> --}}
 
                 {{-- table  --}}
+                <div class="row m-3">
+                    <div class="col-md">
+                        <input type="text" id="search-input"class="form-control" placeholder="Search MCQs">
+                    </div>
+                </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead class="table-light">
@@ -402,6 +407,7 @@
         function fetchQuestionRecords(page = 1) {
             var topicId = $('#topic_id').val();
             var check = "ajax";
+            var searchQuery = $('#search-input').val();
             $.ajax({
                 url: '{{ route('mcq-choice.index') }}',
                 method: 'GET',
@@ -409,6 +415,7 @@
                     topic_id: topicId,
                     check: check,
                     page: page,
+                    searchQuery: searchQuery,
                     perPage: perPage
                 },
                 success: function(response) {
@@ -536,6 +543,8 @@
 
             if (lastPage > 1) {
                 var paginationLinks = '';
+                var maxVisiblePages = 5; // Set the maximum number of visible page links
+
                 if (currentPage > 1) {
                     paginationLinks +=
                         '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
@@ -543,11 +552,16 @@
                         '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
                             currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
                 }
-                for (var i = 1; i <= lastPage; i++) {
+
+                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                var endPage = Math.min(lastPage, startPage + maxVisiblePages - 1);
+
+                for (var i = startPage; i <= endPage; i++) {
                     var activeClass = (i === currentPage) ? 'active' : '';
                     paginationLinks += '<li class="page-item ' + activeClass +
                         '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
                 }
+
                 if (currentPage < lastPage) {
                     paginationLinks +=
                         '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
@@ -556,6 +570,7 @@
                         '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' + lastPage +
                         '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
                 }
+
                 paginationContainer.append(paginationLinks);
             }
         }
