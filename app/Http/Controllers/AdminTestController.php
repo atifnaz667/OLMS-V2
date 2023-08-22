@@ -139,6 +139,7 @@ class AdminTestController extends Controller
       $testDate = $request->testDate ?? Date('Y-m-d');
       $totalQuestions = $request->totalQuestions ?? 10;
       $chapters = $request->chapters;
+      $topics = $request->topics;
       $book = $request->book;
       $questionTime = $request->questionTime;
       $users = isset($request->students) ? $request->students : User::where([['board_id', $request->board], ['class_id', $request->class], ['status', 'Active']])->get()->pluck('id');
@@ -146,7 +147,7 @@ class AdminTestController extends Controller
         return back()->with(['status' => 'error', 'message' => 'Students not found'], 422);
       }
       foreach ($users as $user) {
-        $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book);
+        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book);
         if (!$storeTest) {
           DB::rollBack();
           return back()->with(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
@@ -236,10 +237,10 @@ class AdminTestController extends Controller
 
     // $chapters = Chapter::where([['book_id', $req->book_id], ['board_id', $req->board_id], ['class_id', $req->class_id]])->get();
     // $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
-    // ->select('topics.*')
-    // ->whereIn('topics.chapter_id', $chapters->pluck('id'))
-    // ->where('questions.question_type', '!=', 'mcq')
-    // ->distinct()
+    //   ->select('topics.*')
+    //   ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+    //   ->where('questions.question_type', '!=', 'mcq')
+    //   ->distinct()
     //   ->get();
     // $cols = ' <div class="col-12 mb-2"> <input class="form-check-input " style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All</div>';
     // foreach ($chapters as $chapter) {
@@ -252,6 +253,58 @@ class AdminTestController extends Controller
     //   $cols = ' <div class="col-12"> <h6>Please select book </h6></div>';
     // }
     // return $cols;
+
+    $chapters = Chapter::whereHas('topics', function ($query) {
+      $query
+        ->join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->where('questions.question_type', '!=', 'mcq');
+    })
+      ->where('book_id', $req->book_id)
+      ->where('board_id', $req->board_id)
+      ->where('class_id', $req->class_id)
+      ->get();
+
+    $cols = '<div class="col-12 mb-2">
+             <input class="form-check-input" style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All
+         </div>';
+
+    foreach ($chapters as $chapter) {
+      $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->where('topics.chapter_id', $chapter->id)
+        ->where('questions.question_type', '!=', 'mcq')
+        ->distinct()
+        ->get();
+
+      $cols .= '<div class="col-sm-12 mb-3">
+                 <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" name="chapters[]" class="form-check-input checkboxes" value="' . $chapter->id . '"> <strong>Unit: ' . $chapter->name . '</strong>
+             </div>';
+
+      $topicsInRow = 0;
+      $cols .= '<div class="col-sm-12">';
+      foreach ($topics as $topic) {
+        if ($topicsInRow % 3 === 0 && $topicsInRow !== 0) {
+          $cols .= '</div><div class="col-sm-12">';
+        }
+        $cols .= '<div class="col-sm-4 mb-2" style="display: inline-block; margin-right: 10px;">
+                     <input style="margin-right:1em" type="checkBox" name="topics[]" class="form-check-input checkboxes" value="' . $topic->id . '"> ' . $topic->name . '
+                 </div>';
+        $topicsInRow++;
+      }
+      $cols .= '</div>';
+    }
+
+    if (
+      count($chapters) == 0
+    ) {
+      $cols = '<div class="col-12"> <h6>No Chapters found against this book </h6></div>';
+    }
+    if (!$req->book_id) {
+      $cols = '<div class="col-12"> <h6>Please select a book </h6></div>';
+    }
+
+    return $cols;
+
 
     $chapters = Chapter::whereHas('topics', function ($query) {
       $query
@@ -276,7 +329,7 @@ class AdminTestController extends Controller
     foreach ($chapters as $chapter) {
       $cols .= '<div class="mb-2 p-2">
         <div class="form-check">
-            <input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' . $chapter->id . '">
+            <input class="form-check-input chapter-checkbox" onclick="selectCheckbox()" type="checkbox" id="chapter_' . $chapter->id . '">
             <input type="hidden" id="book_id" value="' . $chapter->book_id . '">
             <h5 class="form-check-h5" for="chapter_' . $chapter->id . '">' . $chapter->name . '</h5>
         </div>
@@ -332,10 +385,10 @@ class AdminTestController extends Controller
     }
   }
 
-  public function storeTest($chapters, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book)
+  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book)
   {
     $student = User::find($user);
-    $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
+    // $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
     $questions = Question::inRandomOrder()->where('question_type', 'mcq')->whereIn('topic_id', $topics)->limit($totalQuestions)->get();
     if (count($questions) == 0) {
       return false;
