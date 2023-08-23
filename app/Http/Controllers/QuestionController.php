@@ -36,25 +36,57 @@ class QuestionController extends Controller
     $sort_order = $request->input('sort_order', 'asc');
     $topicId = $request->input('topic_id');
     $question_type = $request->input('type');
+    $board_id = $request->input('board_id');
+    $class_id = $request->input('class_id');
+    $book_id = $request->input('book_id');
+    $chapter_id = $request->input('chapter_id');
+    $difficulty_level = $request->input('difficulty_level');
     $question_nature = $request->input('nature');
     $searchQuery = $request->input('searchQuery');
 
-    $query = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq');
-
-    if ($topicId) {
-      $query->where('topic_id', $topicId);
-    }
-    if ($question_type) {
-      $query->where('question_type', $question_type);
-    }
-    if ($question_nature) {
-      $query->where('question_nature', $question_nature);
-    }
-
-    if ($searchQuery) {
-      $query->where('description', 'like', '%' . $searchQuery . '%');
-    }
-    $questions = $query->paginate($perPage);
+    $questions = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq')
+      ->when($topicId,function($q)use($topicId){
+        $q->where('topic_id', $topicId);
+      })
+      ->when($difficulty_level,function($q)use($difficulty_level){
+        $q->where('difficulty_level', $difficulty_level);
+      })
+      ->when($question_nature,function($q)use($question_nature){
+        $q->where('question_nature', $question_nature);
+      })
+      ->when($question_type,function($q)use($question_type){
+        $q->where('question_type', $question_type);
+      })
+      ->when($searchQuery,function($q)use($searchQuery){
+        $q->where('description', 'like', '%' . $searchQuery . '%');
+      })
+      ->when($chapter_id,function($q)use($chapter_id){
+        $q->whereHas('topic',function($q)use($chapter_id){
+          $q->where('chapter_id', $chapter_id);
+        });
+      })
+      ->when($book_id,function($q)use($book_id){
+        $q->whereHas('topic',function($q)use($book_id){
+          $q->whereHas('chapter',function($q)use($book_id){
+            $q->where('book_id', $book_id);
+          });
+        });
+      })
+      ->when($class_id,function($q)use($class_id){
+        $q->whereHas('topic',function($q)use($class_id){
+          $q->whereHas('chapter',function($q)use($class_id){
+            $q->where('class_id', $class_id);
+          });
+        });
+      })
+      ->when($board_id,function($q)use($board_id){
+        $q->whereHas('topic',function($q)use($board_id){
+          $q->whereHas('chapter',function($q)use($board_id){
+            $q->where('board_id', $board_id);
+          });
+        });
+      })
+      ->paginate($perPage);
 
     if ($request->check) {
       $data = $questions->map(function ($question) {
@@ -104,6 +136,7 @@ class QuestionController extends Controller
           'topic_id' => $topic_id,
           'question_type' => $question['question_type'],
           'question_nature' => $question['question_nature'],
+          'difficulty_level' => $question['difficulty_level'],
           'description' => $question['description'],
         ];
         $question_id = Question::insertGetId($insertData);
@@ -157,7 +190,7 @@ class QuestionController extends Controller
   public function update(Request $request, $id)
   {
     $validator = Validator::make($request->all(), [
-      'question' => 'sometimes|string|max:255',
+      'question' => 'sometimes|string',
       'answer' => 'required',
       'question_nature' => 'required',
       'question_type' => 'required',
@@ -169,10 +202,10 @@ class QuestionController extends Controller
 
     try {
       $question = Question::findOrFail($id);
-      // $question->update(['description' => $request->input('question'),'question_nature' => $request->input('question_nature'),'question_type' => $request->input('question_type')]);
       $question->description = $request->input('question');
       $question->question_nature = $request->input('question_nature');
       $question->question_type = $request->input('question_type');
+      $question->difficulty_level = $request->input('difficulty_level');
       $question->save();
 
       $answer = $question->answer;

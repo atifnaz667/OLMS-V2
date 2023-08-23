@@ -70,7 +70,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row m-3">
+                    <div class="row mx-3">
                         <div class="col-md-3">
                             <label class="form-label" for="topic_id">Topic</label>
                             <select id="topic_id" class="select2 form-select" data-allow-clear="true">
@@ -93,32 +93,40 @@
                                 <option value="conceptual">Conceptual</option>
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label" for="nature">Difficulity Level</label>
+                            <select id="difficulty-level" class="select2 form-select" data-allow-clear="true">
+                                <option value="">All</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div
-                        class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
+                    <div class="card-header d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                         <h5 class="card-title mb-sm-0 me-2"></h5>
                         <div class="action-btns">
                             <button type="button" onclick="fetchQuestionRecords()" class="btn btn-primary">Filter</button>
                         </div>
                     </div>
                 </div>
-                <hr>
-                {{-- <div class="col-md-1">
-                  <label class="form-label" for="state">Records per Page</label>
-                    <select id="perPageSelect" class="select2 form-select" data-allow-clear="true">
+
+                <div class="row px-3 pb-3">
+                  <div class="col-2">
+                    <label class="form-label" for="state">Records per Page</label>
+                      <select id="perPageSelect" class=" form-select" data-allow-clear="true">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
                       </select>
-                    </div> --}}
+                  </div>
+                  <div class="col-10">
+                    <label class="form-label" for="state">&nbsp;</label>
 
-                {{-- table  --}}
-                <div class="row m-3">
-                    <div class="col-md">
-                        <input type="text" id="search-input" class="form-control" placeholder="Search Question">
-                    </div>
+                    <input type="text" id="search-input" class="form-control" placeholder="Search Question" >
+                  </div>
                 </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
@@ -153,7 +161,7 @@
                     </div>
                     <div class="modal-body">
                       <div class="row mb-3">
-                        <div class="col-6">
+                        <div class="col-6 col-sm-4">
                           <div class="form-group">
                             <label class="form-label" for="form-repeater-1-3">Question Type</label>
                             <select id="question_type" required name="question_type" class="form-select">
@@ -162,12 +170,22 @@
                             </select>
                           </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-6 col-sm-4">
                           <div class="form-group">
                             <label class="form-label" for="form-repeater-1-4">Question Nature</label>
                             <select id="question_nature" required name="question_nature" class="form-select">
                                 <option value="Conceptual">Conceptual</option>
                                 <option value="Exercise ">Exercise</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-6 col-sm-4">
+                          <div class="form-group">
+                            <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
+                            <select id="difficulty_level" name="difficulty_level" class="form-select">
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
                             </select>
                           </div>
                         </div>
@@ -321,9 +339,12 @@
                     $('#questionId').val(response.Question.id);
                     let question_nature = '<option value="'+response.Question.question_nature+'">'+response.Question.question_nature+'</option>';
                     question_nature+='<option value="Conceptual">Conceptual</option><option value="Exercise ">Exercise</option>';
+                    let difficulty_level = '<option value="'+response.Question.difficulty_level+'">'+response.Question.difficulty_level+'</option>';
+                    difficulty_level+='<option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>';
                     let q_type = response.Question.question_type;
                     let question_type = '<option value="'+response.Question.question_type+'">'+q_type.charAt(0).toUpperCase() + q_type.slice(1)+'</option>';
                     question_type+='<option value="long">Long</option><option value="short">Short</option>';
+                    $('#difficulty_level').html(difficulty_level);
                     $('#question_nature').html(question_nature);
                     $('#question_type').html(question_type);
                     $('#questionId').val(response.Question.id);
@@ -342,12 +363,14 @@
             var answer = $('#update-question-answer').val();
             var question_nature = $('#question_nature').val();
             var question_type = $('#question_type').val();
+            var difficulty_level = $('#difficulty_level').val();
             var formData = {
                 question: question,
                 _token: _token,
                 answer: answer,
                 question_type: question_type,
                 question_nature: question_nature,
+                difficulty_level: difficulty_level,
             };
             $.ajax({
                 url: "{{ route('question.update', '') }}" + "/" + id,
@@ -391,8 +414,13 @@
         });
 
         function fetchQuestionRecords(page = 1) {
-            var topicId = $('#topic_id').val();
+            var difficulty_level = $('#difficulty-level').val();
+            var chapter_id = $('#chapter_id').val();
+            var book_id = $('#book_id').val();
+            var class_id = $('#class_id').val();
             var type = $('#type').val();
+            var topicId = $('#topic_id').val();
+            var board_id = $('#board_id').val();
             var nature = $('#nature').val();
             var searchQuery = $('#search-input').val();
             var check = "ajax";
@@ -400,6 +428,11 @@
                 url: '{{ route('question.index') }}',
                 method: 'GET',
                 data: {
+                    difficulty_level: difficulty_level,
+                    chapter_id: chapter_id,
+                    book_id: book_id,
+                    class_id: class_id,
+                    board_id: board_id,
                     topic_id: topicId,
                     type: type,
                     nature: nature,
@@ -512,7 +545,7 @@
         });
 
         // Trigger fetchQuestionRecords() on filter button click
-        $('#filterButton, #perPageSelect').on('click change', function(e) {
+        $('#filterButton, #perPageSelect').on('change', function(e) {
             e.preventDefault();
             currentPage = 1; // Reset to first page when filter is applied
             perPage = $('#perPageSelect').val();
@@ -569,5 +602,12 @@
 
         // Initial fetch and pagination UI update
         fetchQuestionRecords();
+
+        $("#search-input").keypress(function(e) {
+
+          if(e.which == 13) {
+            fetchQuestionRecords();
+          }
+        });
     </script>
 @endsection

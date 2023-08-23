@@ -113,6 +113,14 @@
                                         <option value="short">Short</option>
                                     </select>
                                 </div>
+                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
+                                    <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
+                                    <select id="form-repeater-1-5" name="difficulty_level" class="form-select">
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="row">
