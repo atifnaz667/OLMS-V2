@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
                                 <label class="form-label" for="board_id">Board</label>
                                 <select id="board_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
@@ -46,7 +46,7 @@
 
                                 </select>
                             </div>
-                            <div class="col-md">
+                            <div class="col-md-3">
                                 <label class="form-label" for="class_id">Class</label>
                                 <select id="class_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
@@ -55,7 +55,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md">
+                            <div class="col-md-3">
                                 <label class="form-label" for="book_id">Book</label>
                                 <select id="book_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
@@ -64,13 +64,15 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md">
+                            <div class="col-md-3">
                                 <label class="form-label" for="chapter_id">Chapter</label>
                                 <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
                                 <label class="form-label" for="topic_id">Topic</label>
                                 <select id="topic_id" name="topic_id" class="select2 form-select" data-allow-clear="true">
                                     <option value="">Select</option>
@@ -78,6 +80,30 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label" for="form-repeater-1-4">Question Nature</label>
+                                <select id="form-repeater-1-4" name="question_nature" class="form-select">
+                                    <option value="Conceptual">Conceptual</option>
+                                    <option value="Exercise ">Exercise</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="form-repeater-1-3">Question Type</label>
+                                <select id="form-repeater-1-3" name="question_type" class="form-select">
+                                    <option value="long">Long</option>
+                                    <option value="short">Short</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
+                                <select id="form-repeater-1-5" name="difficulty_level" class="form-select">
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <hr>
                 </div>
@@ -98,7 +124,7 @@
                                     <span class="align-middle">Delete</span>
                                 </button>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-4">Question Nature</label>
                                     <select id="form-repeater-1-4" name="question_nature" class="form-select">
@@ -121,7 +147,7 @@
                                         <option value="Hard">Hard</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="row">
                                 <div class="mb-3 col-lg-12 col-xl-12 col-12">

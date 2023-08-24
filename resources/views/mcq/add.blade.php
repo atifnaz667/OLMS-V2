@@ -108,19 +108,24 @@
                             <div class="row">
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-2">Option A</label>
-                                    <input type="text" name="option-a" id="form-repeater-1-2" class="form-control" />
+                                    <textarea class="form-control summernote" name="option-a" id="form-repeater-1-2" rows="2" class="form-control"></textarea>
+                                    {{-- <input type="text" name="option-a" id="form-repeater-1-2" class="form-control" /> --}}
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-3">Option B</label>
-                                    <input type="text" name="option-b" id="form-repeater-1-3" class="form-control" />
+                                    <textarea class="form-control summernote" name="option-b" id="form-repeater-1-3" rows="2" class="form-control"></textarea>
+                                    {{-- <input type="text" name="option-b" id="form-repeater-1-3" class="form-control" /> --}}
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-4">Option C</label>
-                                    <input type="text" name="option-c" id="form-repeater-1-4" class="form-control" />
+                                    <textarea class="form-control summernote" name="option-c" id="form-repeater-1-4" rows="2" class="form-control"></textarea>
+                                    {{-- <input type="text" name="option-c" id="form-repeater-1-4" class="form-control" /> --}}
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-5">Option D</label>
-                                    <input type="text" name="option-d" id="form-repeater-1-5" class="form-control" />
+                                    <textarea class="form-control summernote" name="option-d" id="form-repeater-1-5" rows="2"
+                                        class="form-control"></textarea>
+                                    {{-- <input type="text" name="option-d" id="form-repeater-1-5" class="form-control" /> --}}
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label">Correct Option</label>
@@ -134,7 +139,7 @@
                                 </div>
                                 <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
                                     <label class="form-label" for="autosize-demo">Reason</label>
-                                    <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
+                                    <textarea id="autosize-demo" name="answer" rows="3" class="form-control summernote"></textarea>
                                 </div>
                             </div>
                             <hr>

@@ -45,43 +45,43 @@ class QuestionController extends Controller
     $searchQuery = $request->input('searchQuery');
 
     $questions = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq')
-      ->when($topicId,function($q)use($topicId){
+      ->when($topicId, function ($q) use ($topicId) {
         $q->where('topic_id', $topicId);
       })
-      ->when($difficulty_level,function($q)use($difficulty_level){
+      ->when($difficulty_level, function ($q) use ($difficulty_level) {
         $q->where('difficulty_level', $difficulty_level);
       })
-      ->when($question_nature,function($q)use($question_nature){
+      ->when($question_nature, function ($q) use ($question_nature) {
         $q->where('question_nature', $question_nature);
       })
-      ->when($question_type,function($q)use($question_type){
+      ->when($question_type, function ($q) use ($question_type) {
         $q->where('question_type', $question_type);
       })
-      ->when($searchQuery,function($q)use($searchQuery){
+      ->when($searchQuery, function ($q) use ($searchQuery) {
         $q->where('description', 'like', '%' . $searchQuery . '%');
       })
-      ->when($chapter_id,function($q)use($chapter_id){
-        $q->whereHas('topic',function($q)use($chapter_id){
+      ->when($chapter_id, function ($q) use ($chapter_id) {
+        $q->whereHas('topic', function ($q) use ($chapter_id) {
           $q->where('chapter_id', $chapter_id);
         });
       })
-      ->when($book_id,function($q)use($book_id){
-        $q->whereHas('topic',function($q)use($book_id){
-          $q->whereHas('chapter',function($q)use($book_id){
+      ->when($book_id, function ($q) use ($book_id) {
+        $q->whereHas('topic', function ($q) use ($book_id) {
+          $q->whereHas('chapter', function ($q) use ($book_id) {
             $q->where('book_id', $book_id);
           });
         });
       })
-      ->when($class_id,function($q)use($class_id){
-        $q->whereHas('topic',function($q)use($class_id){
-          $q->whereHas('chapter',function($q)use($class_id){
+      ->when($class_id, function ($q) use ($class_id) {
+        $q->whereHas('topic', function ($q) use ($class_id) {
+          $q->whereHas('chapter', function ($q) use ($class_id) {
             $q->where('class_id', $class_id);
           });
         });
       })
-      ->when($board_id,function($q)use($board_id){
-        $q->whereHas('topic',function($q)use($board_id){
-          $q->whereHas('chapter',function($q)use($board_id){
+      ->when($board_id, function ($q) use ($board_id) {
+        $q->whereHas('topic', function ($q) use ($board_id) {
+          $q->whereHas('chapter', function ($q) use ($board_id) {
             $q->where('board_id', $board_id);
           });
         });
@@ -120,8 +120,8 @@ class QuestionController extends Controller
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
-      'questions.*.question_type' => 'required|string|in:long,short,mcq',
-      'questions.*.question_nature' => 'required|string|in:Conceptual,Exercise',
+      'question_type' => 'required|string|in:long,short,mcq',
+      'question_nature' => 'required|string|in:Conceptual,Exercise',
       'questions.*.description' => 'required',
     ]);
     if ($validator->fails()) {
@@ -134,9 +134,9 @@ class QuestionController extends Controller
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
-          'question_type' => $question['question_type'],
-          'question_nature' => $question['question_nature'],
-          'difficulty_level' => $question['difficulty_level'],
+          'question_type' => $request->question_type,
+          'question_nature' => $request->question_nature,
+          'difficulty_level' => $request->difficulty_level,
           'description' => $question['description'],
         ];
         $question_id = Question::insertGetId($insertData);
