@@ -169,7 +169,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="form-repeater-1-2">Reason</label>
-                        <textarea id="autosize-demo" name="answer" rows="3" class="form-control"></textarea>
+                        <textarea id="autosize-demo" name="answer" rows="3" class="form-control update-question"></textarea>
                     </div>
                 </div>
 
@@ -292,6 +292,9 @@
                 success: function(response) {
                     // Update the form fields with the fetched data
                     $('#update-question').summernote('code', response.Question.description);
+                    $('#autosize-demo').summernote('code', response.Question.mcq_choices.find(function(choice) {
+                        return choice.is_true === 1;
+                    }).reason);
                     // $('#update-question').val(response.Question.description);
                     $('#questionId').val(response.Question.id);
 
@@ -319,9 +322,9 @@
                     });
 
                     // Populate the reason field with the correct option's reason
-                    $('textarea[name="answer"]').val(response.Question.mcq_choices.find(function(choice) {
-                        return choice.is_true === 1;
-                    }).reason);
+                    // $('textarea[name="answer"]').val(response.Question.mcq_choices.find(function(choice) {
+                    //     return choice.is_true === 1;
+                    // }).reason);
 
                     // Show the offcanvas
                     offcanvas.show();

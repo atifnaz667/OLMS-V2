@@ -42,7 +42,7 @@
 
     @php
         $questionIndex = 1;
-        $choiceNames = ['a. ', 'b. ', 'c. ', 'd. '];
+        $choiceNames = ['A. ', 'B. ', 'C. ', 'D. '];
     @endphp
 
 
@@ -51,7 +51,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Q{{ $questionIndex }}. {!! $question->description !!}</h5>
+                        <h5 class="card-title">Q.{{ $questionIndex }} {!! $question->description !!}</h5>
                         <div class="row">
                             <div class="col-sm-6 col-12 ">
                                 <ul class="list-group">

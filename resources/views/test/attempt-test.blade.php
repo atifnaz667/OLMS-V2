@@ -59,7 +59,7 @@ $customizerHidden = ($customizerHidden ?? '');
             timerElement.text(timeLeft);
             console.log(timeLeft)
             if (timeLeft === 0) {
-              submitAnswer();
+              // submitAnswer();
               timerElement.text("00");
             } else {
               timeLeft--; // Decrease the time left by 1 second

@@ -91,7 +91,7 @@
                             <div class="row">
                                 <!-- Left side: Book icon and name -->
                                 <div class="col-12 col-sm-6 text-center">
-                                    <h6 class="m-0"> {{ $book->name }}</h6>
+
                                     <h5 class="m-0">
                                         @if ($book->file != null)
                                             <img src="files/books/{{ $book->file }}" alt="Book Icon"
@@ -101,6 +101,7 @@
                                         @endif
                                         {{-- {{ $book->name }} --}}
                                     </h5>
+                                    <h5 class="m-0"> {{ $book->name }}</h5>
                                 </div>
                                 <!-- Right side: Paper type buttons -->
                                 <div class="col-12 col-sm-6 mt-4 custom text-center d-flex justify-content-center">
@@ -120,7 +121,7 @@
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
                                                     data-question-type="Subjective" href="javascript:void(0);">SLO Based
                                                     &
-                                                    Detailed</a>
+                                                    Exercise</a>
                                                 <a class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
                                                     data-question-type="Conceptual" href="javascript:void(0);">SLO
@@ -128,7 +129,7 @@
                                                     Questions</a>
                                                 <a class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#chapterModal" data-book-id="{{ $book->id }}"
-                                                    data-question-type="Exercise" href="javascript:void(0);">Detailed
+                                                    data-question-type="Exercise" href="javascript:void(0);">Exercise
                                                     Questions</a>
                                             </div>
                                         </div>
