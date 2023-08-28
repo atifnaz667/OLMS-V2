@@ -84,22 +84,21 @@
                         </div>
                     </div>
                 </div>
-                <hr>
-                {{-- <div class="col-md-1">
-                  <label class="form-label" for="state">Records per Page</label>
-                    <select id="perPageSelect" class="select2 form-select" data-allow-clear="true">
+                <div class="row px-3 pb-3">
+                  <div class="col-2">
+                    <label class="form-label" for="state">Records per Page</label>
+                      <select id="perPageSelect" class=" form-select" data-allow-clear="true">
                         <option value="10">10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
                       </select>
-                    </div> --}}
+                  </div>
+                  <div class="col-10">
+                    <label class="form-label" for="state">&nbsp;</label>
 
-                {{-- table  --}}
-                <div class="row m-3">
-                    <div class="col-md">
-                        <input type="text" id="search-input"class="form-control" placeholder="Search MCQs">
-                    </div>
+                    <input type="text" id="search-input" class="form-control" placeholder="Search MCQs" >
+                  </div>
                 </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
@@ -509,7 +508,7 @@
                             var status = response.status;
                             var message = response.message;
                             Swal.fire({
-                                title: status,
+                                title: status.charAt(0).toUpperCase() + status.slice(1),
                                 text: message,
                                 icon: 'error',
                                 customClass: {
@@ -523,7 +522,7 @@
         });
 
         // Trigger fetchQuestionRecords() on filter button click
-        $('#filterButton, #perPageSelect').on('click change', function(e) {
+        $('#filterButton, #perPageSelect').on('change', function(e) {
             e.preventDefault();
             currentPage = 1; // Reset to first page when filter is applied
             perPage = $('#perPageSelect').val();
@@ -580,5 +579,12 @@
 
         // Initial fetch and pagination UI update
         fetchQuestionRecords();
+
+        $("#search-input").keypress(function(e) {
+
+          if(e.which == 13) {
+            fetchQuestionRecords();
+          }
+        });
     </script>
 @endsection

@@ -38,6 +38,11 @@
       .ajaxStop(function () {
         $loading.hide();
       });
+
+      $(document).ready(function() {
+        // Add a class to all img tags
+        $("img").addClass("img-fluid");
+      });
   </script>
 
 @yield('page-script')

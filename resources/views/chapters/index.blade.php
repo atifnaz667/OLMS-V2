@@ -321,7 +321,7 @@
                             var status = response.status;
                             var message = response.message;
                             Swal.fire({
-                                title: status,
+                                title: status.charAt(0).toUpperCase() + status.slice(1),
                                 text: message,
                                 icon: 'error',
                                 customClass: {
