@@ -84,14 +84,14 @@
                                   $correctAnswer = $child->question->mcqChoices->where('is_true',1)->first();
                                 @endphp
                                   <b> Correct Answer :  </b>
-                                  {{ $correctAnswer->choice }}
+                                  {!! $correctAnswer->choice !!}
                               </label>
                             </li>
                             @if ($correctAnswer->reason != '')
                               <li class="list-group-item ">
                                 <label class="form-check-label">
                                     <b> Reason :  </b>
-                                    {{ $correctAnswer->reason }}
+                                    {!! $correctAnswer->reason !!}
                                 </label>
                               </li>
                             @endif
