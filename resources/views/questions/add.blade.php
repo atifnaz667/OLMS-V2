@@ -91,8 +91,12 @@
                             <div class="col-md-3">
                                 <label class="form-label" for="form-repeater-1-3">Question Type</label>
                                 <select id="form-repeater-1-3" name="question_type" class="form-select">
-                                    <option value="long">Long</option>
-                                    <option value="short">Short</option>
+                                    @foreach ($questionType as $questionType)
+                                        <option value="{{ $questionType->type }}">{{ $questionType->type }}</option>
+                                    @endforeach
+                                    {{-- <option value="long">Long</option>
+    <option value="short">Short</option> --}}
+                                </select>
                                 </select>
                             </div>
                             <div class="col-md-3">

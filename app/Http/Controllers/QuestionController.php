@@ -19,7 +19,8 @@ class QuestionController extends Controller
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
-    return view('questions.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
+    $questionType = $results['questionType'];
+    return view('questions.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
   public function index(Request $request)
   {
@@ -112,7 +113,8 @@ class QuestionController extends Controller
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
-    return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
+    $questionType = $results['questionType'];
+    return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
 
   public function store(Request $request)

@@ -81,9 +81,13 @@
                             <label class="form-label" for="type">Type</label>
                             <select id="type" class="select2 form-select" data-allow-clear="true">
                                 <option value="">All</option>
-                                <option value="long">Long</option>
-                                <option value="short">Short</option>
+                                @foreach ($questionType as $questionType)
+                                    <option value="{{ $questionType->type }}">{{ $questionType->type }}</option>
+                                @endforeach
+                                {{-- <option value="long">Long</option>
+    <option value="short">Short</option> --}}
                             </select>
+
                         </div>
                         <div class="col-md-3">
                             <label class="form-label" for="nature">Nature</label>
@@ -104,7 +108,8 @@
                         </div>
                     </div>
 
-                    <div class="card-header d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
+                    <div
+                        class="card-header d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                         <h5 class="card-title mb-sm-0 me-2"></h5>
                         <div class="action-btns">
                             <button type="button" onclick="fetchQuestionRecords()" class="btn btn-primary">Filter</button>
@@ -113,20 +118,20 @@
                 </div>
 
                 <div class="row px-3 pb-3">
-                  <div class="col-2">
-                    <label class="form-label" for="state">Records per Page</label>
-                      <select id="perPageSelect" class=" form-select" data-allow-clear="true">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                  </div>
-                  <div class="col-10">
-                    <label class="form-label" for="state">&nbsp;</label>
+                    <div class="col-2">
+                        <label class="form-label" for="state">Records per Page</label>
+                        <select id="perPageSelect" class=" form-select" data-allow-clear="true">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="col-10">
+                        <label class="form-label" for="state">&nbsp;</label>
 
-                    <input type="text" id="search-input" class="form-control" placeholder="Search Question" >
-                  </div>
+                        <input type="text" id="search-input" class="form-control" placeholder="Search Question">
+                    </div>
                 </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
@@ -160,36 +165,36 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <div class="row mb-3">
-                        <div class="col-6 col-sm-4">
-                          <div class="form-group">
-                            <label class="form-label" for="form-repeater-1-3">Question Type</label>
-                            <select id="question_type" required name="question_type" class="form-select">
-                                <option value="long">Long</option>
-                                <option value="short">Short</option>
-                            </select>
-                          </div>
+                        <div class="row mb-3">
+                            <div class="col-6 col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="form-repeater-1-3">Question Type</label>
+                                    <select id="question_type" required name="question_type" class="form-select">
+                                        <option value="long">Long</option>
+                                        <option value="short">Short</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="form-repeater-1-4">Question Nature</label>
+                                    <select id="question_nature" required name="question_nature" class="form-select">
+                                        <option value="Conceptual">Conceptual</option>
+                                        <option value="Exercise ">Exercise</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-4">
+                                <div class="form-group">
+                                    <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
+                                    <select id="difficulty_level" name="difficulty_level" class="form-select">
+                                        <option value="Easy">Easy</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="Hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6 col-sm-4">
-                          <div class="form-group">
-                            <label class="form-label" for="form-repeater-1-4">Question Nature</label>
-                            <select id="question_nature" required name="question_nature" class="form-select">
-                                <option value="Conceptual">Conceptual</option>
-                                <option value="Exercise ">Exercise</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-6 col-sm-4">
-                          <div class="form-group">
-                            <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
-                            <select id="difficulty_level" name="difficulty_level" class="form-select">
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
                         <div class="row">
                             <div class="col mb-3">
                                 <input type="hidden" id="questionId" name="questionId" />
@@ -337,13 +342,18 @@
                     $('#update-question').summernote('code', response.Question.description);
                     $('#update-question-answer').summernote('code', response.Question.answer.answer);
                     $('#questionId').val(response.Question.id);
-                    let question_nature = '<option value="'+response.Question.question_nature+'">'+response.Question.question_nature+'</option>';
-                    question_nature+='<option value="Conceptual">Conceptual</option><option value="Exercise ">Exercise</option>';
-                    let difficulty_level = '<option value="'+response.Question.difficulty_level+'">'+response.Question.difficulty_level+'</option>';
-                    difficulty_level+='<option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>';
+                    let question_nature = '<option value="' + response.Question.question_nature + '">' +
+                        response.Question.question_nature + '</option>';
+                    question_nature +=
+                        '<option value="Conceptual">Conceptual</option><option value="Exercise ">Exercise</option>';
+                    let difficulty_level = '<option value="' + response.Question.difficulty_level + '">' +
+                        response.Question.difficulty_level + '</option>';
+                    difficulty_level +=
+                        '<option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>';
                     let q_type = response.Question.question_type;
-                    let question_type = '<option value="'+response.Question.question_type+'">'+q_type.charAt(0).toUpperCase() + q_type.slice(1)+'</option>';
-                    question_type+='<option value="long">Long</option><option value="short">Short</option>';
+                    let question_type = '<option value="' + response.Question.question_type + '">' + q_type
+                        .charAt(0).toUpperCase() + q_type.slice(1) + '</option>';
+                    question_type += '<option value="long">Long</option><option value="short">Short</option>';
                     $('#difficulty_level').html(difficulty_level);
                     $('#question_nature').html(question_nature);
                     $('#question_type').html(question_type);
@@ -605,9 +615,9 @@
 
         $("#search-input").keypress(function(e) {
 
-          if(e.which == 13) {
-            fetchQuestionRecords();
-          }
+            if (e.which == 13) {
+                fetchQuestionRecords();
+            }
         });
     </script>
 @endsection

@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md">
-                            <label class="form-label" for="username">User Name</label>
+                            <label class="form-label" for="username">User Name | Card no.</label>
                             <input type="text" class="form-control" id="username" placeholder="User Name" />
                         </div>
                         <div class="col-md">
