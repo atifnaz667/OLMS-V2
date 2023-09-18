@@ -122,7 +122,7 @@ class QuestionController extends Controller
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
-      'question_type' => 'required|string|in:long,short,mcq',
+      'question_type' => 'required|string',
       'question_nature' => 'required|string|in:Conceptual,Exercise',
       'questions.*.description' => 'required',
     ]);

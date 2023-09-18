@@ -56,7 +56,11 @@
                         <form id="formAuthentication" class="mb-3" action="{{ url('login') }}" method="POST">
                             @csrf
                             <div class="mb-3">
+                                @if($type=="Admin")
                                 <label for="email" class="form-label">{{ $type }} Username</label>
+                                @else
+                                <label for="email" class="form-label">{{ $type }} Username | Card No.</label>
+                                @endif
                                 <input type="hidden" name="type" value="{{ $type }}">
                                 <input type="text" class="form-control" id="email" name="username"
                                     placeholder="Enter your username" autofocus>
