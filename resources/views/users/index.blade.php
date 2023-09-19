@@ -35,6 +35,10 @@
                             <input type="text" class="form-control" id="username" placeholder="User Name" />
                         </div>
                         <div class="col-md">
+                            <label class="form-label" for="cardno">Card no.</label>
+                            <input type="text" class="form-control" id="cardno" placeholder="Card Number" />
+                        </div>
+                        <div class="col-md">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="multicol-password">Password</label>
                                 <div class="input-group input-group-merge">
@@ -73,6 +77,7 @@
                                     <th>Sr#</th>
                                     <th>User</th>
                                     <th>User name</th>
+                                    <th>Card No.</th>
                                     <th>Role</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -91,6 +96,7 @@
                                             </div>
                                         </td>
                                         <td>{{ $user->username }}</td>
+                                        <td>{{ $user->cardno }}</td>
                                         <?php if ($user->role->name == 'Admin') { ?>
                                         <td>
                                             <span class="text-truncate d-flex align-items-center"><span
@@ -352,6 +358,7 @@
                 var password = $('#multicol-password').val();
                 var username = $('#username').val();
                 var role_id = $('#role_id').val();
+                var cardno = $('#cardno').val();
 
                 $.ajax({
                     type: 'POST',
@@ -361,6 +368,7 @@
                         username: username,
                         password: password,
                         role_id: role_id,
+                        cardno: cardno,
                     },
                     success: function(response) {
                         var status = response.status;
@@ -378,7 +386,8 @@
                         toastAnimation.show();
                         $('#multicol-password').val('');
                         $('#username').val('');
-                        getData();
+                        $('#cardno').val('');
+                        // getData();
                     },
                     error: function(xhr) {
 

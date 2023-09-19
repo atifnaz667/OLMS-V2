@@ -11,6 +11,7 @@ use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\McqChoiceController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
@@ -53,6 +54,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 
   Route::resource('board', BoardController::class);
+  Route::resource('questionType', QuestionTypeController::class);
 
   Route::resource('class', ClassesController::class);
 

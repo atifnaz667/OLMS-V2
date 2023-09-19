@@ -32,8 +32,9 @@ class UserController extends Controller
   {
     // Validate the request data
     $validatedData = $request->validate([
-      'username' => 'required|unique:users',
-      'password' => 'required|min:8',
+      'username' => 'sometimes',
+      'cardno' => 'sometimes',
+      'password' => 'required',
       'role_id' => 'required',
     ]);
 
@@ -42,6 +43,7 @@ class UserController extends Controller
       $user = new User();
       $user->role_id = $validatedData['role_id'];
       $user->username = $validatedData['username'];
+      $user->cardno = $validatedData['cardno'];
       $user->password = Hash::make($validatedData['password']);
       $user->save();
 

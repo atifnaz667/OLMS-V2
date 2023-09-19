@@ -38,21 +38,32 @@ class LoginController extends Controller
         ->withInput()
         ->with(['status' => 'error', 'message' => $validator->errors()->first()]);
     }
-    $user = User::where('username',$req->username)->first();
-    if ($user && $user->role->name != $req->type) {
-      return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
+    // $user = User::where('username',$req->username)->first();
+    $user = User::where(function ($query) use ($req) {
+      $query->where('username', $req->username)
+      ->orWhere('cardno', $req->username);
+    })->first();
+   
+    if (!$user || $user->role->name != $req->type) {
+      return back()->with(['status' => 'error', 'message' => 'Wrong Credential1s']);
     }
     if ($user && $user->status == 'deactive') {
       return back()
         ->withInput()
         ->with(['status' => 'error', 'message' => 'Your account has been deactivated']);
     }
-    $credentials = ['username' => $req->username, 'password' => $req->password];
+
+    if ($user->cardno==$req->username) 
+      $credentials = ['cardno' => $req->username, 'password' => $req->password];
+    else 
+      $credentials = ['username' => $req->username, 'password' => $req->password];
+    
+    
     if (Auth::attempt($credentials)) {
 
       return redirect('home')->with(['status' => 'success', 'message' => 'Welcome..! ' . $user->name]);
     }
-    return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
+    return back()->with(['status' => 'error', 'message' => 'Wrong Credential3s']);
   }
 
   public function logout()

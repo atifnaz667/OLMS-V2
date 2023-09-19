@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Board;
 use App\Models\Classes;
+use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
@@ -30,7 +31,8 @@ class BookController extends Controller
     $classes = Classes::when($search, function ($search, $q) {
       return $search->where('name', 'like', '%' . $q . '%'); // Filter the query by name if a search query is present
     })->get();
-    return ['Books' => $books, 'Boards' => $boards, 'Classes' => $classes];
+    $questionType = QuestionType::get();
+    return ['Books' => $books, 'Boards' => $boards, 'Classes' => $classes, 'questionType' => $questionType];
   }
 
   public function index(Request $request)
