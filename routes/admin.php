@@ -9,6 +9,7 @@ use App\Http\Controllers\SelfAssessmentController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\VisualController;
 
 $controller_path = 'App\Http\Controllers';
 
@@ -54,6 +55,15 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
+
+
+  // --------------------------------------- Visuals Routes---------------------------------------
+  Route::get('visuals', [VisualController::class, 'index'])->name('visual.index');
+  Route::get('visuals/create', [VisualController::class, 'create'])->name('visual.create');
+  Route::post('add-visual', [VisualController::class, 'store'])->name('add-visual');
+  Route::get('visual/show/{id}', [VisualController::class, 'show'])->name('visual.show');
+  Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
+  Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
 });
 
 Route::middleware([StudentMiddleware::class])->group(function () {

@@ -49,6 +49,12 @@
       "slug": "admin/test/list.index"
     },
     {
+      "url": "visuals",
+      "name": "Visuals",
+      "icon": "menu-icon tf-icons ti ti-presentation",
+      "slug": "admin/test/list.index"
+    },
+    {
       "url": "suggestion/list",
       "name": "Human Error & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",
