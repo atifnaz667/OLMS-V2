@@ -111,6 +111,8 @@
                                             data-bs-toggle="modal" data-bs-target="#chapterModal"
                                             data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
                                             data-question-type="Objective">Multiple Choice Questions</button>
+
+
                                         <div class="btn-group" role="group">
                                             <button id="btnGroupDrop1" type="button"
                                                 class="list-group-item list-group-item-action btn-outline-danger dropdown-toggle waves-effect"
@@ -133,6 +135,12 @@
                                                     Questions</a>
                                             </div>
                                         </div>
+
+                                        <button style="border-radius: 0px !important" type="button"
+                                            class="list-group-item list-group-item-action btn-outline-primary waves-effect mt-2"
+                                            data-bs-toggle="modal" data-bs-target="#chapterModal"
+                                            data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
+                                            data-question-type="Visual">Videos and Animations</button>
                                     </div>
                                 </div>
                             </div>
@@ -160,6 +168,10 @@
 
                 if (questionType === 'Objective') {
                     totalQuestionsField.show();
+                    totalLongQuestionsField.hide();
+                    totalShortQuestionsField.hide();
+                } else if(questionType === 'Visual') {
+                    totalQuestionsField.hide();
                     totalLongQuestionsField.hide();
                     totalShortQuestionsField.hide();
                 } else {
@@ -250,7 +262,11 @@
                         return;
                     }
 
-                } else {
+                }
+                else if(questionType === 'Visual'){
+
+                }
+                else {
                     if (totalLongQuestions.trim() === '' && totalShortQuestions.trim() === '') {
                         alert('Please enter the total number of both questions.');
                         return;
@@ -262,6 +278,13 @@
                     'action': "{{ route('get-test-for-preparation') }}",
                     'method': 'POST'
                 });
+
+                if (questionType === 'Visual') {
+                  form = $('<form>', {
+                    'action': "{{ route('get.visuals') }}",
+                    'method': 'POST'
+                  });
+                }
 
                 var csrfToken = $('<input>', {
                     'type': 'hidden',

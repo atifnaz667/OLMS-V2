@@ -28,7 +28,7 @@ class AttemptTestController extends Controller
     {
       $result = $this->validateTest($req);
       if ($result['status'] == 'error') {
-        return response()->json(['status' => 'error', 'message' => $result['message']], 422);
+        return back()->with(['status' => 'error', 'message' => $result['message']], 422);
       }
       $test = $result['test'];
       if ($test->attempted_child_count == 0) {
@@ -50,6 +50,7 @@ class AttemptTestController extends Controller
       }
       $test = Test::find($req->test_id);
       if ($test->status == 'Attempted') {
+        return ['status'=>'success','test_id'=>$req->test_id];
         return view('test.test-completed',['test_id'=>$req->test_id]);
       }
       $attemptedCount = TestChild::where([['test_id',$req->test_id],['is_viewed',1]])->count();
@@ -65,6 +66,7 @@ class AttemptTestController extends Controller
           $test->status = 'Attempted';
           $test->attempted_at = date('Y-m-d H:i:s');
           $test->save();
+          return ['status'=>'success','test_id'=>$req->test_id];
           return view('test.test-completed',['test_id'=>$req->test_id]);
         }
         if ($test->question_time >  strtotime(date("Y-m-d H:i:s")) - strtotime($testChild->viewed_at )  && $testChild->is_attempted == 0) {
@@ -187,11 +189,11 @@ class AttemptTestController extends Controller
           }])->find($req->test_id);
         if ($test->created_for != Auth::user()->id) {
           return ['status' => 'error', 'message' => 'Invalid Test Requested'];
-        }elseif($test->test_date > date('Y-m-d')){
+        }elseif($test->test_date > date('Y-m-d H:i:s')){
           return ['status' => 'error', 'message' => "You can't attempt test before test date"];
         }elseif($test->status == 'Completed'){
           return ['status' => 'error', 'message' => "You have already taken the test"];
-        }elseif($test->expiry_date != null && $test->expiry_date < date('Y-m-d')){
+        }elseif($test->expiry_date != null && $test->expiry_date < date('Y-m-d H:i:s')){
           return ['status' => 'error', 'message' => "This test is expired now"];
         }
         return ['status'=>'success', 'test'=>$test];

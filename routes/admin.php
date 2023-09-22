@@ -64,6 +64,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('visual/show/{id}', [VisualController::class, 'show'])->name('visual.show');
   Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
   Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
+
 });
 
 Route::middleware([StudentMiddleware::class])->group(function () {
@@ -82,6 +83,9 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('self/assessment/chapters', [SelfAssessmentController::class, 'getChaptersForTest'])->name(
     'self/assessment/chapters'
   );
+
+  Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
+  Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {

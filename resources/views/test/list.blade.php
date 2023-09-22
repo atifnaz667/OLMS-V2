@@ -13,7 +13,14 @@
 </style>
 
 @section('content')
+@if (Session::has('status'))
+<input type="hidden" name="" id="tostStatus" value="{{ Session::get('status') }}">
+<input type="hidden" name="" id="tostMessage" value="{{ Session::get('message') }}">
+<input type="hidden" name="" id="tostType" value="{{ Session::get('status') == 'Success' ? 'text-success' : 'text-warning' }}">
 
+{{ Session::forget('status') }}
+{{ Session::forget('message') }}
+@endif
     <h4 class="fw-bold py-1 ">
         <span class="text-muted fw-light">Home/</span>
         Digital task
@@ -74,8 +81,8 @@
                                 <th>Test Type</th>
                                 <th>Total Marks</th>
                                 <th>Obtainded Marks</th>
-                                <th>Created At </th>
                                 <th>Test Date </th>
+                                <th>Expiry Date </th>
                                 <th>Attempted At </th>
                                 <th>Action</th>
                             </tr>
@@ -146,8 +153,8 @@
                                     '<td>' + test.test_type + '</td>' +
                                     '<td>' + test.total_marks + '</td>' +
                                     '<td>' + test.obtained_marks + '</td>' +
-                                    '<td>' + test.created_at + '</td>' +
                                     '<td>' + test.test_date + '</td>' +
+                                    '<td>' + test.expiry_date + '</td>' +
                                     '<td>' + test.attempted_at  + '</td>' +
                                     td+
                                     '</tr>';
@@ -221,5 +228,27 @@
 
         // Initial fetch and pagination UI update
         fetchTestRecords();
+
+        $(document).ready(function() {
+          var status = $("#tostStatus").val();
+          if (status) {
+            var message = $("#tostMessage").val();
+            showNotification(status,message);
+          }
+        });
+
+        function showNotification(status,message){
+          const toastAnimationExample = document.querySelector('.toast-ex');
+          $('.toast-ex .fw-semibold').text(status);
+          $('.toast-ex .toast-body').text(message);
+
+          // Show the toast notification
+          selectedType = $("#tostType").val();
+          selectedAnimation = "animate__fade";
+          toastAnimationExample.classList.add(selectedAnimation);
+          toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+          toastAnimation = new bootstrap.Toast(toastAnimationExample);
+          toastAnimation.show();
+        }
     </script>
 @endsection

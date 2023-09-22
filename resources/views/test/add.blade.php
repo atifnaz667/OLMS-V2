@@ -65,8 +65,12 @@
               </div>
               <div class="row px-4">
                 <div class="col-sm-3 mb-3">
-                  <label for="nameExLarge" class="form-label">Test Date</label>
-                  <input type="date" class="form-control" name="testDate" value="{{ date("Y-m-d") }}" required>
+                  <label for="nameExLarge" class="form-label">Test Time</label>
+                  <input type="datetime-local" class="form-control" name="testDate"  required>
+                </div>
+                <div class="col-sm-3 mb-3">
+                  <label for="nameExLarge" class="form-label">Expiry Time</label>
+                  <input type="datetime-local" class="form-control" name="expiryDate"  required>
                 </div>
                 <div class="col-sm-3 mb-3">
                   <label for="nameExLarge" class="form-label">Total Questions</label>

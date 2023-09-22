@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\DropdownHelper;
+use App\Models\Chapter;
 use App\Models\Visual;
 use App\Services\CustomErrorMessages;
 use Illuminate\Http\Request;
@@ -139,8 +140,8 @@ class VisualController extends Controller
     try {
       DB::beginTransaction();
       $visual_type = $request->visual_type;
-      $i=0;
-      $j=0;
+      $i = 0;
+      $j = 0;
       foreach ($request->title as $key => $title) {
         $visual = new Visual();
         $visual->title = $title;
@@ -265,7 +266,7 @@ class VisualController extends Controller
     $visual = Visual::find($id);
     if (!$visual) {
       return response()->json(['status' => 'error', 'message' => 'Invalid Visual']);
-    }else{
+    } else {
       // if ($visual->type == 'image') {
       //   if (file_exists(public_path('assets/img/syllabus/'.$visual->path))) {
       //     @unlink(public_path('assets/img/syllabus/'.$visual->path));
@@ -277,5 +278,34 @@ class VisualController extends Controller
       $visual->delete();
       return response()->json(['status' => 'success', 'message' => 'Visual deleted successfully']);
     }
+  }
+
+  public function getVisualsForStudent(Request $req)
+  {
+    return view('visuals.list', ['topics' => $req->topics]);
+  }
+
+  public function getVisualsForStudentAjax(Request $req)
+  {
+    $chapters = Chapter::with(['topics' => function ($q) use ($req) {
+      $q->whereHas('visuals', function ($q) use ($req) {
+        $q->whereIn('topic_id', $req->topics)
+          ->where('visual_type', $req->visual_type);
+      })->with(['visuals' => function ($q) use ($req) {
+        $q->whereIn('topic_id', $req->topics)
+          ->where('visual_type', $req->visual_type);
+      }]);
+    }])->whereHas('topics', function ($q) use ($req) {
+      $q->whereHas('visuals', function ($q) use ($req) {
+        $q->whereIn('topic_id', $req->topics)
+          ->where('visual_type', $req->visual_type);
+      });
+    })->get();
+
+    return response()->json([
+      'status' => 'success',
+      'message' => 'Visuals retrieved successfully',
+      'chapters' => $chapters,
+    ]);
   }
 }
