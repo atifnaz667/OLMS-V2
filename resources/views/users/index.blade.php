@@ -169,7 +169,8 @@
             aria-labelledby="offcanvasUpdateUserLabel">
             <div class="offcanvas-header">
                 <h5 id="offcanvasUpdateUserLabel" class="offcanvas-title">Edit User</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0">
                 <form class="update-class pt-0" id="addUserForm">
@@ -386,7 +387,6 @@
                         toastAnimation.show();
                         $('#multicol-password').val('');
                         $('#username').val('');
-                        $('#cardno').val('');
                         // getData();
                     },
                     error: function(xhr) {

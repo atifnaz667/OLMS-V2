@@ -32,8 +32,7 @@ class UserController extends Controller
   {
     // Validate the request data
     $validatedData = $request->validate([
-      'username' => 'sometimes',
-      'cardno' => 'sometimes',
+      'username' => 'required|unique:users',
       'password' => 'required',
       'role_id' => 'required',
     ]);
@@ -85,7 +84,7 @@ class UserController extends Controller
       $results = DropdownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
-      return view('users.edit', ['user' => $user,'classes' => $classes,'boards' => $boards]);
+      return view('users.edit', ['user' => $user, 'classes' => $classes, 'boards' => $boards]);
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 

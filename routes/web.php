@@ -45,6 +45,9 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::post('get-test-for-preparation', [SyllabusPreparationController::class, 'show'])->name(
     'get-test-for-preparation'
   );
+  Route::get('/calculator', function () {
+    return view('users.calculator');
+  });
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route

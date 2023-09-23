@@ -32,17 +32,50 @@ class McqChoiceController extends Controller
     $sort_order = $request->input('sort_order', 'asc');
     $topicId = $request->input('topic_id');
     $searchQuery = $request->input('searchQuery');
+    $board_id = $request->input('board_id');
+    $class_id = $request->input('class_id');
+    $book_id = $request->input('book_id');
+    $chapter_id = $request->input('chapter_id');
+    $difficulty_level = $request->input('difficulty_level');
 
+    $questions = Question::orderBy($sort, $sort_order)->where('question_type', 'mcq')
 
-    $query = Question::orderBy($sort, $sort_order)->where('question_type', 'mcq');
-
-    if ($topicId) {
-      $query->where('topic_id', $topicId);
-    }
-    if ($searchQuery) {
-      $query->where('description', 'like', '%' . $searchQuery . '%');
-    }
-    $questions = $query->paginate($perPage);
+      ->when($searchQuery, function ($q) use ($searchQuery) {
+        $q->where('description', 'like', '%' . $searchQuery . '%');
+      })
+      ->when($topicId, function ($q) use ($topicId) {
+        $q->where('topic_id', $topicId);
+      })
+      ->when($difficulty_level, function ($q) use ($difficulty_level) {
+        $q->where('difficulty_level', $difficulty_level);
+      })
+      ->when($chapter_id, function ($q) use ($chapter_id) {
+        $q->whereHas('topic', function ($q) use ($chapter_id) {
+          $q->where('chapter_id', $chapter_id);
+        });
+      })
+      ->when($book_id, function ($q) use ($book_id) {
+        $q->whereHas('topic', function ($q) use ($book_id) {
+          $q->whereHas('chapter', function ($q) use ($book_id) {
+            $q->where('book_id', $book_id);
+          });
+        });
+      })
+      ->when($class_id, function ($q) use ($class_id) {
+        $q->whereHas('topic', function ($q) use ($class_id) {
+          $q->whereHas('chapter', function ($q) use ($class_id) {
+            $q->where('class_id', $class_id);
+          });
+        });
+      })
+      ->when($board_id, function ($q) use ($board_id) {
+        $q->whereHas('topic', function ($q) use ($board_id) {
+          $q->whereHas('chapter', function ($q) use ($board_id) {
+            $q->where('board_id', $board_id);
+          });
+        });
+      })
+      ->paginate($perPage);
 
     if ($request->check) {
       $data = $questions->map(function ($question) {
@@ -109,6 +142,7 @@ class McqChoiceController extends Controller
         $insertData = [
           'topic_id' => $topic_id,
           'question_type' => $mcq,
+          'difficulty_level' => $request->difficulty_level,
           'description' => $question['description'],
         ];
         $question_id = Question::insertGetId($insertData);
