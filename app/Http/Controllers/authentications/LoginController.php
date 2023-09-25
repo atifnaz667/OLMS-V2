@@ -131,7 +131,8 @@ class LoginController extends Controller
 
 
     if (Auth::attempt($credentials)) {
-
+      $user->last_login_at = now();
+      $user->save();
       return redirect('home')->with(['status' => 'success', 'message' => 'Welcome..! ' . $user->name]);
     }
     return back()->with(['status' => 'error', 'message' => 'Wrong Credential3s']);

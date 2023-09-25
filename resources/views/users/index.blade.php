@@ -117,6 +117,9 @@
                                             <th>User name</th>
                                             {{-- <th>Card No.</th> --}}
                                             <th>Role</th>
+                                            <th>Last Login At</th>
+                                            <th>Last Activity At</th>
+                                            <th>Role</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -160,7 +163,8 @@
                                                                 class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
                                                 </td>
                                                 <?php } ?>
-
+                                                <td>{{ $user->last_login_at }}</td>
+                                                <td>{{ $user->last_activity_at }}</td>
                                                 <?php if ($user->status == 'active') { ?>
                                                 <td><span class="badge bg-label-success"
                                                         text-capitalized="">{{ $user->status }}</span></td>

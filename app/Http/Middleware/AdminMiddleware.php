@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\UserActivity;
+use Illuminate\Support\Facades\Event;
 
 class AdminMiddleware
 {
@@ -20,6 +22,9 @@ class AdminMiddleware
     if (!Auth::user() || Auth::user()->role_id != 1) {
       return redirect('/');
     }
+    $user = auth()->user();
+    $timestamp = now();
+    Event::dispatch(new UserActivity($user, $timestamp));
     return $next($request);
   }
 }

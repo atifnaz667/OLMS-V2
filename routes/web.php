@@ -47,7 +47,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
   );
   Route::get('/calculator', function () {
     return view('users.calculator');
-  });
+  })->name('calculator');
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
