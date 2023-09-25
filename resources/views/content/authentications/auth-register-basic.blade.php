@@ -30,7 +30,15 @@
     <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
             <div class="authentication-inner py-4">
+                @if (Session::has('status'))
+                    <input type="hidden" name="" id="tostStatus" value="{{ Session::get('status') }}">
+                    <input type="hidden" name="" id="tostMessage" value="{{ Session::get('message') }}">
+                    <input type="hidden" name="" id="tostType"
+                        value="{{ Session::get('status') == 'Success' ? 'text-success' : 'text-warning' }}">
 
+                    {{ Session::forget('status') }}
+                    {{ Session::forget('message') }}
+                @endif
                 <!-- Register Card -->
                 <div class="card">
                     <div class="card-body">
@@ -46,13 +54,15 @@
                         <h4 class="mb-1 pt-2">Adventure starts here 🚀</h4>
                         <p class="mb-4">Before Start please enter your basic info.</p>
 
-                        <form id="formAuthentication" class="mb-3" action="{{ url('store-pending-user') }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form id="formAuthentication" class="mb-3" action="{{ url('store-pending-user') }}"
+                            method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="fullName" class="form-label">Full Name</label>
                                 <input type="text" required class="form-control" id="fullName" name="fullName"
                                     placeholder="Enter your fullName" autofocus>
+                                <input type="hidden" value="{{ $card_id }}" id="card_id" name="card_id">
+                                <input type="hidden" value="{{ $type }}" id="type" name="type">
                             </div>
 
                             <div class="mb-3">
@@ -60,8 +70,19 @@
                                 <input required type="email" class="form-control" id="email" name="email"
                                     placeholder="Enter your email" autofocus>
                             </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">User name</label>
+                                <input required type="text" class="form-control" id="username" name="username"
+                                    placeholder="Enter your username" autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input required type="password" id="password" class="form-control" name="password"
+                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    aria-describedby="password" />
+                            </div>
 
-                            @if (Auth::user()->role_id == 4)
+                            @if ($type == 'Student')
                                 <div class="mb-3">
                                     <label class="form-label" for="board_id">Your Board?</label>
                                     <select required id="board_id" name="board_id" class="select2 form-select"
@@ -110,4 +131,31 @@
             <!-- Register Card -->
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            var status = $("#tostStatus").val();
+            if (status) {
+                var message = $("#tostMessage").val();
+                showNotification(status, message);
+            }
+
+        });
+
+        function showNotification(status, message) {
+            const toastAnimationExample = document.querySelector('.toast-ex');
+            $('.toast-ex .fw-semibold').text(status);
+            $('.toast-ex .toast-body').text(message);
+
+            // Show the toast notification
+            selectedType = $("#tostType").val();
+            selectedAnimation = "animate__fade";
+            toastAnimationExample.classList.add(selectedAnimation);
+            toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+            toastAnimation = new bootstrap.Toast(toastAnimationExample);
+            toastAnimation.show();
+        }
+    </script>
 @endsection

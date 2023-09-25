@@ -18,9 +18,12 @@ $controller_path = 'App\Http\Controllers';
 Route::middleware([AlreadyLoggedIn::class])->group(function () {
   Route::get('/', [LoginController::class, 'index']);
   Route::get('/login/{type}', [LoginController::class, 'show']);
+  Route::get('/signup/{type}', [LoginController::class, 'sigupPage']);
+  Route::post('signup', [LoginController::class, 'sigup']);
   Route::post('login', [LoginController::class, 'login']);
-  Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 });
+Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
+Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 
 //------------------------------Common Routes--------------------------
 Route::middleware([CommonRoutes::class])->group(function () {
@@ -30,7 +33,6 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
   Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
   Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
-  Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -64,7 +66,6 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('visual/show/{id}', [VisualController::class, 'show'])->name('visual.show');
   Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
   Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
-
 });
 
 Route::middleware([StudentMiddleware::class])->group(function () {

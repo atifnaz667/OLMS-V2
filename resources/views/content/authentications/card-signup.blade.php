@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Login ' . config('variables.templateName'))
+@section('title', 'Signup ' . config('variables.templateName'))
 
 @section('vendor-style')
     <!-- Vendor -->
@@ -52,54 +52,21 @@
                         </div>
                         <!-- /Logo -->
                         <h4 class="mb-1 pt-2">Welcome to {{ config('variables.templateName') }}! 👋</h4>
-                        <p class="mb-4">Please sign-in to your account and start the adventure</p>
+                        <p class="mb-4">Please enter you card number to create an account and start the adventure</p>
 
-                        <form id="formAuthentication" class="mb-3" action="{{ url('login') }}" method="POST">
+                        <form id="formAuthentication" class="mb-3" action="{{ url('signup') }}" method="POST">
                             @csrf
                             <div class="mb-3">
-                                @if ($type == 'Admin')
-                                    <label for="email" class="form-label">{{ $type }} Username</label>
-                                @else
-                                    <label for="email" class="form-label">{{ $type }} Username</label>
-                                @endif
+                                <label for="card_no" class="form-label">{{ $type }} Card number</label>
                                 <input type="hidden" name="type" value="{{ $type }}">
-                                <input type="text" class="form-control" id="email" name="username"
-                                    placeholder="Enter your username" autofocus>
+                                <input type="text" class="form-control" id="card_no" name="card_no"
+                                    placeholder="Enter your card Number" autofocus>
                             </div>
-                            <div class="mb-3 form-password-toggle">
-                                <div class="d-flex justify-content-between">
-                                    <label class="form-label" for="password">Password</label>
-                                    <a href="javascript:void(0);">
-                                        <small>Forgot Password?</small>
-                                    </a>
-                                </div>
-                                <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control" name="password"
-                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                                        aria-describedby="password" />
-                                    <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
-                                </div>
-                            </div>
+
                             <div class="mb-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember-me">
-                                    <label class="form-check-label" for="remember-me">
-                                        Remember Me
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
+                                <button class="btn btn-primary d-grid w-100" type="submit">Sign up</button>
                             </div>
                         </form>
-                        @if ($type != 'Admin')
-                            <p class="text-center mt-2">
-                                <span>Sign up with Card?</span>
-                                <a href="{{ url('signup') . '/' . $type }}">
-                                    <span>Create an account</span>
-                                </a>
-                            </p>
-                        @endif
                     </div>
                 </div>
                 <!-- /Register -->
