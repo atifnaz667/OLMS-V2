@@ -1,0 +1,30 @@
+{
+    "menu": [
+      {
+        "url": "/",
+        "name": "Dashboard",
+        "icon": "menu-icon tf-icons ti ti-layout-dashboard",
+        "slug": "pages-home"
+      },
+      {
+        "url": "question",
+        "name": "Questions",
+        "icon": "menu-icon tf-icons ti ti-question-mark",
+        "slug": "question.index"
+      },
+      {
+        "url": "mcq-choice",
+        "name": "Multiple Choices",
+        "icon": "menu-icon tf-icons ti ti-checkbox",
+        "slug": "mcq-choice.index"
+      },
+    
+      {
+        "url": "suggestion/list",
+        "name": "Human Error & Suggestions",
+        "icon": "menu-icon tf-icons ti ti-chart-infographic",
+        "slug": "auth-register-basic"
+      }
+    ]
+  }
+  

@@ -38,7 +38,7 @@ class LoginController extends Controller
         ->withInput()
         ->with(['status' => 'error', 'message' => $validator->errors()->first()]);
     }
-    $user = User::where('username',$req->username)->first();
+     $user = User::where('username',$req->username)->first();
     if ($user && $user->role->name != $req->type) {
       return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
     }

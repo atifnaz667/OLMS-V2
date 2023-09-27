@@ -43,6 +43,12 @@
       "slug": "user.index"
     },
     {
+      "url": "assignRole",
+      "name": "Assign",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "assignRole.index"
+    },
+    {
       "url": "admin/test/list",
       "name": "Test List",
       "icon": "menu-icon tf-icons ti ti-book",

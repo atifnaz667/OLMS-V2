@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
+use App\Models\Board;
+use App\Models\Classes;
+use App\Models\AssignRole;
 
 class McqChoiceController extends Controller
 {
@@ -72,10 +77,35 @@ class McqChoiceController extends Controller
 
   public function addMcqChoioce(Request $request)
   {
-    $results = DropdownHelper::getBoardBookClass();
-    $books = $results['Books'];
-    $boards = $results['Boards'];
-    $classes = $results['Classes'];
+    $user = Auth::user();
+    $role_id = $user->role_id;
+
+    // Initialize variables
+    $boards = [];
+    $classes = [];
+    $books = [];
+
+    if ($role_id == 5) {
+      // If the user has role_id 5, retrieve data based on their assignments
+      $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+
+      // Collect unique board_ids, class_ids, and subject_ids
+      $board_ids = $assignRoles->pluck('board_id')->unique();
+      $class_ids = $assignRoles->pluck('class_id')->unique();
+      $subject_ids = $assignRoles->pluck('subject_id')->unique();
+
+      // Retrieve boards, classes, and books based on the unique IDs
+      $boards = Board::whereIn('id', $board_ids)->get();
+      $classes = Classes::whereIn('id', $class_ids)->get();
+      $books = Book::whereIn('id', $subject_ids)->get();
+
+    }else{
+      $results = DropdownHelper::getBoardBookClass();
+      $books = $results['Books'];
+      $boards = $results['Boards'];
+      $classes = $results['Classes'];
+    }
+    
     return view('mcq.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
   }
 

@@ -31,8 +31,10 @@ class MenuServiceProvider extends ServiceProvider
 
     $adminMenuJson = file_get_contents(base_path('resources/menu/adminMenu.json'));
     $adminMenuData = json_decode($adminMenuJson);
+    $staffMenuJson = file_get_contents(base_path('resources/menu/staffMenu.json'));
+    $staffMenuData = json_decode($staffMenuJson);
 
     // Share all menuData to all the views
-    \View::share('menuData', [$adminMenuData, $teacherMenuData, $parentMenuData, $studenMenuData]);
+    \View::share('menuData', [$adminMenuData, $teacherMenuData, $parentMenuData, $studenMenuData, $staffMenuData]);
   }
 }

@@ -53,6 +53,7 @@
                         <div class="mb-3">
                             <a href="{{ url('/login/Teacher') }}" class="btn btn-primary d-grid w-100">Teacher</a>
                         </div>
+                     
                         <div class="mb-3">
                             <a href="#" class="btn btn-primary d-grid w-100">Paper
                                 Creation</a>

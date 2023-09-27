@@ -19,7 +19,7 @@ class HomePage extends Controller
     $results = DropdownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
-    if ($role_id == 1) {
+    if ($role_id == 1 || $role_id == 5) {
       return view('dashboards.admin');
     } elseif ($role_id == 4) {
       if (Auth::user()->status == 'pending') {
