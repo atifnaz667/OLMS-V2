@@ -29,6 +29,7 @@ class QuestionController extends Controller
     $books = [];
 
     if ($role_id == 5) {
+      $results = DropdownHelper::getBoardBookClass();
       // If the user has role_id 5, retrieve data based on their assignments
       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
 
@@ -41,6 +42,7 @@ class QuestionController extends Controller
       $boards = Board::whereIn('id', $board_ids)->get();
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
+      $questionType = $results['questionType'];
 
     }else{
       $results = DropdownHelper::getBoardBookClass();
