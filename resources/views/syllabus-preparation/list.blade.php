@@ -63,7 +63,7 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label" for="class-name">Total Long Questions</label>
-                            <input type="text" class="form-control"  id="total-long-questions"
+                            <input type="text" class="form-control" id="total-long-questions"
                                 name="total-long-questions">
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label" for="class-name">Total Short Questions</label>
-                            <input type="text" class="form-control"  id="total-short-questions"
+                            <input type="text" class="form-control" id="total-short-questions"
                                 name="total-short-questions">
                         </div>
                     </div>
@@ -141,6 +141,13 @@
                                             data-bs-toggle="modal" data-bs-target="#chapterModal"
                                             data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
                                             data-question-type="Visual">Videos and Animations</button>
+
+                                        <a href="{{ url('keyPoints/' . $book->id) }}" type="button"
+                                            style="border-top-width: thin;border-radius: 0px !important"
+                                            class="list-group-item list-group-item-action btn-outline-danger waves-effect mt-2"
+                                            data-book-id="{{ $book->id }}" data-book-name="{{ $book->name }}"
+                                            data-question-type="Objective">Key
+                                            Points</a>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +177,7 @@
                     totalQuestionsField.show();
                     totalLongQuestionsField.hide();
                     totalShortQuestionsField.hide();
-                } else if(questionType === 'Visual') {
+                } else if (questionType === 'Visual') {
                     totalQuestionsField.hide();
                     totalLongQuestionsField.hide();
                     totalShortQuestionsField.hide();
@@ -190,7 +197,8 @@
                         // Build the chapter and topic checkboxes dynamically
                         var chapterList = "";
                         $.each(response.chapters, function(index, chapter) {
-                            chapterList += '<div class="mb-2 p-2" ><div class="form-check">';
+                            chapterList +=
+                                '<div class="mb-2 p-2" ><div class="form-check">';
                             chapterList +=
                                 '<input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' +
                                 chapter.id + '">';
@@ -216,7 +224,8 @@
 
                         // Build the topic checkboxes dynamically
                         $.each(response.topics, function(index, topic) {
-                            var topicList = '<div class="col-sm-4"><div class="form-check">';
+                            var topicList =
+                                '<div class="col-sm-4"><div class="form-check">';
                             topicList +=
                                 '<input class="form-check-input topic-checkbox" type="checkbox" id="topic_' +
                                 topic.id + '">';
@@ -262,11 +271,9 @@
                         return;
                     }
 
-                }
-                else if(questionType === 'Visual'){
+                } else if (questionType === 'Visual') {
 
-                }
-                else {
+                } else {
                     if (totalLongQuestions.trim() === '' && totalShortQuestions.trim() === '') {
                         alert('Please enter the total number of both questions.');
                         return;
@@ -280,10 +287,10 @@
                 });
 
                 if (questionType === 'Visual') {
-                  form = $('<form>', {
-                    'action': "{{ route('get.visuals') }}",
-                    'method': 'POST'
-                  });
+                    form = $('<form>', {
+                        'action': "{{ route('get.visuals') }}",
+                        'method': 'POST'
+                    });
                 }
 
                 var csrfToken = $('<input>', {
