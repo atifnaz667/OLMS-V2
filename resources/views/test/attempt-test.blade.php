@@ -78,6 +78,9 @@ $customizerHidden = ($customizerHidden ?? '');
                       _token:'{{ csrf_token() }}'
                   },
                   success: function(response) {
+                    if (response.status == 'success') {
+                      window.location.href = "{{ url('test/result?test_id=') }}" + response.test_id;
+                    }
                     $("#test-content").html(response);
                     timerElement = $('#timer');
                     timeLeft = parseFloat($('#timeLeft').val());

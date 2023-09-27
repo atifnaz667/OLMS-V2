@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md">
                                 <label class="form-label" for="board_id">Board</label>
                                 <select id="board_id" class="select2 form-select" data-allow-clear="true">
@@ -64,6 +64,8 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md">
                                 <label class="form-label" for="chapter_id">Chapter</label>
                                 <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
@@ -76,6 +78,15 @@
                                     <option value="">Select</option>
                                 </select>
                             </div>
+                            <div class="col-md">
+                                <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
+                                <select id="form-repeater-1-5" name="difficulty_level" class="form-select">
+                                    <option value="Easy">Easy</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Hard">Hard</option>
+                                </select>
+                            </div>
+
                         </div>
 
                     </div>
@@ -118,7 +129,8 @@
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">
                                     <label class="form-label" for="form-repeater-1-4">Option C</label>
-                                    <textarea class="form-control summernote" name="option-c" id="form-repeater-1-4" rows="2" class="form-control"></textarea>
+                                    <textarea class="form-control summernote" name="option-c" id="form-repeater-1-4" rows="2"
+                                        class="form-control"></textarea>
                                     {{-- <input type="text" name="option-c" id="form-repeater-1-4" class="form-control" /> --}}
                                 </div>
                                 <div class="mb-3 col-lg-6 col-xl-6 col-12 mb-0">

@@ -14,4 +14,9 @@ class Topic extends Model
   {
     return $this->belongsTo(Chapter::class);
   }
+
+  public function visuals()
+  {
+    return $this->hasMany(Visual::class);
+  }
 }

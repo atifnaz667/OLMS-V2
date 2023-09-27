@@ -34,6 +34,10 @@
                             <label class="form-label" for="username">User Name</label>
                             <input type="text" class="form-control" id="username" placeholder="User Name" />
                         </div>
+                        {{-- <div class="col-md">
+                            <label class="form-label" for="card_no">Card no.</label>
+                            <input type="text" class="form-control" id="card_no" placeholder="Card Number" />
+                        </div> --}}
                         <div class="col-md">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="multicol-password">Password</label>
@@ -57,6 +61,24 @@
                         </div>
                     </div>
                     <button type="button" onclick="addUser()" class="btn btn-primary">Create</button>
+                    <hr class="my-5">
+                    <h5 class="mt-3">Add Card</h5>
+                    <div class="row mb-3">
+                        <div class="col-md">
+                            <label class="form-label" for="card_no">Card No.</label>
+                            <input type="text" class="form-control" id="card_no" placeholder="Card Number" />
+                        </div>
+
+                        <div class="col-md">
+                            <div class="form-password-toggle">
+                                <label class="form-label" for="expiryDate">Expiry Date</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="date" id="expiryDate" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
             </div>
         </div>
@@ -64,94 +86,186 @@
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
+
+
                     <div class="card-header">
-                        <h5 class="card-header">Users</h5>
+                        <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                    data-bs-target="#form-tabs-board-listing" role="tab"
+                                    aria-selected="true">Users</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link " data-bs-toggle="tab" data-bs-target="#form-tabs-class-listing"
+                                    role="tab" aria-selected="false">Cards</button>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="table-responsive text-nowrap">
-                        <table class="table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Sr#</th>
-                                    <th>User</th>
-                                    <th>User name</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                                @foreach ($users as $key => $user)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td class="sorting_1">
-                                            <div class="d-flex justify-content-start align-items-center user-name">
-                                                <div class="d-flex flex-column"><a href="#"
-                                                        class="text-body text-truncate"><span
-                                                            class="fw-semibold">{{ $user->name }}</span></a><small
-                                                        class="text-muted">{{ $user->email }}</small></div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $user->username }}</td>
-                                        <?php if ($user->role->name == 'Admin') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-circle-check ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php } elseif ($user->role->name == 'Parent') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-edit ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php  } elseif ($user->role->name == 'Teacher') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-device-laptop ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php  } else { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php } ?>
 
-                                        <?php if ($user->status == 'active') { ?>
-                                        <td><span class="badge bg-label-success"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php } elseif ($user->status == 'pending') { ?>
-                                        <td><span class="badge bg-label-warning"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php  } elseif ($user->status == 'deactive') { ?>
-                                        <td><span class="badge bg-label-secondary"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php  } ?>
-                                        <td>
-                                            <!-- Edit Icon -->
-                                            <a href="#" onclick="editUser({{ $user->id }})">
-                                                <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
-                                            </a>
 
-                                            <!-- Delete Icon -->
-                                            {{-- <a href="{{ route('user.destroy', $user->id) }}"
+
+                    <div class="tab-content">
+                        <!-- Personal Info -->
+                        <div class="tab-pane fade active show" id="form-tabs-board-listing" role="tabpanel">
+                            {{-- <div class="card"> --}}
+                            <h5 class="card-header">Users</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Sr#</th>
+                                            <th>User</th>
+                                            <th>User name</th>
+                                            {{-- <th>Card No.</th> --}}
+                                            <th>Role</th>
+                                            <th>Last Login At</th>
+                                            <th>Last Activity At</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach ($users as $key => $user)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td class="sorting_1">
+                                                    <div class="d-flex justify-content-start align-items-center user-name">
+                                                        <div class="d-flex flex-column"><a href="#"
+                                                                class="text-body text-truncate"><span
+                                                                    class="fw-semibold">{{ $user->name }}</span></a><small
+                                                                class="text-muted">{{ $user->email }}</small></div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $user->username }}</td>
+                                                {{-- <td>{{ $user->cardno }}</td> --}}
+                                                <?php if ($user->role->name == 'Admin') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-circle-check ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php } elseif ($user->role->name == 'Parent') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-edit ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php  } elseif ($user->role->name == 'Teacher') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-device-laptop ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php  } else { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php } ?>
+                                                <td>{{ $user->last_login_at }}</td>
+                                                <td>{{ $user->last_activity_at }}</td>
+                                                <?php if ($user->status == 'active') { ?>
+                                                <td><span class="badge bg-label-success"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php } elseif ($user->status == 'pending') { ?>
+                                                <td><span class="badge bg-label-warning"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } elseif ($user->status == 'deactive') { ?>
+                                                <td><span class="badge bg-label-secondary"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } ?>
+                                                <td>
+                                                    <!-- Edit Icon -->
+                                                    <a href="#" onclick="editUser({{ $user->id }})">
+                                                        <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
+                                                    </a>
+
+                                                    <!-- Delete Icon -->
+                                                    {{-- <a href="{{ route('user.destroy', $user->id) }}"
                                                 onclick="event.preventDefault();
                                                 document.getElementById('delete-user-{{ $user->id }}').submit();">
                                                 <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
                                             </a> --}}
-                                            <form id="delete-user-{{ $user->id }}"
-                                                action="{{ route('user.destroy', $user->id) }}" method="POST"
-                                                style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                    <form id="delete-user-{{ $user->id }}"
+                                                        action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Account Details -->
+                        <div class="tab-pane fade" id="form-tabs-class-listing" role="tabpanel">
+                            {{-- <div class="card"> --}}
+                            <h5 class="card-header">Classes</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Sr#</th>
+                                            <th>Card No.</th>
+                                            <th>Expiry Date</th>
+                                            <th>Status</th>
+                                            {{-- <th>Action</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach ($cards as $key => $user)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $user->card_no }}</td>
+                                                <td>{{ $user->expiry_date }}</td>
+                                                <?php if ($user->status == 'used') { ?>
+                                                <td><span class="badge bg-label-success" text-capitalized="">Used</span>
+                                                </td>
+                                                <?php } elseif ($user->status == 'expired') { ?>
+                                                <td><span class="badge bg-label-warning"
+                                                        text-capitalized="">Expired</span></td>
+                                                <?php  }else { ?>
+                                                <td><span class="badge bg-label-secondary"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } ?>
+                                                {{-- <td> --}}
+                                                <!-- Edit Icon -->
+                                                {{-- <a href="#" onclick="editUser({{ $user->id }})">
+                                                        <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
+                                                    </a> --}}
+
+                                                <!-- Delete Icon -->
+                                                {{-- <a href="{{ route('user.destroy', $user->id) }}"
+                                                onclick="event.preventDefault();
+                                                document.getElementById('delete-user-{{ $user->id }}').submit();">
+                                                <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
+                                            </a> --}}
+                                                <form id="delete-user-{{ $user->id }}"
+                                                    action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                                    style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                                {{-- </td> --}}
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            {{-- </div> --}}
+                        </div>
                     </div>
+
+
+
+                    <div class="card-header">
+                        <h5 class="card-header">Users</h5>
+                    </div>
+
                     {{-- <nav aria-label="Page navigation" class="pagination-nav">
                         <ul class="pagination"></ul>
                     </nav> --}}
@@ -164,7 +278,8 @@
             aria-labelledby="offcanvasUpdateUserLabel">
             <div class="offcanvas-header">
                 <h5 id="offcanvasUpdateUserLabel" class="offcanvas-title">Edit User</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0">
                 <form class="update-class pt-0" id="addUserForm">
@@ -348,11 +463,61 @@
                 });
             }
 
+            function addCard() {
+                const toastAnimationExample = document.querySelector('.toast-ex');
+                var card_no = $('#card_no').val();
+                var expiryDate = $('#expiryDate').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('user.store') }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        card_no: card_no,
+                        expiryDate: expiryDate,
+                        check: "card",
+                    },
+                    success: function(response) {
+                        var status = response.status;
+                        var message = response.message;
+                        // Update toast message and status
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+
+                        // Show the toast notification
+                        selectedType = "text-success";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                        $('#card_no').val('');
+                        // getData();
+                        location.reload();
+                    },
+                    error: function(xhr) {
+
+                        var response = JSON.parse(xhr.responseText);
+                        var status = response.status;
+                        var message = response.message;
+
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-warning";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                    }
+                });
+            }
+
             function addUser() {
                 const toastAnimationExample = document.querySelector('.toast-ex');
                 var password = $('#multicol-password').val();
                 var username = $('#username').val();
                 var role_id = $('#role_id').val();
+                // var card_no = $('#card_no').val();
 
                 $.ajax({
                     type: 'POST',
@@ -362,6 +527,7 @@
                         username: username,
                         password: password,
                         role_id: role_id,
+                        // card_no: card_no,
                     },
                     success: function(response) {
                         var status = response.status;
@@ -379,7 +545,9 @@
                         toastAnimation.show();
                         $('#multicol-password').val('');
                         $('#username').val('');
-                        getData();
+                        // getData();
+                        location.reload();
+
                     },
                     error: function(xhr) {
 

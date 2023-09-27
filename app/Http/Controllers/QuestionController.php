@@ -19,7 +19,7 @@ use App\Models\AssignRole;
 class QuestionController extends Controller
 {
   public function addQuestion(Request $request)
-  { 
+  {
     $user = Auth::user();
     $role_id = $user->role_id;
 
@@ -47,10 +47,11 @@ class QuestionController extends Controller
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
+    $questionType = $results['questionType'];
     }
-    
-    
-    return view('questions.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
+
+
+    return view('questions.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
   public function index(Request $request)
   {
@@ -143,7 +144,8 @@ class QuestionController extends Controller
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
-    return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
+    $questionType = $results['questionType'];
+    return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
 
   public function store(Request $request)
@@ -151,7 +153,7 @@ class QuestionController extends Controller
     $validator = Validator::make($request->all(), [
       'topic_id' => 'required|exists:topics,id',
       'questions' => 'required|array',
-      'question_type' => 'required|string|in:long,short,mcq',
+      'question_type' => 'required|string',
       'question_nature' => 'required|string|in:Conceptual,Exercise',
       'questions.*.description' => 'required',
     ]);

@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md">
                             <label class="form-label" for="board_id">Board</label>
                             <select id="board_id" class="select2 form-select" data-allow-clear="true">
@@ -62,6 +62,8 @@
                                 @endforeach
                             </select>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md">
                             <label class="form-label" for="chapter_id">Chapter</label>
                             <select id="chapter_id" class="select2 form-select" data-allow-clear="true">
@@ -72,6 +74,15 @@
                             <label class="form-label" for="topic_id">Topic</label>
                             <select id="topic_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
+                            </select>
+                        </div>
+                        <div class="col-md">
+                            <label class="form-label" for="difficulty-level">Difficulity Level</label>
+                            <select id="difficulty-level" class="select2 form-select" data-allow-clear="true">
+                                <option value="">All</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
                             </select>
                         </div>
                     </div>
@@ -85,20 +96,20 @@
                     </div>
                 </div>
                 <div class="row px-3 pb-3">
-                  <div class="col-2">
-                    <label class="form-label" for="state">Records per Page</label>
-                      <select id="perPageSelect" class=" form-select" data-allow-clear="true">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                      </select>
-                  </div>
-                  <div class="col-10">
-                    <label class="form-label" for="state">&nbsp;</label>
+                    <div class="col-2">
+                        <label class="form-label" for="state">Records per Page</label>
+                        <select id="perPageSelect" class=" form-select" data-allow-clear="true">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    <div class="col-10">
+                        <label class="form-label" for="state">&nbsp;</label>
 
-                    <input type="text" id="search-input" class="form-control" placeholder="Search MCQs" >
-                  </div>
+                        <input type="text" id="search-input" class="form-control" placeholder="Search MCQs">
+                    </div>
                 </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
@@ -408,12 +419,22 @@
 
         function fetchQuestionRecords(page = 1) {
             var topicId = $('#topic_id').val();
+            var difficulty_level = $('#difficulty-level').val();
+            var chapter_id = $('#chapter_id').val();
+            var book_id = $('#book_id').val();
+            var class_id = $('#class_id').val();
+            var board_id = $('#board_id').val();
             var check = "ajax";
             var searchQuery = $('#search-input').val();
             $.ajax({
                 url: '{{ route('mcq-choice.index') }}',
                 method: 'GET',
                 data: {
+                    difficulty_level: difficulty_level,
+                    chapter_id: chapter_id,
+                    book_id: book_id,
+                    class_id: class_id,
+                    board_id: board_id,
                     topic_id: topicId,
                     check: check,
                     page: page,
@@ -582,9 +603,9 @@
 
         $("#search-input").keypress(function(e) {
 
-          if(e.which == 13) {
-            fetchQuestionRecords();
-          }
+            if (e.which == 13) {
+                fetchQuestionRecords();
+            }
         });
     </script>
 @endsection

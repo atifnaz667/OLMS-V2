@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Book;
 use App\Models\Board;
 use App\Models\Classes;
+use App\Models\QuestionType;
 
 class DropdownHelper
 {
@@ -13,9 +14,8 @@ class DropdownHelper
     $books = Book::all();
     $boards = Board::all();
     $classes = Classes::all();
+    $questionType = QuestionType::all();
 
-    return ['Books' => $books, 'Boards' => $boards, 'Classes' => $classes];
+    return ['Books' => $books, 'Boards' => $boards, 'Classes' => $classes, 'questionType' => $questionType];
   }
-
-
 }
