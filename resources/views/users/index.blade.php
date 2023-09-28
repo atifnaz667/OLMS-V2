@@ -120,7 +120,6 @@
                                             <th>Role</th>
                                             <th>Last Login At</th>
                                             <th>Last Activity At</th>
-                                            <th>Role</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
