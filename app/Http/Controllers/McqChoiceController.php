@@ -23,7 +23,10 @@ class McqChoiceController extends Controller
    * Display a listing of the resource.
    */
   public function index(Request $request)
-  {
+  { 
+    $user = Auth::user();
+    $role_id = $user->role_id;
+    $user_id = $user->id;
     $rules = [
       'perPage' => 'integer|min:1',
       'sort_by' => 'in:description,id',
@@ -43,7 +46,13 @@ class McqChoiceController extends Controller
     $chapter_id = $request->input('chapter_id');
     $difficulty_level = $request->input('difficulty_level');
 
-    $questions = Question::orderBy($sort, $sort_order)->where('question_type', 'mcq')
+    if($user_id == 1){
+      $questions = Question::orderBy($sort, $sort_order);
+    }else{
+      $questions = Question::orderBy($sort, $sort_order)->where('user_id',$user_id);
+    }
+
+    $questions = $questions->where('question_type', 'mcq')
 
       ->when($searchQuery, function ($q) use ($searchQuery) {
         $q->where('description', 'like', '%' . $searchQuery . '%');
@@ -101,10 +110,35 @@ class McqChoiceController extends Controller
         'total' => $questions->total(),
       ]);
     }
-    $results = DropdownHelper::getBoardBookClass();
-    $books = $results['Books'];
-    $boards = $results['Boards'];
-    $classes = $results['Classes'];
+
+     // Initialize variables
+     $boards = [];
+     $classes = [];
+     $books = [];
+ 
+     if ($role_id == 5) {
+       $results = DropdownHelper::getBoardBookClass();
+       // If the user has role_id 5, retrieve data based on their assignments
+       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+ 
+       // Collect unique board_ids, class_ids, and subject_ids
+       $board_ids = $assignRoles->pluck('board_id')->unique();
+       $class_ids = $assignRoles->pluck('class_id')->unique();
+       $subject_ids = $assignRoles->pluck('subject_id')->unique();
+ 
+       // Retrieve boards, classes, and books based on the unique IDs
+       $boards = Board::whereIn('id', $board_ids)->get();
+       $classes = Classes::whereIn('id', $class_ids)->get();
+       $books = Book::whereIn('id', $subject_ids)->get();
+      
+     }else{
+       $results = DropdownHelper::getBoardBookClass();
+       $books = $results['Books'];
+       $boards = $results['Boards'];
+       $classes = $results['Classes'];
+    
+     }
+  
     return view('mcq.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
   }
 
@@ -171,6 +205,7 @@ class McqChoiceController extends Controller
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
+          'user_id' => Auth::user()->id,
           'question_type' => $mcq,
           'difficulty_level' => $request->difficulty_level,
           'description' => $question['description'],

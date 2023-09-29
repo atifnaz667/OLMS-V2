@@ -17,9 +17,15 @@ class StaffMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-      if (!Auth::user() || Auth::user()->role_id != 5) {
+      if (Auth::user()->role_id == 5 || Auth::user()->role_id != 1) {
+        return $next($request);
+      }elseif(Auth::user()->role_id = 1){
+        return $next($request);
+      }else{
         return redirect('/');
       }
-        return $next($request);
+       
+      
+        
     }
 }

@@ -57,6 +57,10 @@ class QuestionController extends Controller
   }
   public function index(Request $request)
   {
+    $user = Auth::user();
+    $role_id = $user->role_id;
+    $user_id = $user->id;
+
     $rules = [
       'perPage' => 'integer|min:1',
       'sort_by' => 'in:description,id',
@@ -78,7 +82,13 @@ class QuestionController extends Controller
     $question_nature = $request->input('nature');
     $searchQuery = $request->input('searchQuery');
 
-    $questions = Question::orderBy($sort, $sort_order)->where('question_type', '!=', 'mcq')
+    if($user_id == 1){
+      $questions = Question::orderBy($sort, $sort_order);
+    }else{
+      $questions = Question::orderBy($sort, $sort_order)->where('user_id',$user_id);
+    }
+
+     $questions = $questions->where('question_type', '!=', 'mcq')
       ->when($topicId, function ($q) use ($topicId) {
         $q->where('topic_id', $topicId);
       })
@@ -142,11 +152,37 @@ class QuestionController extends Controller
         'total' => $questions->total(),
       ]);
     }
-    $results = DropdownHelper::getBoardBookClass();
-    $books = $results['Books'];
-    $boards = $results['Boards'];
-    $classes = $results['Classes'];
+
+
+
+    // Initialize variables
+    $boards = [];
+    $classes = [];
+    $books = [];
+
+    if ($role_id == 5) {
+      $results = DropdownHelper::getBoardBookClass();
+      // If the user has role_id 5, retrieve data based on their assignments
+      $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+
+      // Collect unique board_ids, class_ids, and subject_ids
+      $board_ids = $assignRoles->pluck('board_id')->unique();
+      $class_ids = $assignRoles->pluck('class_id')->unique();
+      $subject_ids = $assignRoles->pluck('subject_id')->unique();
+
+      // Retrieve boards, classes, and books based on the unique IDs
+      $boards = Board::whereIn('id', $board_ids)->get();
+      $classes = Classes::whereIn('id', $class_ids)->get();
+      $books = Book::whereIn('id', $subject_ids)->get();
+      $questionType = $results['questionType'];
+
+    }else{
+      $results = DropdownHelper::getBoardBookClass();
+      $books = $results['Books'];
+      $boards = $results['Boards'];
+      $classes = $results['Classes'];
     $questionType = $results['questionType'];
+    }
     return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
 
@@ -169,6 +205,7 @@ class QuestionController extends Controller
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
+          'user_id' => Auth::user()->id,
           'question_type' => $request->question_type,
           'question_nature' => $request->question_nature,
           'difficulty_level' => $request->difficulty_level,
