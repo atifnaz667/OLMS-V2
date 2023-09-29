@@ -202,10 +202,10 @@ class LoginController extends Controller
     $card = Card::where('id', $request->card_id)->first();
     if ($userCount == 1) {
 
-      $card->status = "used";
+      $card->status = "partial";
       $card->count = 1;
     } else {
-      $card->status = "partial";
+      $card->status = "used";
       $card->count = 2;
     }
     $card->save();

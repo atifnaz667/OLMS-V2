@@ -118,10 +118,10 @@
                                             <th>User name</th>
                                             {{-- <th>Card No.</th> --}}
                                             <th>Role</th>
+                                            <th>Card Sr#</th>
+                                            <th>Account Status</th>
                                             <th>Last Login At</th>
                                             <th>Last Activity At</th>
-                                            <th>Role</th>
-                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -164,8 +164,7 @@
                                                                 class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
                                                 </td>
                                                 <?php } ?>
-                                                <td>{{ $user->last_login_at }}</td>
-                                                <td>{{ $user->last_activity_at }}</td>
+                                                <td>{{ $user->card_id }}</td>
                                                 <?php if ($user->status == 'active') { ?>
                                                 <td><span class="badge bg-label-success"
                                                         text-capitalized="">{{ $user->status }}</span></td>
@@ -176,6 +175,8 @@
                                                 <td><span class="badge bg-label-secondary"
                                                         text-capitalized="">{{ $user->status }}</span></td>
                                                 <?php  } ?>
+                                                <td>{{ $user->last_login_at }}</td>
+                                                <td>{{ $user->last_activity_at }}</td>
                                                 <td>
                                                     <!-- Edit Icon -->
                                                     <a href="#" onclick="editUser({{ $user->id }})">
