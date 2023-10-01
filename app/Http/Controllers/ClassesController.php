@@ -37,6 +37,7 @@ class ClassesController extends Controller
 
   /**
    * Store a newly created resource in storage.
+   * Display a listing of the resource.
    *
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
