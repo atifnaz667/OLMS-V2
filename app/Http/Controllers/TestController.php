@@ -82,11 +82,11 @@ class TestController extends Controller
         $data = $tests->map(function ($tests) {
         $formStart = '';
         $formEnd = '';
-        if (Auth::user()->role_id == 4 && $tests->status == 'Pending' && $tests->test_date <= date('Y-m-d') && ($tests->expiry_date == null || $tests->expiry_date >= date("Y-m-d"))) {
+        if (Auth::user()->role_id == 4 && $tests->status == 'Pending' && $tests->test_date <= date('Y-m-d H:i:s') && ($tests->expiry_date == null || $tests->expiry_date >= date("Y-m-d H:i:s"))) {
           $formStart = "<form action='instructions' method='post'> ";
           $formEnd = "<input value='".$tests->id."' type='hidden' name='test_id'> <button class='btn btn-sm btn-primary mt-1' type='submit' >Attempt</button> </form>";
         }
-        if ($tests->expiry_date != null && $tests->expiry_date < date("Y-m-d")) {
+        if ($tests->expiry_date != null && $tests->status != 'Attempted' && $tests->expiry_date < date("Y-m-d H:i:s")) {
           $status = '<span class="badge rounded bg-label-danger">Expired</span>';
         }elseif ($tests->status == 'Pending') {
           $status = '<span class="badge rounded bg-label-warning">'.$tests->status.'</span>';
@@ -104,10 +104,10 @@ class TestController extends Controller
           'obtained_marks' => $tests->status == 'Attempted' ? $tests->obtained_marks_count : 0,
           'total_marks' => $tests->total_questions,
           'test_type' => $tests->test_type,
-          'attempted_at' => Helpers::formatDate($tests->attempted_at),
-          'test_date' => Helpers::formatDate($tests->test_date),
-          'expiry_date' => Helpers::formatDate($tests->expiry_date),
-          'created_at' => Helpers::formatDate($tests->created_at),
+          'attempted_at' => Helpers::formatDateTime($tests->attempted_at),
+          'test_date' => Helpers::formatDateTime($tests->test_date),
+          'expiry_date' => Helpers::formatDateTime($tests->expiry_date),
+          'created_at' => Helpers::formatDateTime($tests->created_at),
         ];
       });
 
@@ -151,8 +151,10 @@ class TestController extends Controller
 	 */
 	public function store(Request $request)
 	{
+
     $rules = array(
       'testDate' => 'required',
+      'expiryDate' => 'required',
       'totalQuestions' => 'required|int|max:100',
       'chapters' => 'required',
       'testUserId' => 'required',
@@ -163,9 +165,13 @@ class TestController extends Controller
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
     try {
+      if ($request->expiryDate <= $request->testDate) {
+        return response()->json(['status' => 'error', 'message' => 'Expiry date must be greater than test date'], 422);
+      }
       DB::beginTransaction();
         $createdBy = Auth::user()->id;
-        $testDate = $request->testDate ?? Date('Y-m-d');
+        $testDate = $request->testDate;
+        $expiryDate = $request->expiryDate;
         $totalQuestions = $request->totalQuestions ?? 10;
         $chapters = $request->chapters;
         $book = $request->book;
@@ -177,7 +183,7 @@ class TestController extends Controller
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Invalid User provided for test creation'], 422);
           }
-          $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $user, $testDate,$questionTime,$book);
+          $storeTest = $this->storeTest($chapters, $totalQuestions, $createdBy, $user,$expiryDate, $testDate,$questionTime,$book);
           if (!$storeTest) {
             DB::rollBack();
             return response()->json(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
@@ -225,7 +231,7 @@ class TestController extends Controller
 		//
 	}
 
-  public function storeTest($chapters, $totalQuestions, $createdBy, $student,$testDate,$questionTime, $book){
+  public function storeTest($chapters, $totalQuestions, $createdBy, $student,$expiryDate, $testDate,$questionTime, $book){
     $topics = Topic::whereIn('chapter_id',$chapters)->get()->pluck('id');
     $questions = Question::inRandomOrder()->where('question_type','mcq')->whereIn('topic_id',$topics)->limit($totalQuestions)->get();
     if (count($questions) == 0) {
@@ -236,6 +242,7 @@ class TestController extends Controller
     $test->created_by = $createdBy;
     $test->status = 'Pending';
     $test->test_date = $testDate;
+    $test->expiry_date = $expiryDate;
     $test->test_type = 'Parent';
     $test->question_time = $questionTime;
     $test->total_questions = count($questions);

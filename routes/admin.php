@@ -10,6 +10,7 @@ use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\VisualController;
 
 $controller_path = 'App\Http\Controllers';
 
@@ -18,9 +19,12 @@ $controller_path = 'App\Http\Controllers';
 Route::middleware([AlreadyLoggedIn::class])->group(function () {
   Route::get('/', [LoginController::class, 'index']);
   Route::get('/login/{type}', [LoginController::class, 'show']);
+  Route::get('/signup/{type}', [LoginController::class, 'sigupPage']);
+  Route::post('signup', [LoginController::class, 'sigup']);
   Route::post('login', [LoginController::class, 'login']);
-  Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 });
+Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
+Route::get('pending-user', [LoginController::class, 'pendingUser'])->name('pending-user');
 
 //------------------------------Common Routes--------------------------
 Route::middleware([CommonRoutes::class])->group(function () {
@@ -30,7 +34,6 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
   Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
   Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
-  Route::post('store-pending-user', [LoginController::class, 'storePendingUser']);
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -56,6 +59,15 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
 
+
+  // --------------------------------------- Visuals Routes---------------------------------------
+  Route::get('visuals', [VisualController::class, 'index'])->name('visual.index');
+  Route::get('visuals/create', [VisualController::class, 'create'])->name('visual.create');
+  Route::post('add-visual', [VisualController::class, 'store'])->name('add-visual');
+  Route::get('visual/show/{id}', [VisualController::class, 'show'])->name('visual.show');
+  Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
+  Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
+
   // --------------------------------------- Teacher Route---------------------------------------
   Route::get('assigned/students', [TeacherController::class, 'index'])->name('assigned/students');
   Route::get('assign/students', [TeacherController::class, 'assignStudents'])->name('assign/students');
@@ -65,6 +77,8 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
 Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('syllabus-preparation', [SyllabusPreparationController::class, 'index'])->name('syllabus-preparation');
+  Route::get('keyPoints/{bookId}', [SyllabusPreparationController::class, 'keyPoints']);
+  Route::get('load-notes/{chapter}/{questionType}', [SyllabusPreparationController::class, 'loadNotes']);
 
   //----------------------------Attempt Test ROutes--------------------------------
   Route::get('tests', [AttemptTestController::class, 'index']);
@@ -79,6 +93,9 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('self/assessment/chapters', [SelfAssessmentController::class, 'getChaptersForTest'])->name(
     'self/assessment/chapters'
   );
+
+  Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
+  Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {

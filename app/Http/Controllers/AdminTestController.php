@@ -123,8 +123,10 @@ class AdminTestController extends Controller
    */
   public function store(Request $request)
   {
+
     $rules = array(
       'testDate' => 'required',
+      'expiryDate' => 'required',
       'totalQuestions' => 'required|int|max:100',
       'chapters' => 'required',
       'book' => 'required',
@@ -134,9 +136,13 @@ class AdminTestController extends Controller
       return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
     try {
+      if ($request->expiryDate <= $request->testDate) {
+        return back()->with(['status' => 'error', 'message' => 'Expiry date must be greater than test date'], 422);
+      }
       DB::beginTransaction();
       $createdBy = Auth::user()->id;
-      $testDate = $request->testDate ?? Date('Y-m-d');
+      $testDate = $request->testDate;
+      $expiryDate = $request->expiryDate;
       $totalQuestions = $request->totalQuestions ?? 10;
       $chapters = $request->chapters;
       $topics = $request->topics;
@@ -147,7 +153,7 @@ class AdminTestController extends Controller
         return back()->with(['status' => 'error', 'message' => 'Students not found'], 422);
       }
       foreach ($users as $user) {
-        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book);
+        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $expiryDate, $testDate, $questionTime, $book);
         if (!$storeTest) {
           DB::rollBack();
           return back()->with(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
@@ -385,7 +391,7 @@ class AdminTestController extends Controller
     }
   }
 
-  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book)
+  public function storeTest($topics, $totalQuestions, $createdBy, $user, $expiryDate, $testDate, $questionTime, $book)
   {
     $student = User::find($user);
     // $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
@@ -398,6 +404,7 @@ class AdminTestController extends Controller
     $test->created_by = $createdBy;
     $test->status = 'Pending';
     $test->test_date = $testDate;
+    $test->expiry_date = $expiryDate;
     $test->test_type = 'Monthly';
     $test->question_time = $questionTime;
     $test->total_questions = count($questions);

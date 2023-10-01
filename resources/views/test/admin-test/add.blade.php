@@ -63,7 +63,11 @@
                   </div>
                   <div class="col-sm-3 mb-3">
                     <label for="nameExLarge" class="form-label">Test Date</label>
-                    <input type="date" name="testDate" id="testDate" value="{{ date("Y-m-d") }}" class="form-control">
+                    <input type="datetime-local" name="testDate" id="testDate" required class="form-control">
+                  </div>
+                  <div class="col-sm-3 mb-3">
+                    <label for="nameExLarge" class="form-label">Expiry Date</label>
+                    <input type="datetime-local" name="expiryDate" id="expiryDate" required class="form-control">
                   </div>
                 </div>
                 <div class="row px-4 mt-3 mb-5" id="chaptersRow">

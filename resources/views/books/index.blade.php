@@ -42,6 +42,10 @@
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#form-tabs-social" role="tab"
                                 aria-selected="false">Book</button>
                         </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#form-tabs-social-2"
+                                role="tab" aria-selected="false">Question Type</button>
+                        </li>
                     </ul>
                 </div>
 
@@ -137,6 +141,32 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Question Type -->
+                    <div class="tab-pane fade" id="form-tabs-social-2" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label text-sm-end" for="questionType">Question
+                                        Type</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="questionType" name="questionType" required
+                                            class="form-control" placeholder="Enter Question Type" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="row justify-content-end">
+                                    <div class="col-sm-9">
+                                        <button type="button" onclick="addQuestionType()"
+                                            class="btn btn-primary me-sm-3 me-1">Submit</button>
+                                        <button type="reset" class="btn btn-label-secondary">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -163,6 +193,11 @@
                         <li class="nav-item">
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#form-tabs-book-listing"
                                 role="tab" aria-selected="false">Books</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab"
+                                data-bs-target="#form-tabs-questionType-listing" role="tab"
+                                aria-selected="false">Question Types</button>
                         </li>
                     </ul>
                 </div>
@@ -221,6 +256,24 @@
                                     </tr>
                                 </thead>
                                 <tbody id="books-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                        {{-- </div> --}}
+                    </div>
+                    <div class="tab-pane fade" id="form-tabs-questionType-listing" role="tabpanel">
+                        {{-- <div class="card"> --}}
+                        <h5 class="card-header">Books</h5>
+                        <div class="card-datatable text-nowrap">
+                            <table class="datatables-ajax table" id="questionType-table">
+                                <thead>
+                                    <tr>
+                                        <th>SR#</th>
+                                        <th>Question Type</th>
+                                        {{-- <th>Action</th> --}}
+                                    </tr>
+                                </thead>
+                                <tbody id="questionType-body">
                                 </tbody>
                             </table>
                         </div>
@@ -301,6 +354,30 @@
                                         placeholder="FBISE" name="update-class-name" aria-label="class" />
                                     <input type="hidden" class="form-control" required id="classId"
                                         placeholder="FBISE" name="classId" />
+                                </div>
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
+                                <button type="reset" class="btn btn-label-secondary"
+                                    data-bs-dismiss="offcanvas">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {{-- update model for Question Type --}}
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateQuestionType"
+                        aria-labelledby="offcanvasUpdateQuestionTypeLabel">
+                        <div class="offcanvas-header">
+                            <h5 id="offcanvasUpdateQuestionTypeLabel" class="offcanvas-title">Edit Class</h5>
+                            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body mx-0 flex-grow-0">
+                            <form class="update-class pt-0" id="addClassForm">
+                                <div class="mb-3">
+                                    <label class="form-label" for="question-type">Question Type</label>
+                                    <input type="text" class="form-control" required id="update-question-type"
+                                        placeholder="" name="update-question-type" aria-label="class" />
+                                    <input type="hidden" class="form-control" required id="questionTypeId"
+                                        placeholder="" name="questionTypeId" />
                                 </div>
                                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                                 <button type="reset" class="btn btn-label-secondary"
@@ -642,6 +719,52 @@
             });
         }
 
+        function addQuestionType() {
+            const toastAnimationExample = document.querySelector('.toast-ex');
+            var questionType = $('#questionType').val();
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('questionType.store') }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    type: questionType
+                },
+                success: function(response) {
+                    var status = response.status;
+                    var message = response.message;
+
+                    // Update toast message and status
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+
+                    // Show the toast notification
+                    selectedType = "text-success";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                    $('#questionType').val('');
+                    getData();
+                },
+                error: function(xhr) {
+
+                    var response = JSON.parse(xhr.responseText);
+                    var status = response.status;
+                    var message = response.message;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-warning";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+
+                }
+            });
+        }
+
         function addBoard() {
             const toastAnimationExample = document.querySelector('.toast-ex');
             var boardName = $('#board-name').val();
@@ -925,6 +1048,31 @@
                             "<button class=\"btn btn-sm btn-icon delete-class\" data-id='" + classs
                             .id + "'><i class=\"ti ti-trash\"></i></button>" +
                             "</td>" +
+                            "</tr>";
+                        classesTableBody.append(row);
+
+                    });
+
+                    // Populate the Classes table
+                    var classesTableBody = $("#questionType-table tbody");
+                    var dataTable = $('#questionType-table').DataTable();
+                    dataTable.destroy();
+                    $('#questionType-table').find(
+                            'tbody')
+                        .empty();
+                    $.each(response.questionType, function(index, questionTypes) {
+                        var row = "<tr>" +
+                            "<td>" + (index + 1) + "</td>" +
+                            "<td>" + questionTypes.type + "</td>" +
+                            // "<td>" +
+                            // "<button  onclick=\"editClass('" + questionTypes.id +
+                            // "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + questionTypes
+                            // .id +
+                            // "'><i class=\"ti ti-edit\"></i></button>" +
+                            // "<button class=\"btn btn-sm btn-icon delete-class\" data-id='" +
+                            // questionTypes
+                            // .id + "'><i class=\"ti ti-trash\"></i></button>" +
+                            // "</td>" +
                             "</tr>";
                         classesTableBody.append(row);
 

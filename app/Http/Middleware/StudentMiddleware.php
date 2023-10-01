@@ -3,8 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Events\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 
 class StudentMiddleware
 {
@@ -22,6 +24,9 @@ class StudentMiddleware
     } elseif (Auth::user()->status == 'pending') {
       return redirect('pending-user');
     }
+    $user = auth()->user();
+    $timestamp = now();
+    Event::dispatch(new UserActivity($user, $timestamp));
 
     return $next($request);
   }

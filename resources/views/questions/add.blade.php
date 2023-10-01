@@ -91,8 +91,12 @@
                             <div class="col-md-3">
                                 <label class="form-label" for="form-repeater-1-3">Question Type</label>
                                 <select id="form-repeater-1-3" name="question_type" class="form-select">
-                                    <option value="long">Long</option>
-                                    <option value="short">Short</option>
+                                    @foreach ($questionType as $questionType)
+                                        <option value="{{ $questionType->type }}">{{ $questionType->type }}</option>
+                                    @endforeach
+                                    {{-- <option value="long">Long</option>
+    <option value="short">Short</option> --}}
+                                </select>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -124,30 +128,6 @@
                                     <span class="align-middle">Delete</span>
                                 </button>
                             </div>
-                            {{-- <div class="row">
-                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-4">Question Nature</label>
-                                    <select id="form-repeater-1-4" name="question_nature" class="form-select">
-                                        <option value="Conceptual">Conceptual</option>
-                                        <option value="Exercise ">Exercise</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-3">Question Type</label>
-                                    <select id="form-repeater-1-3" name="question_type" class="form-select">
-                                        <option value="long">Long</option>
-                                        <option value="short">Short</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3 col-lg-6 col-xl-2 col-12 mb-0">
-                                    <label class="form-label" for="form-repeater-1-3">Difficulty Level</label>
-                                    <select id="form-repeater-1-5" name="difficulty_level" class="form-select">
-                                        <option value="Easy">Easy</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="Hard">Hard</option>
-                                    </select>
-                                </div>
-                            </div> --}}
 
                             <div class="row">
                                 <div class="mb-3 col-lg-12 col-xl-12 col-12">
