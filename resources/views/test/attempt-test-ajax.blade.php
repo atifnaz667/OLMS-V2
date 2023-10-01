@@ -32,7 +32,7 @@
                       <div style="border: 1px solid #d4c0c0; width:100%; border-radius:8px;" class="mt-2 ">
                         <div class="pt-4 p-3">
                           <input style="  zoom: 1.4; float:left" class="form-check-input checkbox" type="checkbox" name="checkboxGroup" value="{{ $mcqChoices->id }}" onclick="handleCheckboxChange(this)">
-                          <h6 class="py-1 pt-1" style="margin-left:50px"> {{ $opt }}) &nbsp;&nbsp;&nbsp;{{ ucFirst($mcqChoices->choice) }}</h6>
+                          <h6 class="py-1 pt-1" style="margin-left:50px"> {{ $opt }}) &nbsp;&nbsp;&nbsp;{!! ucFirst($mcqChoices->choice) !!}</h6>
                         </div>
                       </div>
                     @php($opt++)

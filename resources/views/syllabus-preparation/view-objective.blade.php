@@ -56,22 +56,21 @@
                             <div class="col-sm-6 col-12 ">
                                 <ul class="list-group">
                                     @php
-                                      $answer = '';
-                                      $ansKey = '';
+                                        $answer = '';
+                                        $ansKey = '';
                                     @endphp
                                     @foreach ($question->mcqChoices as $key => $choice)
-                                    @if ($key % 2 == 0)
-                                        @if ($choice->is_true)
-                                          @php
-                                            $answer = $choice->choice;
-                                            $ansKey = $choiceNames[$key / 2]
-                                          @endphp
-                                        @endif
-                                            <li
-                                                class=" mt-2 list-group-item " style="border-top:1px solid #dbdade; ">
+                                        @if ($key % 2 == 0)
+                                            @if ($choice->is_true)
+                                                @php
+                                                    $answer = $choice->choice;
+                                                    $ansKey = $choiceNames[$key / 2];
+                                                @endphp
+                                            @endif
+                                            <li class=" mt-2 list-group-item " style="border-top:1px solid #dbdade; ">
                                                 <label class="form-check-label">
                                                     <span class="option-label"><strong>{{ $choiceNames[$key / 2] }}
-                                                            &nbsp;&nbsp;</strong></span> {{ $choice->choice }}
+                                                            &nbsp;&nbsp;</strong></span> {!! $choice->choice !!}
                                                 </label>
                                             </li>
                                         @endif
@@ -82,18 +81,17 @@
                                 <ul class="list-group">
                                     @foreach ($question->mcqChoices as $key => $choice)
                                         @if ($key % 2 == 1)
-                                          @if ($choice->is_true)
-                                            @php
-                                              $answer = $choice->choice;
-                                              $ansKey = $choiceNames[($key - 1) / 2 + 2];
-                                            @endphp
-                                          @endif
-                                            <li
-                                                class="mt-2 list-group-item " style="border-top:1px solid #dbdade;">
+                                            @if ($choice->is_true)
+                                                @php
+                                                    $answer = $choice->choice;
+                                                    $ansKey = $choiceNames[($key - 1) / 2 + 2];
+                                                @endphp
+                                            @endif
+                                            <li class="mt-2 list-group-item " style="border-top:1px solid #dbdade;">
                                                 <label class="form-check-label">
                                                     <span class="option-label"><strong>{{ $choiceNames[($key - 1) / 2 + 2] }}
                                                             &nbsp;&nbsp;</strong></span>
-                                                    {{ $choice->choice }}
+                                                    {!! $choice->choice !!}
                                                 </label>
                                             </li>
                                         @endif
@@ -103,16 +101,16 @@
                         </div>
 
                         @if ($test_type == 'Objective')
-                            <button class="btn btn-primary mt-3 mb-3"
-                                onclick="toggleAnswer({{ $questionIndex }})" id="btn{{ $questionIndex }}">Show Answer</button>
-                                <div class="row">
-                                  <div class="col-sm-6 col-12">
-                                    <div class="card-text answer-text p-3 d-none" id="answer{{ $questionIndex }}" style="border:1px solid #7367f0; border-radius:5px;">
-                                      <b>{{ $ansKey }}</b> &nbsp; &nbsp; {{ $answer }}
+                            <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
+                                id="btn{{ $questionIndex }}">Show Answer</button>
+                            <div class="row">
+                                <div class="col-sm-6 col-12">
+                                    <div class="card-text answer-text p-3 d-none" id="answer{{ $questionIndex }}"
+                                        style="border:1px solid #7367f0; border-radius:5px;">
+                                        <b>{{ $ansKey }}</b> &nbsp; &nbsp; {!! $answer !!}
                                     </div>
-                                  </div>
                                 </div>
-
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -129,11 +127,11 @@
         function toggleAnswer(questionIndex) {
             var answerText = document.getElementById('answer' + questionIndex);
             answerText.classList.toggle('d-none');
-            var btnText = $("#btn"+questionIndex).text();
+            var btnText = $("#btn" + questionIndex).text();
             if (btnText == 'Show Answer') {
-              $("#btn"+questionIndex).text('Hide Answer')
-            }else{
-              $("#btn"+questionIndex).text('Show Answer')
+                $("#btn" + questionIndex).text('Hide Answer')
+            } else {
+                $("#btn" + questionIndex).text('Show Answer')
             }
         }
     </script>

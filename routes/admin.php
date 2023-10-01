@@ -8,6 +8,7 @@ use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\SelfAssessmentController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TestController;
 
 $controller_path = 'App\Http\Controllers';
@@ -54,6 +55,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   // --------------------------------------- Assign user Routes---------------------------------------
   Route::post('assign-users', [AssignUserController::class, 'store']);
+
+  // --------------------------------------- Teacher Route---------------------------------------
+  Route::get('assigned/students', [TeacherController::class, 'index'])->name('assigned/students');
+  Route::get('assign/students', [TeacherController::class, 'assignStudents'])->name('assign/students');
+  Route::get('get/students/ajax', [TeacherController::class, 'getStudents'])->name('get/students/ajax');
+  Route::post('assignStudent/store', [TeacherController::class, 'store'])->name('assignStudent/store');
 });
 
 Route::middleware([StudentMiddleware::class])->group(function () {
@@ -79,4 +86,15 @@ Route::middleware([ParentMiddleware::class])->group(function () {
   Route::get('test/books', [TestController::class, 'getBooksForTest'])->name('test/books');
   Route::get('test/chapters', [TestController::class, 'getChaptersForTest'])->name('test/chapters');
   Route::post('test/store', [TestController::class, 'store'])->name('test/store');
+});
+
+Route::middleware([TeacherMiddleware::class])->group(function () {
+  Route::get('teacher/create/test', [TeacherController::class, 'teacherCreateTest'])->name('teacher/create/test');
+  Route::get('teacher/test/list', [TeacherController::class, 'teacherTestList'])->name('teacher/test/list');
+  Route::get('teacher/test/chapters', [TeacherController::class, 'getChaptersForTest'])->name('teacher/test/chapters');
+  Route::get('teacher/test/students', [TeacherController::class, 'getTeacherAssignStudents'])->name('teacher/test/students');
+  Route::post('teacher/store/test',[TeacherController::class,'teacherStoreTest'])->name('teacher/store/test');
+  Route::get('fetchTestsRecordsTeacher', [TeacherController::class, 'fetchTestsRecords'])->name(
+    'fetchTestsRecordsTeacher'
+  );
 });

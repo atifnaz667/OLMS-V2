@@ -138,23 +138,27 @@
                 <div class="row">
                     <div class="mb-3">
                         <label class="form-label" for="form-repeater-1-1">Option A</label>
-                        <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" />
+                        <textarea class="form-control" name="option-a" id="form-repeater-1-1" rows="2" class="form-control"></textarea>
+                        {{-- <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" /> --}}
                         <input type="hidden" name="option-a-id" id="option-a-id" class="form-control" />
                         <input type="hidden" name="questionId" id="questionId" class="form-control" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="form-repeater-1-2">Option B</label>
-                        <input type="text" name="option-b" id="form-repeater-1-2" class="form-control" />
+                        <textarea class="form-control" name="option-b" id="form-repeater-1-2" rows="2" class="form-control"></textarea>
+                        {{-- <input type="text" name="option-b" id="form-repeater-1-2" class="form-control" /> --}}
                         <input type="hidden" name="option-b-id" id="option-b-id" class="form-control" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="form-repeater-1-3">Option C</label>
-                        <input type="text" name="option-c" id="form-repeater-1-3" class="form-control" />
+                        <textarea class="form-control" name="option-c" id="form-repeater-1-3" rows="2" class="form-control"></textarea>
+                        {{-- <input type="text" name="option-c" id="form-repeater-1-3" class="form-control" /> --}}
                         <input type="hidden" name="option-c-id" id="option-c-id" class="form-control" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="form-repeater-1-4">Option D</label>
-                        <input type="text" name="option-d" id="form-repeater-1-4" class="form-control" />
+                        <textarea class="form-control" name="option-d" id="form-repeater-1-4" rows="2" class="form-control"></textarea>
+                        {{-- <input type="text" name="option-d" id="form-repeater-1-4" class="form-control" /> --}}
                         <input type="hidden" name="option-d-id" id="option-d-id" class="form-control" />
                     </div>
                     <div class="mb-3">
@@ -299,27 +303,23 @@
 
                     // Loop through the mcq choices and populate the options
                     $.each(response.Question.mcq_choices, function(index, choice) {
-                        var optionName = 'option-' + String.fromCharCode(97 +
-                            index); // Convert index to corresponding character code (a, b, c, d)
-                        var inputElement = $('input[name="' + optionName + '"]');
+                        var optionName = 'option-' + String.fromCharCode(97 + index);
+                        var textareaElement = $('textarea[name="' + optionName + '"]');
                         var inputIdElement = $('input[name="' + optionName + '-id"]');
                         var isTrue = choice.is_true === 1;
+                        textareaElement.summernote('code', choice.choice);
 
-                        inputElement.val(choice.choice);
+                        // textareaElement.val(choice.choice); // Set the value of the textarea
                         inputIdElement.val(choice.id);
 
-                        // If this choice is the correct option, select it in the dropdown
                         if (isTrue) {
-                            // Add the correct option at the top of the dropdown
                             $('#correct-option').prepend('<option value="' + optionName +
                                 '" selected>' + choice.choice + '</option>');
                         } else {
-                            // Append other options to the dropdown
                             $('#correct-option').append('<option value="' + optionName + '">' + choice
                                 .choice + '</option>');
                         }
                     });
-
                     // Populate the reason field with the correct option's reason
                     // $('textarea[name="answer"]').val(response.Question.mcq_choices.find(function(choice) {
                     //     return choice.is_true === 1;
@@ -339,13 +339,13 @@
             // Get the form data
             var _token = $('input[name="_token"]').val();
             var question = $('#update-question').val();
-            var optionA = $('input[name="option-a"]').val();
+            var optionA = $('textarea[name="option-a"]').val();
             var optionAId = $('input[name="option-a-id"]').val();
-            var optionB = $('input[name="option-b"]').val();
+            var optionB = $('textarea[name="option-b"]').val();
             var optionBId = $('input[name="option-b-id"]').val();
-            var optionC = $('input[name="option-c"]').val();
+            var optionC = $('textarea[name="option-c"]').val();
             var optionCId = $('input[name="option-c-id"]').val();
-            var optionD = $('input[name="option-d"]').val();
+            var optionD = $('textarea[name="option-d"]').val();
             var optionDId = $('input[name="option-d-id"]').val();
             var correctOption = $('#correct-option').val();
             var reason = $('textarea[name="answer"]').val();

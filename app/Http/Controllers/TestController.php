@@ -313,10 +313,10 @@ class TestController extends Controller
       }
       $test = Test::with('book','obtainedMarks','testChildren.question.mcqChoices', 'testChildren.selectedAnswer')->find($req->test_id);
       $role_id = Auth::user()->role_id;
-      $loggedInUserId = Auth::user()->id;
+       $loggedInUserId = Auth::user()->id;
       if ($role_id == 4 && $loggedInUserId != $test->created_for) {
         return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
-      }elseif ($role_id == 2 || $role_id == 3) {
+      }elseif ($role_id == 2) {
         $assignedUser = AssignUser::where([['parent_id',$loggedInUserId],['child_id',$test->created_for]])->first();
         if (!$assignedUser) {
           return back()->with(['status' => 'error', 'message' => 'Invalid Request'], 422);
