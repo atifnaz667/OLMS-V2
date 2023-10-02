@@ -109,7 +109,7 @@ class LoginController extends Controller
         ->withInput()
         ->with(['status' => 'error', 'message' => $validator->errors()->first()]);
     }
-     $user = User::where('username',$req->username)->first();
+    $user = User::where('username', $req->username)->first();
     if ($user && $user->role->name != $req->type) {
       return back()->with(['status' => 'error', 'message' => 'Wrong Credentials']);
     }
@@ -119,11 +119,16 @@ class LoginController extends Controller
         ->with(['status' => 'error', 'message' => 'Your account has been deactivated']);
     }
 
-    if ($user->cardno == $req->username)
-      $credentials = ['cardno' => $req->username, 'password' => $req->password];
-    else
-      $credentials = ['username' => $req->username, 'password' => $req->password];
+    if ($user && ($req->type == "Student" || $req->type == "Parent")) {
+      $card = Card::where('id', $user->card_id)->first();
+      if ($card && $card->valid_date < date('Y-m-d')) {
+        return back()
+          ->withInput()
+          ->with(['status' => 'error', 'message' => 'Your account has been Expired']);
+      }
+    }
 
+    $credentials = ['username' => $req->username, 'password' => $req->password];
 
     if (Auth::attempt($credentials)) {
       $user->last_login_at = now();

@@ -25,12 +25,6 @@
       "slug": "test/list"
     },
     {
-      "url": "calculator",
-      "name": "Calculator",
-      "icon": "menu-icon tf-icons ti ti-calculator",
-      "slug": "calculator"
-    },
-    {
       "url": "suggestion/create",
       "name": "Human Error & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",

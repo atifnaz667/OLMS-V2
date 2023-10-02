@@ -78,6 +78,15 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md">
+                            <div class="form-password-toggle">
+                                <label class="form-label" for="validDate">Valid Till</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="date" id="validDate" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
@@ -206,7 +215,7 @@
                         <!-- Account Details -->
                         <div class="tab-pane fade" id="form-tabs-class-listing" role="tabpanel">
                             {{-- <div class="card"> --}}
-                            <h5 class="card-header">Classes</h5>
+                            <h5 class="card-header">Cards</h5>
                             <div class="table-responsive text-nowrap">
                                 <table class="table">
                                     <thead class="table-light">
@@ -214,8 +223,9 @@
                                             <th>Sr#</th>
                                             <th>Card No.</th>
                                             <th>Expiry Date</th>
+                                            <th>Valid till</th>
                                             <th>Status</th>
-                                            {{-- <th>Action</th> --}}
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -224,6 +234,7 @@
                                                 <td>{{ $key + 1 }}</td>
                                                 <td>{{ $user->card_no }}</td>
                                                 <td>{{ $user->expiry_date }}</td>
+                                                <td>{{ $user->valid_date }}</td>
                                                 <?php if ($user->status == 'used') { ?>
                                                 <td><span class="badge bg-label-success" text-capitalized="">Used</span>
                                                 </td>
@@ -234,25 +245,25 @@
                                                 <td><span class="badge bg-label-secondary"
                                                         text-capitalized="">{{ $user->status }}</span></td>
                                                 <?php  } ?>
-                                                {{-- <td> --}}
-                                                <!-- Edit Icon -->
-                                                {{-- <a href="#" onclick="editUser({{ $user->id }})">
+                                                <td>
+                                                    <!-- Edit Icon -->
+                                                    <a href="#" onclick="editCard({{ $user->id }})">
                                                         <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
-                                                    </a> --}}
+                                                    </a>
 
-                                                <!-- Delete Icon -->
-                                                {{-- <a href="{{ route('user.destroy', $user->id) }}"
+                                                    <!-- Delete Icon -->
+                                                    {{-- <a href="{{ route('user.destroy', $user->id) }}"
                                                 onclick="event.preventDefault();
                                                 document.getElementById('delete-user-{{ $user->id }}').submit();">
                                                 <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
                                             </a> --}}
-                                                <form id="delete-user-{{ $user->id }}"
-                                                    action="{{ route('user.destroy', $user->id) }}" method="POST"
-                                                    style="display: none;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                                {{-- </td> --}}
+                                                    <form id="delete-user-{{ $user->id }}"
+                                                        action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -276,6 +287,38 @@
         </div>
 
         {{-- update model for User --}}
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateCard"
+            aria-labelledby="offcanvasUpdateCardLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasUpdateCardLabel" class="offcanvas-title">Edit User</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mx-0 flex-grow-0">
+                <form class="update-card pt-0" id="addCardForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label" for="update-card">Card No</label>
+                        <input type="text" class="form-control" required id="update-card" name="update-card"
+                            aria-label="class" />
+                        <input type="hidden" id="cardId" name="cardId" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="update-expiry-date">Expiry Date</label>
+                        <input type="date" class="form-control" required
+                            id="update-expiry-date"name="update-expiry-date" aria-label="class" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="update-valid-date">Valid Till</label>
+                        <input type="date" class="form-control" required
+                            id="update-valid-date"name="update-valid-date" aria-label="class" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
+                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                </form>
+            </div>
+        </div>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateUser"
             aria-labelledby="offcanvasUpdateUserLabel">
             <div class="offcanvas-header">
@@ -378,7 +421,9 @@
         <script>
             const toastAnimationExample = document.querySelector('.toast-ex');
             var offcanvasElement = document.getElementById('offcanvasUpdateUser');
+            var offcanvasElement2 = document.getElementById('offcanvasUpdateCard');
             var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+            var offcanvas2 = new bootstrap.Offcanvas(offcanvasElement2);
 
             function getdropdowns() {
                 $.ajax({
@@ -469,6 +514,7 @@
                 const toastAnimationExample = document.querySelector('.toast-ex');
                 var card_no = $('#card_no').val();
                 var expiryDate = $('#expiryDate').val();
+                var validDate = $('#validDate').val();
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('user.store') }}',
@@ -476,6 +522,7 @@
                         _token: '{{ csrf_token() }}',
                         card_no: card_no,
                         expiryDate: expiryDate,
+                        validDate: validDate,
                         check: "card",
                     },
                     success: function(response) {
@@ -575,6 +622,11 @@
                 var userId = $('#userId').val();
                 updateUser(userId);
             });
+            $('#addCardForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                var cardId = $('#cardId').val();
+                updateCard(cardId);
+            });
         </script>
         <script>
             var currentPage = 1;
@@ -598,6 +650,78 @@
                     }
                 });
 
+            }
+
+            function editCard(id) {
+                $.ajax({
+                    url: "{{ route('user.show', '') }}" + "/" + id,
+                    type: 'GET',
+                    data: {
+                        check: "card"
+                    },
+                    success: function(response) {
+                        $('#update-card').val(response.User.card_no);
+                        $('#update-expiry-date').val(response.User.expiry_date);
+                        $('#update-valid-date').val(response.User.valid_date);
+                        $('#cardId').val(response.User.id);
+                        offcanvas2.show();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        // Handle error if necessary
+                    }
+                });
+
+            }
+
+            function updateCard(id) {
+                // Get the form data
+
+                var _token = $('input[name="_token"]').val();
+                var card_no = $('#update-card').val();
+                var expiry_date = $('#update-expiry-date').val();
+                var valid_date = $('#update-valid-date').val();
+
+                var formData = {
+                    _token: _token,
+                    card_no: card_no,
+                    expiry_date: expiry_date,
+                    valid_date: valid_date
+                };
+                $.ajax({
+                    url: "{{ route('user.update', '') }}" + "/" + id,
+                    type: 'PUT',
+                    data: formData,
+                    success: function(response) {
+
+                        var status = response.status;
+                        var message = response.message;
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-success";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                        offcanvas.hide();
+                        location.reload();
+
+                    },
+                    error: function(xhr, status, error) {
+                        var response = JSON.parse(xhr.responseText);
+                        var status = response.status;
+                        var message = response.message;
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-warning";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                    }
+                });
             }
 
             function updateUser(id) {
