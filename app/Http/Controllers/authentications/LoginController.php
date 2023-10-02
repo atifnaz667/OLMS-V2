@@ -119,9 +119,7 @@ class LoginController extends Controller
         ->with(['status' => 'error', 'message' => 'Your account has been deactivated']);
     }
 
-    if ($user->cardno == $req->username)
-      $credentials = ['cardno' => $req->username, 'password' => $req->password];
-    else
+    
       $credentials = ['username' => $req->username, 'password' => $req->password];
 
 
