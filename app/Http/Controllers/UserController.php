@@ -38,11 +38,13 @@ class UserController extends Controller
       $validatedData = $request->validate([
         'card_no' => 'required|unique:cards',
         'expiryDate' => 'required',
+        'validDate' => 'required',
       ]);
       try {
         $card = new Card;
         $card->card_no = $validatedData['card_no'];
         $card->expiry_date = $validatedData['expiryDate'];
+        $card->valid_date = $validatedData['validDate'];
         $card->save();
 
         // Return success status and message
@@ -130,7 +132,7 @@ class UserController extends Controller
   /**
    * Display the specified resource.
    */
-  public function show($id)
+  public function show(Request $request, $id)
   {
     $validator = Validator::make(
       ['id' => $id],
@@ -143,7 +145,11 @@ class UserController extends Controller
       return response()->json(['status' => 'errors', 'message' => $validator->errors()->first()], 422);
     }
     try {
-      $User = User::with('role')->findOrFail($id);
+      if (isset($request->check))
+        $User = Card::findOrFail($id);
+      else
+        $User = User::with('role')->findOrFail($id);
+
 
       return response()->json([
         'status' => 'success',
@@ -168,6 +174,18 @@ class UserController extends Controller
    */
   public function update(Request $request, $id)
   {
+    if (isset($request->card_no)) {
+      $card = Card::findOrFail($id);
+      $card->card_no = $request->card_no;
+      $card->expiry_date = $request->expiry_date;
+      $card->valid_date = $request->valid_date;
+      $card->save();
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Card updated successfully.',
+      ]);
+    }
     $user = User::findOrFail($id);
 
     // Validate the request data

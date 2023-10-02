@@ -17,7 +17,7 @@ class User extends Authenticatable
    *
    * @var array<int, string>
    */
-  protected $fillable = ['name', 'email', 'password', 'card_id', 'last_activity_at', 'last_login_at'];
+  protected $fillable = ['name', 'email', 'password'];
 
   /**
    * The attributes that should be hidden for serialization.
@@ -56,5 +56,8 @@ class User extends Authenticatable
   public function assignUserAsChild()
   {
     return $this->hasOne(AssignUser::class, 'child_id');
+  }
+  public function assignUserAsStudent(){
+    return $this->hasMany(AssignTeacherStudent::class,'teacher_id');
   }
 }

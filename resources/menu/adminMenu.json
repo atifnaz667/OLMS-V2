@@ -55,6 +55,22 @@
       "slug": "admin/test/list.index"
     },
     {
+      "url": "#",
+      "name": "Teacher",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "",
+      "submenu": [
+        {
+          "url": "assigned/students",
+          "name": "Assigned Students",
+          "icon": "menu-icon tf-icons ti ti-file",
+          "slug": "assigned/student",
+          "closed": true
+        }
+      ]
+    
+    },
+    {
       "url": "visuals",
       "name": "Visuals",
       "icon": "menu-icon tf-icons ti ti-presentation",
