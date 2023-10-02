@@ -89,7 +89,7 @@ class SelfAssessmentController extends Controller
     $chapters = Chapter::whereHas('topics', function ($query) {
       $query
         ->join('questions', 'questions.topic_id', '=', 'topics.id')
-        ->where('questions.question_type', '!=', 'mcq');
+        ->where('questions.question_type', '=', 'mcq');
     })
       ->where('book_id', $req->bookId)
       ->where('board_id', $user->board_id)
@@ -104,7 +104,7 @@ class SelfAssessmentController extends Controller
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->where('topics.chapter_id', $chapter->id)
-        ->where('questions.question_type', '!=', 'mcq')
+        ->where('questions.question_type', '=', 'mcq')
         ->distinct()
         ->get();
 

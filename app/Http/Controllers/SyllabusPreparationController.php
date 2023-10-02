@@ -56,7 +56,11 @@ class SyllabusPreparationController extends Controller
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', 'Conceptual');
+          ->where('questions.question_nature', 'Conceptual')
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
@@ -67,30 +71,46 @@ class SyllabusPreparationController extends Controller
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
         ->where('questions.question_nature', 'Conceptual')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     } elseif ($questionType === 'Exercise') {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', 'Exercise');
+          ->where('questions.question_nature', 'Exercise')
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
         ->where('class_id', $class_id)
         ->get();
 
+
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
         ->where('questions.question_nature', 'Exercise')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     } else {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_type', '!=', 'mcq');
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
@@ -100,7 +120,10 @@ class SyllabusPreparationController extends Controller
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
-        ->where('questions.question_type', '!=', 'mcq')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     }
