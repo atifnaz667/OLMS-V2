@@ -7,6 +7,7 @@ use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
 use App\Models\Card;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
@@ -20,11 +21,12 @@ class UserController extends Controller
   public function index()
   {
     $cards = Card::get();
+    $roles = Role::get();
     $users = User::with('role')->get();
     $results = DropdownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
-    return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards, 'cards' => $cards]);
+    return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards, 'cards' => $cards, 'roles' => $roles]);
   }
 
   /**
@@ -70,7 +72,7 @@ class UserController extends Controller
         $user = new User();
         $user->role_id = $validatedData['role_id'];
         $user->username = $validatedData['username'];
-        $user->cardno = $validatedData['cardno'];
+      //  $user->cardno = $validatedData['cardno'];
         $user->password = Hash::make($validatedData['password']);
         $user->save();
 
@@ -81,6 +83,8 @@ class UserController extends Controller
         ]);
       } catch (\Exception $e) {
         // Return error status and message
+
+       // dd($e);
         return response()->json([
           'status' => 'error',
           'message' => 'Failed to store username and password.',

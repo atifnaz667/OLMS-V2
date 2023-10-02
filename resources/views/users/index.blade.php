@@ -53,9 +53,12 @@
                         <div class="col-md">
                             <label class="form-label" for="role_id">Role</label>
                             <select id="role_id" class="select2 form-select" data-allow-clear="true">
-                                <option value="4">Student</option>
-                                <option value="2">Parent</option>
-                                <option value="5">Staff</option>
+                                
+
+                                <option value="">Select</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
 
                             </select>
                         </div>
