@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminTestController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssignUserController;
 use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,15 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('visual/show/{id}', [VisualController::class, 'show'])->name('visual.show');
   Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
   Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
+
+  // --------------------------------------- Announcements Routes---------------------------------------
+  Route::get('announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
+  Route::get('announcements/ajax', [AnnouncementController::class, 'announcementsAjax'])->name('announcement.ajax');
+  Route::get('announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
+  Route::post('add-announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
+  Route::get('announcement/show/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
+  Route::put('announcement/update/{id}', [AnnouncementController::class, 'update'])->name('announcement.update');
+  Route::delete('announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
 
 });
 

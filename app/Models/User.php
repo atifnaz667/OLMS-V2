@@ -57,4 +57,5 @@ class User extends Authenticatable
   {
     return $this->hasOne(AssignUser::class, 'child_id');
   }
+
 }

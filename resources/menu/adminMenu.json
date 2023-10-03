@@ -52,7 +52,13 @@
       "url": "visuals",
       "name": "Visuals",
       "icon": "menu-icon tf-icons ti ti-presentation",
-      "slug": "admin/test/list.index"
+      "slug": "visuals.index"
+    },
+    {
+      "url": "announcements",
+      "name": "Announcements",
+      "icon": "menu-icon tf-icons ti ti-presentation",
+      "slug": "announcements.index"
     },
     {
       "url": "suggestion/list",
