@@ -34,10 +34,10 @@
                             <label class="form-label" for="username">User Name</label>
                             <input type="text" class="form-control" id="username" placeholder="User Name" />
                         </div>
-                        <div class="col-md">
-                            <label class="form-label" for="cardno">Card no.</label>
-                            <input type="text" class="form-control" id="cardno" placeholder="Card Number" />
-                        </div>
+                        {{-- <div class="col-md">
+                            <label class="form-label" for="card_no">Card no.</label>
+                            <input type="text" class="form-control" id="card_no" placeholder="Card Number" />
+                        </div> --}}
                         <div class="col-md">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="multicol-password">Password</label>
@@ -53,13 +53,42 @@
                         <div class="col-md">
                             <label class="form-label" for="role_id">Role</label>
                             <select id="role_id" class="select2 form-select" data-allow-clear="true">
-                                <option value="4">Student</option>
-                                <option value="2">Parent</option>
+                                <option value="">Select</option>
+                            @foreach ($roles as $roles)
+                                <option value="{{ $roles->id }}">{{ $roles->name }}</option>
+                            @endforeach
 
                             </select>
                         </div>
                     </div>
                     <button type="button" onclick="addUser()" class="btn btn-primary">Create</button>
+                    <hr class="my-5">
+                    <h5 class="mt-3">Add Card</h5>
+                    <div class="row mb-3">
+                        <div class="col-md">
+                            <label class="form-label" for="card_no">Card No.</label>
+                            <input type="text" class="form-control" id="card_no" placeholder="Card Number" />
+                        </div>
+
+                        <div class="col-md">
+                            <div class="form-password-toggle">
+                                <label class="form-label" for="expiryDate">Expiry Date</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="date" id="expiryDate" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md">
+                            <div class="form-password-toggle">
+                                <label class="form-label" for="validDate">Valid Till</label>
+                                <div class="input-group input-group-merge">
+                                    <input type="date" id="validDate" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
             </div>
         </div>
@@ -67,96 +96,189 @@
         <div class="row">
             <div class="col-xl">
                 <div class="card mb-4">
+
+
                     <div class="card-header">
-                        <h5 class="card-header">Users</h5>
+                        <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab"
+                                    data-bs-target="#form-tabs-board-listing" role="tab"
+                                    aria-selected="true">Users</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link " data-bs-toggle="tab" data-bs-target="#form-tabs-class-listing"
+                                    role="tab" aria-selected="false">Cards</button>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="table-responsive text-nowrap">
-                        <table class="table">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Sr#</th>
-                                    <th>User</th>
-                                    <th>User name</th>
-                                    <th>Card No.</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                                @foreach ($users as $key => $user)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td class="sorting_1">
-                                            <div class="d-flex justify-content-start align-items-center user-name">
-                                                <div class="d-flex flex-column"><a href="#"
-                                                        class="text-body text-truncate"><span
-                                                            class="fw-semibold">{{ $user->name }}</span></a><small
-                                                        class="text-muted">{{ $user->email }}</small></div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $user->username }}</td>
-                                        <td>{{ $user->cardno }}</td>
-                                        <?php if ($user->role->name == 'Admin') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-circle-check ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php } elseif ($user->role->name == 'Parent') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-edit ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php  } elseif ($user->role->name == 'Teacher') { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-device-laptop ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php  } else { ?>
-                                        <td>
-                                            <span class="text-truncate d-flex align-items-center"><span
-                                                    class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i
-                                                        class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
-                                        </td>
-                                        <?php } ?>
 
-                                        <?php if ($user->status == 'active') { ?>
-                                        <td><span class="badge bg-label-success"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php } elseif ($user->status == 'pending') { ?>
-                                        <td><span class="badge bg-label-warning"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php  } elseif ($user->status == 'deactive') { ?>
-                                        <td><span class="badge bg-label-secondary"
-                                                text-capitalized="">{{ $user->status }}</span></td>
-                                        <?php  } ?>
-                                        <td>
-                                            <!-- Edit Icon -->
-                                            <a href="#" onclick="editUser({{ $user->id }})">
-                                                <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
-                                            </a>
 
-                                            <!-- Delete Icon -->
-                                            {{-- <a href="{{ route('user.destroy', $user->id) }}"
+
+                    <div class="tab-content">
+                        <!-- Personal Info -->
+                        <div class="tab-pane fade active show" id="form-tabs-board-listing" role="tabpanel">
+                            {{-- <div class="card"> --}}
+                            <h5 class="card-header">Users</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Sr#</th>
+                                            <th>User</th>
+                                            <th>User name</th>
+                                            {{-- <th>Card No.</th> --}}
+                                            <th>Role</th>
+                                            <th>Card Sr#</th>
+                                            <th>Account Status</th>
+                                            <th>Last Login At</th>
+                                            <th>Last Activity At</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach ($users as $key => $user)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td class="sorting_1">
+                                                    <div class="d-flex justify-content-start align-items-center user-name">
+                                                        <div class="d-flex flex-column"><a href="#"
+                                                                class="text-body text-truncate"><span
+                                                                    class="fw-semibold">{{ $user->name }}</span></a><small
+                                                                class="text-muted">{{ $user->email }}</small></div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $user->username }}</td>
+                                                {{-- <td>{{ $user->cardno }}</td> --}}
+                                                <?php if ($user->role->name == 'Admin') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-circle-check ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php } elseif ($user->role->name == 'Parent') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-edit ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php  } elseif ($user->role->name == 'Teacher') { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-device-laptop ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php  } else { ?>
+                                                <td>
+                                                    <span class="text-truncate d-flex align-items-center"><span
+                                                            class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i
+                                                                class="ti ti-user ti-sm"></i></span>{{ $user->role->name }}</span>
+                                                </td>
+                                                <?php } ?>
+                                                <td>{{ $user->card_id }}</td>
+                                                <?php if ($user->status == 'active') { ?>
+                                                <td><span class="badge bg-label-success"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php } elseif ($user->status == 'pending') { ?>
+                                                <td><span class="badge bg-label-warning"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } elseif ($user->status == 'deactive') { ?>
+                                                <td><span class="badge bg-label-secondary"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } ?>
+                                                <td>{{ $user->last_login_at }}</td>
+                                                <td>{{ $user->last_activity_at }}</td>
+                                                <td>
+                                                    <!-- Edit Icon -->
+                                                    <a href="#" onclick="editUser({{ $user->id }})">
+                                                        <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
+                                                    </a>
+
+                                                    <!-- Delete Icon -->
+                                                    {{-- <a href="{{ route('user.destroy', $user->id) }}"
                                                 onclick="event.preventDefault();
                                                 document.getElementById('delete-user-{{ $user->id }}').submit();">
                                                 <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
                                             </a> --}}
-                                            <form id="delete-user-{{ $user->id }}"
-                                                action="{{ route('user.destroy', $user->id) }}" method="POST"
-                                                style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                    <form id="delete-user-{{ $user->id }}"
+                                                        action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Account Details -->
+                        <div class="tab-pane fade" id="form-tabs-class-listing" role="tabpanel">
+                            {{-- <div class="card"> --}}
+                            <h5 class="card-header">Cards</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Sr#</th>
+                                            <th>Card No.</th>
+                                            <th>Expiry Date</th>
+                                            <th>Valid till</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        @foreach ($cards as $key => $user)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $user->card_no }}</td>
+                                                <td>{{ $user->expiry_date }}</td>
+                                                <td>{{ $user->valid_date }}</td>
+                                                <?php if ($user->status == 'used') { ?>
+                                                <td><span class="badge bg-label-success" text-capitalized="">Used</span>
+                                                </td>
+                                                <?php } elseif ($user->status == 'expired') { ?>
+                                                <td><span class="badge bg-label-warning"
+                                                        text-capitalized="">Expired</span></td>
+                                                <?php  }else { ?>
+                                                <td><span class="badge bg-label-secondary"
+                                                        text-capitalized="">{{ $user->status }}</span></td>
+                                                <?php  } ?>
+                                                <td>
+                                                    <!-- Edit Icon -->
+                                                    <a href="#" onclick="editCard({{ $user->id }})">
+                                                        <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
+                                                    </a>
+
+                                                    <!-- Delete Icon -->
+                                                    {{-- <a href="{{ route('user.destroy', $user->id) }}"
+                                                onclick="event.preventDefault();
+                                                document.getElementById('delete-user-{{ $user->id }}').submit();">
+                                                <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
+                                            </a> --}}
+                                                    <form id="delete-user-{{ $user->id }}"
+                                                        action="{{ route('user.destroy', $user->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            {{-- </div> --}}
+                        </div>
                     </div>
+
+
+
+                    <div class="card-header">
+                        <h5 class="card-header">Users</h5>
+                    </div>
+
                     {{-- <nav aria-label="Page navigation" class="pagination-nav">
                         <ul class="pagination"></ul>
                     </nav> --}}
@@ -165,11 +287,44 @@
         </div>
 
         {{-- update model for User --}}
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateCard"
+            aria-labelledby="offcanvasUpdateCardLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasUpdateCardLabel" class="offcanvas-title">Edit User</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body mx-0 flex-grow-0">
+                <form class="update-card pt-0" id="addCardForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label" for="update-card">Card No</label>
+                        <input type="text" class="form-control" required id="update-card" name="update-card"
+                            aria-label="class" />
+                        <input type="hidden" id="cardId" name="cardId" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="update-expiry-date">Expiry Date</label>
+                        <input type="date" class="form-control" required
+                            id="update-expiry-date"name="update-expiry-date" aria-label="class" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="update-valid-date">Valid Till</label>
+                        <input type="date" class="form-control" required
+                            id="update-valid-date"name="update-valid-date" aria-label="class" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
+                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+                </form>
+            </div>
+        </div>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateUser"
             aria-labelledby="offcanvasUpdateUserLabel">
             <div class="offcanvas-header">
                 <h5 id="offcanvasUpdateUserLabel" class="offcanvas-title">Edit User</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0">
                 <form class="update-class pt-0" id="addUserForm">
@@ -266,7 +421,9 @@
         <script>
             const toastAnimationExample = document.querySelector('.toast-ex');
             var offcanvasElement = document.getElementById('offcanvasUpdateUser');
+            var offcanvasElement2 = document.getElementById('offcanvasUpdateCard');
             var offcanvas = new bootstrap.Offcanvas(offcanvasElement);
+            var offcanvas2 = new bootstrap.Offcanvas(offcanvasElement2);
 
             function getdropdowns() {
                 $.ajax({
@@ -353,12 +510,63 @@
                 });
             }
 
+            function addCard() {
+                const toastAnimationExample = document.querySelector('.toast-ex');
+                var card_no = $('#card_no').val();
+                var expiryDate = $('#expiryDate').val();
+                var validDate = $('#validDate').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('user.store') }}',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        card_no: card_no,
+                        expiryDate: expiryDate,
+                        validDate: validDate,
+                        check: "card",
+                    },
+                    success: function(response) {
+                        var status = response.status;
+                        var message = response.message;
+                        // Update toast message and status
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+
+                        // Show the toast notification
+                        selectedType = "text-success";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                        $('#card_no').val('');
+                        // getData();
+                        location.reload();
+                    },
+                    error: function(xhr) {
+
+                        var response = JSON.parse(xhr.responseText);
+                        var status = response.status;
+                        var message = response.message;
+
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-warning";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                    }
+                });
+            }
+
             function addUser() {
                 const toastAnimationExample = document.querySelector('.toast-ex');
                 var password = $('#multicol-password').val();
                 var username = $('#username').val();
                 var role_id = $('#role_id').val();
-                var cardno = $('#cardno').val();
+                // var card_no = $('#card_no').val();
 
                 $.ajax({
                     type: 'POST',
@@ -368,7 +576,7 @@
                         username: username,
                         password: password,
                         role_id: role_id,
-                        cardno: cardno,
+                        // card_no: card_no,
                     },
                     success: function(response) {
                         var status = response.status;
@@ -386,8 +594,9 @@
                         toastAnimation.show();
                         $('#multicol-password').val('');
                         $('#username').val('');
-                        $('#cardno').val('');
                         // getData();
+                        location.reload();
+
                     },
                     error: function(xhr) {
 
@@ -413,6 +622,11 @@
                 var userId = $('#userId').val();
                 updateUser(userId);
             });
+            $('#addCardForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+                var cardId = $('#cardId').val();
+                updateCard(cardId);
+            });
         </script>
         <script>
             var currentPage = 1;
@@ -436,6 +650,78 @@
                     }
                 });
 
+            }
+
+            function editCard(id) {
+                $.ajax({
+                    url: "{{ route('user.show', '') }}" + "/" + id,
+                    type: 'GET',
+                    data: {
+                        check: "card"
+                    },
+                    success: function(response) {
+                        $('#update-card').val(response.User.card_no);
+                        $('#update-expiry-date').val(response.User.expiry_date);
+                        $('#update-valid-date').val(response.User.valid_date);
+                        $('#cardId').val(response.User.id);
+                        offcanvas2.show();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        // Handle error if necessary
+                    }
+                });
+
+            }
+
+            function updateCard(id) {
+                // Get the form data
+
+                var _token = $('input[name="_token"]').val();
+                var card_no = $('#update-card').val();
+                var expiry_date = $('#update-expiry-date').val();
+                var valid_date = $('#update-valid-date').val();
+
+                var formData = {
+                    _token: _token,
+                    card_no: card_no,
+                    expiry_date: expiry_date,
+                    valid_date: valid_date
+                };
+                $.ajax({
+                    url: "{{ route('user.update', '') }}" + "/" + id,
+                    type: 'PUT',
+                    data: formData,
+                    success: function(response) {
+
+                        var status = response.status;
+                        var message = response.message;
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-success";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                        offcanvas.hide();
+                        location.reload();
+
+                    },
+                    error: function(xhr, status, error) {
+                        var response = JSON.parse(xhr.responseText);
+                        var status = response.status;
+                        var message = response.message;
+                        $('.toast-ex .fw-semibold').text(status);
+                        $('.toast-ex .toast-body').text(message);
+                        selectedType = "text-warning";
+                        selectedAnimation = "animate__fade";
+                        toastAnimationExample.classList.add(selectedAnimation);
+                        toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                        toastAnimation.show();
+                    }
+                });
             }
 
             function updateUser(id) {

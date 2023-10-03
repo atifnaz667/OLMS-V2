@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Topic;
 use App\Models\Chapter;
 use App\Models\Question;
+use App\Models\QuestionType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,7 +56,11 @@ class SyllabusPreparationController extends Controller
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', 'Conceptual');
+          ->where('questions.question_nature', 'Conceptual')
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
@@ -66,30 +71,46 @@ class SyllabusPreparationController extends Controller
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
         ->where('questions.question_nature', 'Conceptual')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     } elseif ($questionType === 'Exercise') {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_nature', 'Exercise');
+          ->where('questions.question_nature', 'Exercise')
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
         ->where('class_id', $class_id)
         ->get();
 
+
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
         ->where('questions.question_nature', 'Exercise')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     } else {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
-          ->where('questions.question_type', '!=', 'mcq');
+          ->where(function ($subquery) {
+            $subquery->where('questions.question_type', 'short')
+              ->orWhere('questions.question_type', 'long');
+          });
       })
         ->where('book_id', $bookId)
         ->where('board_id', $board_id)
@@ -99,7 +120,10 @@ class SyllabusPreparationController extends Controller
       $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
         ->select('topics.*')
         ->whereIn('topics.chapter_id', $chapters->pluck('id'))
-        ->where('questions.question_type', '!=', 'mcq')
+        ->where(function ($subquery) {
+          $subquery->where('questions.question_type', 'short')
+            ->orWhere('questions.question_type', 'long');
+        })
         ->distinct()
         ->get();
     }
@@ -252,5 +276,55 @@ class SyllabusPreparationController extends Controller
   public function destroy()
   {
     //
+  }
+
+  public function keyPoints($bookId)
+  {
+    $board_id = Auth::user()->board_id;
+    $class_id = Auth::user()->class_id;
+    $book = Book::where('id', $bookId)->first('name');
+    $questionTypes = QuestionType::where('type', '!=', 'long')
+      ->where('type', '!=', 'short')
+      ->get();
+    $chapters = Chapter::where('board_id', $board_id)
+      ->where('class_id', $class_id)
+      ->where('book_id', $bookId)
+      ->get();
+    return view('syllabus-preparation.key-points', ['chapters' => $chapters, 'book' => $book->name, 'questionTypes' => $questionTypes]);
+  }
+
+  public function loadNotes($chapter, $questionType)
+  {
+    $questions = Question::with('answer')
+      ->whereHas('topic', function ($query) use ($chapter) {
+        $query->where('chapter_id', $chapter);
+      })
+      ->where('question_type', $questionType)
+      ->get();
+    if ($questions->isEmpty()) {
+      return  $cols = '
+      <div class="card mb-3">
+  <div class="card-header">
+  <h5 class="card-title">No Data Available.</h5>
+  </div>
+  </div>
+  ';
+    }
+    $cols = '
+<div class="card mb-3">
+
+  <div class="card-body">';
+
+    foreach ($questions as $question) {
+      $cols .= ' <h5 class="card-title mt-3 mb-0">' . $question->description . ' </h5>';
+      $cols .= ' <h6 class="card-title mb-3 mt-0">' . $question->answer['answer'] . ' </h6>';
+    }
+
+    $cols .= '
+  </div>
+</div>
+';
+
+    return $cols;
   }
 }

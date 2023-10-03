@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Book;
+use App\Models\Board;
+use App\Models\Classes;
+use App\Models\AssignRole;
 
 class McqChoiceController extends Controller
 {
@@ -18,7 +23,10 @@ class McqChoiceController extends Controller
    * Display a listing of the resource.
    */
   public function index(Request $request)
-  {
+  { 
+    $user = Auth::user();
+    $role_id = $user->role_id;
+    $user_id = $user->id;
     $rules = [
       'perPage' => 'integer|min:1',
       'sort_by' => 'in:description,id',
@@ -32,17 +40,56 @@ class McqChoiceController extends Controller
     $sort_order = $request->input('sort_order', 'asc');
     $topicId = $request->input('topic_id');
     $searchQuery = $request->input('searchQuery');
+    $board_id = $request->input('board_id');
+    $class_id = $request->input('class_id');
+    $book_id = $request->input('book_id');
+    $chapter_id = $request->input('chapter_id');
+    $difficulty_level = $request->input('difficulty_level');
 
-
-    $query = Question::orderBy($sort, $sort_order)->where('question_type', 'mcq');
-
-    if ($topicId) {
-      $query->where('topic_id', $topicId);
+    if($user_id == 1){
+      $questions = Question::orderBy($sort, $sort_order);
+    }else{
+      $questions = Question::orderBy($sort, $sort_order)->where('user_id',$user_id);
     }
-    if ($searchQuery) {
-      $query->where('description', 'like', '%' . $searchQuery . '%');
-    }
-    $questions = $query->paginate($perPage);
+
+    $questions = $questions->where('question_type', 'mcq')
+
+      ->when($searchQuery, function ($q) use ($searchQuery) {
+        $q->where('description', 'like', '%' . $searchQuery . '%');
+      })
+      ->when($topicId, function ($q) use ($topicId) {
+        $q->where('topic_id', $topicId);
+      })
+      ->when($difficulty_level, function ($q) use ($difficulty_level) {
+        $q->where('difficulty_level', $difficulty_level);
+      })
+      ->when($chapter_id, function ($q) use ($chapter_id) {
+        $q->whereHas('topic', function ($q) use ($chapter_id) {
+          $q->where('chapter_id', $chapter_id);
+        });
+      })
+      ->when($book_id, function ($q) use ($book_id) {
+        $q->whereHas('topic', function ($q) use ($book_id) {
+          $q->whereHas('chapter', function ($q) use ($book_id) {
+            $q->where('book_id', $book_id);
+          });
+        });
+      })
+      ->when($class_id, function ($q) use ($class_id) {
+        $q->whereHas('topic', function ($q) use ($class_id) {
+          $q->whereHas('chapter', function ($q) use ($class_id) {
+            $q->where('class_id', $class_id);
+          });
+        });
+      })
+      ->when($board_id, function ($q) use ($board_id) {
+        $q->whereHas('topic', function ($q) use ($board_id) {
+          $q->whereHas('chapter', function ($q) use ($board_id) {
+            $q->where('board_id', $board_id);
+          });
+        });
+      })
+      ->paginate($perPage);
 
     if ($request->check) {
       $data = $questions->map(function ($question) {
@@ -63,19 +110,69 @@ class McqChoiceController extends Controller
         'total' => $questions->total(),
       ]);
     }
-    $results = DropdownHelper::getBoardBookClass();
-    $books = $results['Books'];
-    $boards = $results['Boards'];
-    $classes = $results['Classes'];
+
+     // Initialize variables
+     $boards = [];
+     $classes = [];
+     $books = [];
+ 
+     if ($role_id == 5) {
+       $results = DropdownHelper::getBoardBookClass();
+       // If the user has role_id 5, retrieve data based on their assignments
+       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+ 
+       // Collect unique board_ids, class_ids, and subject_ids
+       $board_ids = $assignRoles->pluck('board_id')->unique();
+       $class_ids = $assignRoles->pluck('class_id')->unique();
+       $subject_ids = $assignRoles->pluck('subject_id')->unique();
+ 
+       // Retrieve boards, classes, and books based on the unique IDs
+       $boards = Board::whereIn('id', $board_ids)->get();
+       $classes = Classes::whereIn('id', $class_ids)->get();
+       $books = Book::whereIn('id', $subject_ids)->get();
+      
+     }else{
+       $results = DropdownHelper::getBoardBookClass();
+       $books = $results['Books'];
+       $boards = $results['Boards'];
+       $classes = $results['Classes'];
+    
+     }
+  
     return view('mcq.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
   }
 
   public function addMcqChoioce(Request $request)
   {
-    $results = DropdownHelper::getBoardBookClass();
-    $books = $results['Books'];
-    $boards = $results['Boards'];
-    $classes = $results['Classes'];
+    $user = Auth::user();
+    $role_id = $user->role_id;
+
+    // Initialize variables
+    $boards = [];
+    $classes = [];
+    $books = [];
+
+    if ($role_id == 5) {
+      // If the user has role_id 5, retrieve data based on their assignments
+      $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+
+      // Collect unique board_ids, class_ids, and subject_ids
+      $board_ids = $assignRoles->pluck('board_id')->unique();
+      $class_ids = $assignRoles->pluck('class_id')->unique();
+      $subject_ids = $assignRoles->pluck('subject_id')->unique();
+
+      // Retrieve boards, classes, and books based on the unique IDs
+      $boards = Board::whereIn('id', $board_ids)->get();
+      $classes = Classes::whereIn('id', $class_ids)->get();
+      $books = Book::whereIn('id', $subject_ids)->get();
+
+    }else{
+      $results = DropdownHelper::getBoardBookClass();
+      $books = $results['Books'];
+      $boards = $results['Boards'];
+      $classes = $results['Classes'];
+    }
+    
     return view('mcq.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
   }
 
@@ -108,7 +205,9 @@ class McqChoiceController extends Controller
       foreach ($questions as $question) {
         $insertData = [
           'topic_id' => $topic_id,
+          'user_id' => Auth::user()->id,
           'question_type' => $mcq,
+          'difficulty_level' => $request->difficulty_level,
           'description' => $question['description'],
         ];
         $question_id = Question::insertGetId($insertData);

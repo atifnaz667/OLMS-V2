@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
+use App\Models\Card;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
@@ -18,11 +20,13 @@ class UserController extends Controller
    */
   public function index()
   {
+    $cards = Card::get();
+    $roles = Role::get();
     $users = User::with('role')->get();
     $results = DropdownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
-    return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards]);
+    return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards, 'cards' => $cards, 'roles' => $roles]);
   }
 
   /**
@@ -30,34 +34,64 @@ class UserController extends Controller
    */
   public function store(Request $request)
   {
-    // Validate the request data
-    $validatedData = $request->validate([
-      'username' => 'sometimes',
-      'cardno' => 'sometimes',
-      'password' => 'required',
-      'role_id' => 'required',
-    ]);
-
-    try {
-      // Store the username and hashed password
-      $user = new User();
-      $user->role_id = $validatedData['role_id'];
-      $user->username = $validatedData['username'];
-      $user->cardno = $validatedData['cardno'];
-      $user->password = Hash::make($validatedData['password']);
-      $user->save();
-
-      // Return success status and message
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Username and password stored successfully.',
+    if (isset($request->check)) {
+      $validatedData = $request->validate([
+        'card_no' => 'required|unique:cards',
+        'expiryDate' => 'required',
+        'validDate' => 'required',
       ]);
-    } catch (\Exception $e) {
-      // Return error status and message
-      return response()->json([
-        'status' => 'error',
-        'message' => 'Failed to store username and password.',
+      try {
+        $card = new Card;
+        $card->card_no = $validatedData['card_no'];
+        $card->expiry_date = $validatedData['expiryDate'];
+        $card->valid_date = $validatedData['validDate'];
+        $card->save();
+
+        // Return success status and message
+        return response()->json([
+          'status' => 'success',
+          'message' => 'Card stored successfully.',
+        ]);
+      } catch (\Exception $e) {
+        // Return error status and message
+        return response()->json([
+          'status' => 'error',
+          'message' => 'Failed to store Card.',
+        ]);
+      }
+    } else {
+      # code...
+
+      // Validate the request data
+      $validatedData = $request->validate([
+        'username' => 'required|unique:users',
+        'password' => 'required',
+        'role_id' => 'required',
       ]);
+
+      try {
+        // Store the username and hashed password
+        $user = new User();
+        $user->role_id = $validatedData['role_id'];
+        $user->username = $validatedData['username'];
+      //  $user->cardno = $validatedData['cardno'];
+        $user->password = Hash::make($validatedData['password']);
+        $user->save();
+
+        // Return success status and message
+        return response()->json([
+          'status' => 'success',
+          'message' => 'Username and password stored successfully.',
+        ]);
+      } catch (\Exception $e) {
+        // Return error status and message
+
+       // dd($e);
+        return response()->json([
+          'status' => 'error',
+          'message' => 'Failed to store username and password.',
+        ]);
+      }
     }
   }
 
@@ -85,7 +119,7 @@ class UserController extends Controller
       $results = DropdownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
-      return view('users.edit', ['user' => $user,'classes' => $classes,'boards' => $boards]);
+      return view('users.edit', ['user' => $user, 'classes' => $classes, 'boards' => $boards]);
     } catch (\Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);
 
@@ -98,7 +132,7 @@ class UserController extends Controller
   /**
    * Display the specified resource.
    */
-  public function show($id)
+  public function show(Request $request, $id)
   {
     $validator = Validator::make(
       ['id' => $id],
@@ -111,7 +145,11 @@ class UserController extends Controller
       return response()->json(['status' => 'errors', 'message' => $validator->errors()->first()], 422);
     }
     try {
-      $User = User::with('role')->findOrFail($id);
+      if (isset($request->check))
+        $User = Card::findOrFail($id);
+      else
+        $User = User::with('role')->findOrFail($id);
+
 
       return response()->json([
         'status' => 'success',
@@ -136,6 +174,18 @@ class UserController extends Controller
    */
   public function update(Request $request, $id)
   {
+    if (isset($request->card_no)) {
+      $card = Card::findOrFail($id);
+      $card->card_no = $request->card_no;
+      $card->expiry_date = $request->expiry_date;
+      $card->valid_date = $request->valid_date;
+      $card->save();
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Card updated successfully.',
+      ]);
+    }
     $user = User::findOrFail($id);
 
     // Validate the request data
