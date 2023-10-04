@@ -21,7 +21,7 @@ class UserController extends Controller
   public function index()
   {
     $cards = Card::get();
-    $roles = Role::get();
+    $roles = Role::where('id', '!=', 1)->get();
     $users = User::with('role')->get();
     $results = DropdownHelper::getBoardBookClass();
     $classes = $results['Classes'];
@@ -67,6 +67,7 @@ class UserController extends Controller
         'username' => 'required|unique:users',
         'password' => 'required',
         'role_id' => 'required',
+        'full_name' => 'required',
       ]);
 
       try {
@@ -74,6 +75,8 @@ class UserController extends Controller
         $user = new User();
         $user->role_id = $validatedData['role_id'];
         $user->username = $validatedData['username'];
+        $user->name = $validatedData['full_name'];
+        $user->email = $request->email;
       //  $user->cardno = $validatedData['cardno'];
         $user->password = Hash::make($validatedData['password']);
         $user->save();
