@@ -35,6 +35,8 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
   Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
   Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
+  Route::get('announcement/show/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
+
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -74,7 +76,6 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('announcements/ajax', [AnnouncementController::class, 'announcementsAjax'])->name('announcement.ajax');
   Route::get('announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
   Route::post('add-announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
-  Route::get('announcement/show/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
   Route::put('announcement/update/{id}', [AnnouncementController::class, 'update'])->name('announcement.update');
   Route::delete('announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
 
@@ -106,6 +107,8 @@ Route::middleware([StudentMiddleware::class])->group(function () {
 
   Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
   Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
+
+  Route::get('notice/board.ajax', [AnnouncementController::class, 'noticeBoard'])->name('notice.board.ajax');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {

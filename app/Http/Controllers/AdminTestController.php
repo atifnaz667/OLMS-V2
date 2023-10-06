@@ -51,8 +51,12 @@ class AdminTestController extends Controller
       $status = $request->input('status');
 
       $user_id = Auth::user()->id;
+      $is_not_admin = Auth::user()->role_id == 1 ? 0 :1;
       $tests = Test::withCount('obtainedMarks')
-        ->where('created_by', $user_id)
+      ->where('test_type','!=','Self')
+        ->when($is_not_admin, function ($query)use($user_id)  {
+          $query->where('created_by', $user_id);
+        })
         ->when($from, function ($query) use ($from) {
           $query->where('created_at', '>', $from . " 00:00:00");
         })
@@ -396,7 +400,7 @@ class AdminTestController extends Controller
     $student = User::find($user);
     // $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
     $questions = Question::inRandomOrder()->where('question_type', 'mcq')->whereIn('topic_id', $topics)->limit($totalQuestions)->get();
-    if (count($questions) == 0) {
+    if (!$questions){
       return false;
     }
     $test = new Test();

@@ -86,6 +86,46 @@
         </div>
     </div>
 
+    <div class="card" style="border-left:3px solid #7367f0; border-right:3px solid #7367f0">
+      <h4 class="card-header text-center text-primary">Notice Board</h4>
+      <div class="table-responsive text-nowrap mb-5">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Sr #</th>
+              <th>Posted At</th>
+              <th>Announcement</th>
+              <th>Posted By</th>
+
+            </tr>
+          </thead>
+          <tbody class="" id="tbody">
+          </tbody>
+        </table>
+      </div>
+      <nav aria-label="Page navigation" class="pagination-nav">
+        <ul class="pagination"></ul>
+      </nav>
+    </div>
+
+    <div class="modal fade" id="addAnnouncementModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel3" >Announcement Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div style="border: 1px solid #7367f0; border-radius:5px" class="p-4">
+                  <h5 id="announcementTitle"></h5>
+                  <p id="announcementDesc"></p>
+                </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+
 @endsection
 @section('script')
     <script>
@@ -276,6 +316,105 @@
                 }
 
             })();
+
+        fetchAnnouncementRecords();
+
         });
+
+
+        function fetchAnnouncementRecords(page = 1) {
+
+            var title = $('#search-input').val();
+            var perPage = $('#perPageSelect').val();
+
+            $.ajax({
+                url: '{{ route('notice.board.ajax') }}',
+                method: 'GET',
+                data: {
+                    page: page,
+                    perPage: perPage,
+                    title: title,
+                },
+                success: function(response) {
+                    var tableBody = $('#tbody');
+                    tableBody.empty();
+
+                    if (response.status === 'success') {
+                        var announcements = response.data;
+                        currentPage = response.current_page;
+                        lastPage = response.last_page;
+
+                        if (announcements && announcements.length > 0) {
+                            $.each(announcements, function(index, announcement) {
+                              let date = announcement.date.split(', ')
+                                var row = '<tr>' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td "> ' + date[0] + ', ' + date[1] + ' <br> '+ date[2] +'</td>' +
+                                    '<td> <p class="text-primary" style="cursor:pointer" onclick="showModal('+announcement.id+')" >' + announcement.title + '</p></td>' +
+                                    '<td>' + announcement.user + '</td>' +
+
+                                    '</tr>';
+                                tableBody.append(row);
+                            });
+                        }
+                    } else {
+                        console.error(response.message);
+                    }
+
+                    updatePaginationUI();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+
+        function updatePaginationUI() {
+            var paginationContainer = $('.pagination');
+            paginationContainer.empty();
+
+            if (lastPage > 1) {
+                var paginationLinks = '';
+                if (currentPage > 1) {
+                    paginationLinks +=
+                        '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
+                    paginationLinks +=
+                        '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
+                            currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
+                }
+                for (var i = 1; i <= lastPage; i++) {
+                    var activeClass = (i === currentPage) ? 'active' : '';
+                    paginationLinks += '<li class="page-item ' + activeClass +
+                        '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+                if (currentPage < lastPage) {
+                    paginationLinks +=
+                        '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
+                            currentPage + 1) + '"><i class="ti ti-chevron-right ti-xs"></i></a></li>';
+                    paginationLinks +=
+                        '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' +
+                        lastPage +
+                        '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
+                }
+                paginationContainer.append(paginationLinks);
+            }
+        }
+
+        function showModal(id){
+          $.ajax({
+                url: "{{ route('announcement.show', '') }}" + "/" + id,
+                method: 'GET',
+                success: function(response) {
+                  $('#announcementTitle').html(response.announcement.title);
+                  $('#announcementDesc').html(response.announcement.description);
+                  $("#addAnnouncementModal").modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+
+        }
     </script>
 @endsection

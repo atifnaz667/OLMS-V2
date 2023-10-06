@@ -161,7 +161,7 @@ class AnnouncementController extends Controller
   public function show($id)
   {
     $announcement = Announcement::with('board','announcementClasses.class')->find($id);
-      if (!$announcement || (Auth::user()->role_id != 1  && Auth::user()->id != $announcement->posted_by)) {
+      if (!$announcement || (Auth::user()->role_id == 3  && Auth::user()->id != $announcement->posted_by)) {
         return response()->json([
           'status' => 'error',
           'message' => 'Invalid Announcement',
@@ -293,6 +293,45 @@ class AnnouncementController extends Controller
       return response()->json([
         'status' => 'success',
         'message' => 'Announcement Deleted Successfully',
+      ]);
+    } catch (Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+      return response()->json([
+        'status' => 'error',
+        'message' => $message,
+      ], 500);
+    }
+  }
+
+  public function noticeBoard(){
+
+    try {
+      $student = User::find( Auth::user()->id);
+      $board_id = $student->board_id;
+      $class_id = $student->class_id;
+      $announcements = Announcement::
+      where([['status','Published'],['board_id',$board_id]])
+      ->whereHas('announcementClasses',function($q)use($class_id){
+        $q->where('class_id',$class_id);
+      })->orderBy('id','desc')->paginate(10);
+
+      $data = $announcements->map(function ($announcement) {
+        return [
+          'id' => $announcement->id,
+          'title' => $announcement->title,
+          'user' => $announcement->postedBy->name,
+          'date' => Helpers::formatDateTime($announcement->created_at),
+        ];
+      });
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'announcements retrieved successfully',
+        'data' => $data,
+        'current_page' => $announcements->currentPage(),
+        'last_page' => $announcements->lastPage(),
+        'per_page' => $announcements->perPage(),
+        'total' => $announcements->total(),
       ]);
     } catch (Exception $e) {
       $message = CustomErrorMessages::getCustomMessage($e);

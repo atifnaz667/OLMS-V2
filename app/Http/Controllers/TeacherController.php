@@ -106,11 +106,11 @@ class TeacherController extends Controller
         $classes = $results['Classes'];
         $boards = $results['Boards'];
         $books = $results['Books'];
-  
+
         return view('assign-students.index', ['teachers' => $teachers, 'classes' => $classes, 'boards' => $boards,'books'=>$books]);
       } catch (\Exception $e) {
         $message = CustomErrorMessages::getCustomMessage($e);
-  
+
         return back()->with('error', $message);
       }
     }
@@ -276,11 +276,11 @@ class TeacherController extends Controller
         ->where('board_id', $req->board_id)
         ->where('class_id', $req->class_id)
         ->get();
-  
+
       $cols = '<div class="col-12 mb-2">
                <input class="form-check-input" style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All
            </div>';
-  
+
       foreach ($chapters as $chapter) {
         $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
           ->select('topics.*')
@@ -288,11 +288,11 @@ class TeacherController extends Controller
           ->where('questions.question_type', '!=', 'mcq')
           ->distinct()
           ->get();
-  
+
         $cols .= '<div class="col-sm-12 mb-3">
                    <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" name="chapters[]" class="form-check-input checkboxes" value="' . $chapter->id . '"> <strong>Unit: ' . $chapter->name . '</strong>
                </div>';
-  
+
         $topicsInRow = 0;
         $cols .= '<div class="col-sm-12">';
         foreach ($topics as $topic) {
@@ -306,7 +306,7 @@ class TeacherController extends Controller
         }
         $cols .= '</div>';
       }
-  
+
       if (
         count($chapters) == 0
       ) {
@@ -315,10 +315,10 @@ class TeacherController extends Controller
       if (!$req->book_id) {
         $cols = '<div class="col-12"> <h6>Please select a book </h6></div>';
       }
-  
+
       return $cols;
-  
-  
+
+
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
@@ -338,7 +338,7 @@ class TeacherController extends Controller
       $cols = '<div class="col-12 mb-2">
       <input class="form-check-input" style="margin-right: 1em" id="select-all" onclick="selectCheckboxes()" type="checkbox"> Select All
      </div>';
-  
+
       foreach ($chapters as $chapter) {
         $cols .= '<div class="mb-2 p-2">
           <div class="form-check">
@@ -347,7 +347,7 @@ class TeacherController extends Controller
               <h5 class="form-check-h5" for="chapter_' . $chapter->id . '">' . $chapter->name . '</h5>
           </div>
           <div id="topicList_' . $chapter->id . '" class="row mb-4">';
-  
+
         foreach ($topics as $topic) {
           if ($topic->chapter_id === $chapter->id) {
             $cols .= '<div class="col-sm-4">
@@ -358,17 +358,17 @@ class TeacherController extends Controller
               </div>';
           }
         }
-  
+
         $cols .= '</div></div>';
       }
-  
+
       if (count($chapters) == 0) {
         $cols = '<div class="col-12"> <h6>No Chapters or Topics found against this book </h6></div>';
       }
       if (!$req->book_id) {
         $cols = '<div class="col-12"> <h6>Please select a book </h6></div>';
       }
-  
+
       return $cols;
     }
 
@@ -474,7 +474,7 @@ class TeacherController extends Controller
     $test->created_by = $createdBy;
     $test->status = 'Pending';
     $test->test_date = $testDate;
-    $test->test_type = 'Monthly';
+    $test->test_type = 'Teacher';
     $test->question_time = $questionTime;
     $test->total_questions = count($questions);
     $test->book_id = $book;
