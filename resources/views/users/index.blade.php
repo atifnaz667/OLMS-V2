@@ -31,6 +31,10 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-md">
+                            <label class="form-label" for="full_name">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" placeholder="Full Name" />
+                        </div>
+                        <div class="col-md">
                             <label class="form-label" for="username">User Name</label>
                             <input type="text" class="form-control" id="username" placeholder="User Name" />
                         </div>
@@ -50,7 +54,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
                             <label class="form-label" for="role_id">Role</label>
                             <select id="role_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
@@ -59,6 +65,10 @@
                             @endforeach
 
                             </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label" for="email">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter Email" />
                         </div>
                     </div>
                     <button type="button" onclick="addUser()" class="btn btn-primary">Create</button>
@@ -566,8 +576,10 @@
                 var password = $('#multicol-password').val();
                 var username = $('#username').val();
                 var role_id = $('#role_id').val();
+                var full_name = $('#full_name').val();
+                var email = $('#email').val();
                 // var card_no = $('#card_no').val();
-
+                 console.log(full_name)
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('user.store') }}',
@@ -576,6 +588,8 @@
                         username: username,
                         password: password,
                         role_id: role_id,
+                        full_name: full_name,
+                        email: email,
                         // card_no: card_no,
                     },
                     success: function(response) {
@@ -595,7 +609,7 @@
                         $('#multicol-password').val('');
                         $('#username').val('');
                         // getData();
-                        location.reload();
+                        // location.reload();
 
                     },
                     error: function(xhr) {
