@@ -35,6 +35,7 @@
                         <button class="btn btn-primary  mb-3" data-bs-toggle="modal" data-bs-target="#addAnnouncementModal">Create</button>
                       </div>
                       <hr>
+                      @if (Auth::user()->role_id == 1)
                         <div class="col-12 col-sm-3 mb-3">
                             <label class="form-label" for="class_id">Posted By</label>
                             <select name="posted_by" id="posted_by" class="select2 form-select" data-allow-clear="true">
@@ -52,6 +53,8 @@
                               <option value="Teacher">Teacher</option>
                             </select>
                         </div>
+                      @endif
+
                         <div class="col-12 col-sm-3 mb-3">
                             <label class="form-label" for="class_id">Status</label>
                             <select name="status" id="status" class="select2 form-select">
@@ -127,13 +130,14 @@
                   <div class="modal-body">
 
                     <div class="row">
-                      <div class="col-12 col-sm-6 mb-3">
+                      <div class="col-12 col-sm-6 mb-3"
+                      @if (Auth::user()->role_id == 3) style="display: none" @endif>
                         <label class="form-label" for="class_id">Status</label>
                         <select name="status" id="add-status" class="select2 form-select"  required>
                           <option value="Published">Published</option>
                           <option value="Unpublished">Unpublished</option>
                         </select>
-                    </div>
+                      </div>
                       <div class="col-12 col-sm-6 mb-3">
                         <label class="form-label" for="class_id">Board</label>
                         <select id="add-board" name="board" class="select2 form-select" >
@@ -189,7 +193,7 @@
                   <div class="modal-body">
 
                     <div class="row">
-                      <div class="col-12 col-sm-6 mb-3">
+                      <div class="col-12 col-sm-6 mb-3" @if (Auth::user()->role_id == 3) style="display: none" @endif>
                         <label class="form-label" for="class_id">Status</label>
                         <select name="update_status" id="update_status" class="select2 form-select"  required>
                           <option value="Published">Published</option>

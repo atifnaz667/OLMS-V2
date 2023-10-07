@@ -11,6 +11,12 @@
       "name": "Test List",
       "icon": "menu-icon tf-icons ti ti-book",
       "slug": "teacher/test/list.index"
+    },
+    {
+      "url": "announcements",
+      "name": "Announcements",
+      "icon": "menu-icon tf-icons ti ti-presentation",
+      "slug": "announcements.index"
     }
 
   ]

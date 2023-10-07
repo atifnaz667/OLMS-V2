@@ -41,6 +41,10 @@ class AnnouncementController extends Controller
       $type = $req->type;
       $posted_by = $req->posted_by;
       $title = $req->title;
+      $user_id = null;
+      if (Auth::user()->role_id == 3) {
+        $user_id = Auth::user()->id;
+      }
 
       $announcements = Announcement::when($date, function ($query) use ($date) {
         $query->whereDate('created_at', $date);
@@ -56,6 +60,9 @@ class AnnouncementController extends Controller
         })
         ->when($title, function ($q) use ($title) {
           $q->where('title', 'like', '%' . $title . '%');
+        })
+        ->when($user_id, function ($q) use ($user_id) {
+          $q->where('posted_by', $user_id);
         })
         ->orderBy('id', 'desc')
         ->paginate($perPage);
@@ -310,7 +317,11 @@ class AnnouncementController extends Controller
       $board_id = $student->board_id;
       $class_id = $student->class_id;
       $announcements = Announcement::
-      where([['status','Published'],['board_id',$board_id]])
+      where([['status','Published']])
+      ->where(function($q)use($board_id){
+        $q->where([['board_id',$board_id]])
+        ->orWhere('board_id',null);
+      })
       ->whereHas('announcementClasses',function($q)use($class_id){
         $q->where('class_id',$class_id);
       })->orderBy('id','desc')->paginate(10);
