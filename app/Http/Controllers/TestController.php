@@ -233,7 +233,7 @@ class TestController extends Controller
 
   public function storeTest($chapters, $totalQuestions, $createdBy, $student,$expiryDate, $testDate,$questionTime, $book){
     $topics = Topic::whereIn('chapter_id',$chapters)->get()->pluck('id');
-    $questions = Question::inRandomOrder()->where('question_type','mcq')->whereIn('topic_id',$topics)->limit($totalQuestions)->get();
+    $questions = Question::inRandomOrder()->where([['question_type', 'mcq'],['test_id',null]])->whereIn('topic_id',$topics)->limit($totalQuestions)->get();
     if (count($questions) == 0) {
       return false;
     }

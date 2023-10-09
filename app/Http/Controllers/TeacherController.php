@@ -14,6 +14,7 @@ use App\Models\AssignTeacherStudent;
 use App\Models\Board;
 use App\Models\Chapter;
 use App\Models\Classes;
+use App\Models\McqChoice;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestChild;
@@ -422,16 +423,32 @@ class TeacherController extends Controller
     }
     public function teacherStoreTest(Request $request)
   {
-    // return $request;
     $rules = array(
       'testDate' => 'required',
       'totalQuestions' => 'required|int|max:100',
       'chapters' => 'required',
       'book' => 'required',
+      'topics' => 'required|array',
     );
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
-      return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+    }
+
+    if (isset($request->questions[0]['description'])) {
+      $validator = Validator::make($request->all(), [
+        'questions' => 'required|array',
+        'questions.*.description' => 'required|string',
+        'questions.*.option-a' => 'required|string',
+        'questions.*.option-b' => 'required|string',
+        'questions.*.option-c' => 'required|string',
+        'questions.*.option-d' => 'required|string',
+        'questions.*.correct-option' => 'required|in:a,b,c,d',
+      ]);
+
+      if ($validator->fails()) {
+        return response()->json(['status' => 'error', 'message' => 'Required fields are missing'], 400);
+      }
     }
     try {
       DB::beginTransaction();
@@ -444,31 +461,27 @@ class TeacherController extends Controller
       $questionTime = $request->questionTime;
       $users = $request->students;
       if (count($users) == 0) {
-        return back()->with(['status' => 'error', 'message' => 'Students not found'], 422);
+        return response()->json(['status' => 'error', 'message' => 'Students not found'], 422);
       }
       foreach ($users as $user) {
-        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book);
+        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book, $request->questions);
         if (!$storeTest) {
           DB::rollBack();
-          return back()->with(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
+          return response()->json(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
         }
       }
       DB::commit();
-      return redirect('teacher/test/list')->with(['status' => 'success', 'message' => 'Test created successfully'], 200);
+      return response()->json(['status' => 'success', 'message' => 'Test created successfully'], 200);
     } catch (\Exception $e) {
       DB::rollBack();
       $message = CustomErrorMessages::getCustomMessage($e);
-      return back()->with(['status' => 'error', 'message' => $message], 500);
+      return response()->json(['status' => 'error', 'message' => $message], 500);
     }
   }
-  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book)
+  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book, $manualQuestions)
   {
     $student = User::find($user);
-    // $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
-    $questions = Question::inRandomOrder()->where('question_type', 'mcq')->whereIn('topic_id', $topics)->limit($totalQuestions)->get();
-    if (count($questions) == 0) {
-      return false;
-    }
+
     $test = new Test();
     $test->created_for = $student->id;
     $test->created_by = $createdBy;
@@ -476,18 +489,89 @@ class TeacherController extends Controller
     $test->test_date = $testDate;
     $test->test_type = 'Teacher';
     $test->question_time = $questionTime;
-    $test->total_questions = count($questions);
+    $test->total_questions = 0;
     $test->book_id = $book;
     $test->class_id = $student->class_id;
     $test->board_id = $student->board_id;
     $test->save();
+
+    //------------Storing the manually created mcqs with the test id----------------
+    $this->storeMcqs($manualQuestions, $topics, $test->id);
+
+    //------------getting the manual mcqs first----------------
+    $questions = Question::inRandomOrder()->where('test_id', $test->id)->limit($totalQuestions)->get();
+    $totalManualQuestions = count($questions);
     foreach ($questions as $question) {
       $testChild = new TestChild();
       $testChild->test_id = $test->id;
       $testChild->question_id = $question->id;
       $testChild->save();
     }
+
+    //------------getting the remaining mcqs first----------------
+    $remainingQuestions = $totalQuestions - $totalManualQuestions;
+    $questions = Question::inRandomOrder()->where([['question_type', 'mcq'],['test_id',null]])->whereIn('topic_id', $topics)->limit($remainingQuestions)->get();
+    $remainingQuestions = count($questions);
+    foreach ($questions as $question) {
+      $testChild = new TestChild();
+      $testChild->test_id = $test->id;
+      $testChild->question_id = $question->id;
+      $testChild->save();
+    }
+
+    if ($totalManualQuestions + $remainingQuestions == 0) {
+      return false;
+    }
+
+    $test = Test::find($test->id);
+    $test->total_questions = $totalManualQuestions + $remainingQuestions;
+    $test->save();
     return true;
+  }
+
+  public function storeMcqs($questions, $topics, $test_id){
+      $topic_id = $topics[0];
+      $mcq = 'mcq';
+      foreach ($questions as $question) {
+        $insertData = [
+          'topic_id' => $topic_id,
+          'user_id' => Auth::user()->id,
+          'question_type' => $mcq,
+          'difficulty_level' => 'Easy',
+          'description' => $question['description'],
+          'test_id' => $test_id,
+        ];
+        $question_id = Question::insertGetId($insertData);
+
+        $choiceData = [
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-a'],
+            'is_true' => $question['correct-option'] === 'a' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-b'],
+            'is_true' => $question['correct-option'] === 'b' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-c'],
+            'is_true' => $question['correct-option'] === 'c' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-d'],
+            'is_true' => $question['correct-option'] === 'd' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+        ];
+
+        McqChoice::insert($choiceData);
+      }
   }
 
   public function fetchTestsRecords(Request $request)

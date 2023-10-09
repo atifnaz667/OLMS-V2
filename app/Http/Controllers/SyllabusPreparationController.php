@@ -169,7 +169,7 @@ class SyllabusPreparationController extends Controller
 
     if ($test_type === 'Objective') {
       $questions = Question::whereIn('topic_id', $topics)
-        ->where('question_type', 'mcq')
+        ->where([['question_type', 'mcq'],['test_id',null]])
         ->inRandomOrder()
         ->take($totalQuestions)
         ->with('mcqChoices')

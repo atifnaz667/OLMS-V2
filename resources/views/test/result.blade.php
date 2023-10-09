@@ -75,7 +75,7 @@
                             <li class="list-group-item ">
                                 <label class="form-check-label">
                                     <b> Your Answer :  </b>
-                                    {{ $child->selectedAnswer->choice ?? 'Not Attempted' }}
+                                    {!! $child->selectedAnswer->choice ?? 'Not Attempted' !!}
                                 </label>
                             </li>
                             <li class="list-group-item ">
