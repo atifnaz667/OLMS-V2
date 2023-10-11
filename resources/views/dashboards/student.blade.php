@@ -60,12 +60,27 @@
     <!-- Earning Reports Tabs-->
     <div class="col-12 mb-4 mt-3">
         <div class="card">
+          <div class="row p-4">
+            <div class="col-12 col-sm-4">
+              <h5 class="">Result Reports</h5>
+              <small class="text-muted">All Subjects Result Overview</small>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="form-group">
+                <label for="" class="form-label">From Date</label>
+                <input type="date" name="from_date" id="from_date" class="form-control">
+              </div>
+            </div>
+            <div class="col-12 col-sm-4">
+              <div class="form-group">
+                <label for="" class="form-label">To Date</label>
+                <input type="date" name="to_date" id="to_date" class="form-control">
+              </div>
+            </div>
+          </div>
             <div class="card-header d-flex justify-content-between">
                 <div class="card-title mb-0">
-                    <h5 class="mb-0">Result Reports</h5>
-                    <small class="text-muted">All Subjects Result Overview</small>
                 </div>
-
             </div>
             <div class="card-body">
                 <div class="tab-content p-0 ms-0 ms-sm-2">
@@ -292,9 +307,15 @@
                 var chartJson = 'earning-reports-charts.json';
 
                 var earningReportsChart = [];
+                let to_date = $("#to_date").val();
+                let from_date = $("#from_date").val();
                 $.ajax({
                     url: '{{ route('getGraphDataAjax') }}',
                     method: 'get',
+                    data: {
+                      from_date: from_date,
+                      to_date: to_date
+                    },
                     dataType: 'json',
                     async: false,
                     success: function(response) {
