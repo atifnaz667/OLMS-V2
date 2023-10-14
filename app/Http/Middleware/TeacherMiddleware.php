@@ -20,12 +20,16 @@ class TeacherMiddleware
    */
   public function handle(Request $request, Closure $next)
   {
-    if (!Auth::user() || Auth::user()->role_id != 3) {
+    if (!Auth::user() ) {
+      return redirect('/');
+    }elseif(Auth::user()->role_id == 3 || Auth::user()->role_id == 1){
+      return $next($request);
+    }else{
       return redirect('/');
     }
     $user = auth()->user();
     $timestamp = now();
     Event::dispatch(new UserActivity($user, $timestamp));
-    return $next($request);
+
   }
 }

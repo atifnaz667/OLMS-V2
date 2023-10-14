@@ -35,6 +35,8 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('test/result', [TestController::class, 'getTestResult'])->name('test/result');
   Route::get('suggestion/create', [SuggestionController::class, 'create'])->name('suggestion/create');
   Route::post('suggestion/store', [SuggestionController::class, 'store'])->name('suggestion/store');
+  Route::get('announcement/show/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
+
 });
 
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -69,14 +71,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::put('visual/update', [VisualController::class, 'update'])->name('visual.update');
   Route::delete('visual/destroy/{id}', [VisualController::class, 'destroy'])->name('visual.destroy');
 
-  // --------------------------------------- Announcements Routes---------------------------------------
-  Route::get('announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
-  Route::get('announcements/ajax', [AnnouncementController::class, 'announcementsAjax'])->name('announcement.ajax');
-  Route::get('announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
-  Route::post('add-announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
-  Route::get('announcement/show/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
-  Route::put('announcement/update/{id}', [AnnouncementController::class, 'update'])->name('announcement.update');
-  Route::delete('announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
+
 
   // --------------------------------------- Teacher Route---------------------------------------
   Route::get('assigned/students', [TeacherController::class, 'index'])->name('assigned/students');
@@ -106,6 +101,8 @@ Route::middleware([StudentMiddleware::class])->group(function () {
 
   Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
   Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
+
+  Route::get('notice/board.ajax', [AnnouncementController::class, 'noticeBoard'])->name('notice.board.ajax');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {
@@ -121,9 +118,15 @@ Route::middleware([TeacherMiddleware::class])->group(function () {
   Route::get('teacher/test/chapters', [TeacherController::class, 'getChaptersForTest'])->name('teacher/test/chapters');
   Route::get('teacher/test/students', [TeacherController::class, 'getTeacherAssignStudents'])->name('teacher/test/students');
   Route::post('teacher/store/test',[TeacherController::class,'teacherStoreTest'])->name('teacher/store/test');
-  Route::get('fetchTestsRecordsTeacher', [TeacherController::class, 'fetchTestsRecords'])->name(
-    'fetchTestsRecordsTeacher'
-  );
+  Route::get('fetchTestsRecordsTeacher', [TeacherController::class, 'fetchTestsRecords'])->name('fetchTestsRecordsTeacher');
+
+    // --------------------------------------- Announcements Routes---------------------------------------
+    Route::get('announcements', [AnnouncementController::class, 'index'])->name('announcement.index');
+    Route::get('announcements/ajax', [AnnouncementController::class, 'announcementsAjax'])->name('announcement.ajax');
+    Route::get('announcements/create', [AnnouncementController::class, 'create'])->name('announcement.create');
+    Route::post('add-announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
+    Route::put('announcement/update/{id}', [AnnouncementController::class, 'update'])->name('announcement.update');
+    Route::delete('announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
   Route::get('teacherAssignedStudents/list', [TeacherController::class, 'teacherAssignedStudents'])->name('teacherAssignedStudents/list');
   Route::get('fetchAssignedStudentRecords', [TeacherController::class, 'fetchAssignedStudentRecords'])->name('fetchAssignedStudentRecords');
   Route::post('saveComment',[TeacherController::class,'saveComment'])->name('saveComment');
