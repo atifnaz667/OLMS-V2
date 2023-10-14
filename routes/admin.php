@@ -124,4 +124,10 @@ Route::middleware([TeacherMiddleware::class])->group(function () {
   Route::get('fetchTestsRecordsTeacher', [TeacherController::class, 'fetchTestsRecords'])->name(
     'fetchTestsRecordsTeacher'
   );
+  Route::get('teacherAssignedStudents/list', [TeacherController::class, 'teacherAssignedStudents'])->name('teacherAssignedStudents/list');
+  Route::get('fetchAssignedStudentRecords', [TeacherController::class, 'fetchAssignedStudentRecords'])->name('fetchAssignedStudentRecords');
+  Route::post('saveComment',[TeacherController::class,'saveComment'])->name('saveComment');
+  Route::get('showComments', [TeacherController::class, 'showComments'])->name('showComments');
+  Route::get('editComment', [TeacherController::class, 'editComment'])->name('editComment');
+  Route::post('updateComment',[TeacherController::class,'updateComment'])->name('updateComment');
 });

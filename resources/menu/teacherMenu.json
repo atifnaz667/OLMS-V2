@@ -11,6 +11,12 @@
       "name": "Test List",
       "icon": "menu-icon tf-icons ti ti-book",
       "slug": "teacher/test/list.index"
+    },
+    {
+      "url": "teacherAssignedStudents/list",
+      "name": "Student List",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "teacherAssignedStudents/test/list.index"
     }
 
   ]
