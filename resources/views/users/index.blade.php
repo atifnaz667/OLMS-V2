@@ -76,6 +76,10 @@
                     <h5 class="mt-3">Add Card</h5>
                     <div class="row mb-3">
                         <div class="col-md">
+                            <label class="form-label" for="serial_no">Serial No.</label>
+                            <input type="text" class="form-control" required id="serial_no" placeholder="Serial Number" />
+                        </div>
+                        <div class="col-md">
                             <label class="form-label" for="card_no">Card No.</label>
                             <input type="text" class="form-control" id="card_no" placeholder="Card Number" />
                         </div>
@@ -83,20 +87,27 @@
                         <div class="col-md">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="expiryDate">Expiry Date</label>
-                                <div class="input-group input-group-merge">
+                                <!-- <div class="input-group input-group-merge">
                                     <input type="date" id="expiryDate" class="form-control" />
-                                </div>
+                                </div> -->
+                                <select id="expiryDate" name="expiryDate" class="select2 form-select"
+                                        data-allow-clear="true">
+                                        <option value="">Select Option</option>
+                                        <option value="One Year">One Year</option>
+                                        <option value="Six Months">Six Months</option>
+
+                                    </select>
                             </div>
                         </div>
 
-                        <div class="col-md">
+                        <!-- <div class="col-md">
                             <div class="form-password-toggle">
                                 <label class="form-label" for="validDate">Valid Till</label>
                                 <div class="input-group input-group-merge">
                                     <input type="date" id="validDate" class="form-control" />
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
@@ -231,9 +242,10 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Sr#</th>
+                                            <th>Serial No.</th>
                                             <th>Card No.</th>
                                             <th>Expiry Date</th>
-                                            <th>Valid till</th>
+                                            <!-- <th>Valid till</th> -->
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -242,9 +254,10 @@
                                         @foreach ($cards as $key => $user)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
+                                                <td>{{ $user->serial_no }}</td>
                                                 <td>{{ $user->card_no }}</td>
                                                 <td>{{ $user->expiry_date }}</td>
-                                                <td>{{ $user->valid_date }}</td>
+                                                <!-- <td>{{ $user->valid_date }}</td> -->
                                                 <?php if ($user->status == 'used') { ?>
                                                 <td><span class="badge bg-label-success" text-capitalized="">Used</span>
                                                 </td>
@@ -306,7 +319,11 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0">
                 <form class="update-card pt-0" id="addCardForm">
-                    @csrf
+                @csrf
+                    <div class="col-md">
+                            <label class="form-label" for="update_serial_no">Serial No.</label>
+                            <input type="text" class="form-control" required name="update_serial_no" id="update_serial_no" placeholder="Serial Number" />
+                        </div>
                     <div class="mb-3">
                         <label class="form-label" for="update-card">Card No</label>
                         <input type="text" class="form-control" required id="update-card" name="update-card"
@@ -315,14 +332,21 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="update-expiry-date">Expiry Date</label>
-                        <input type="date" class="form-control" required
-                            id="update-expiry-date"name="update-expiry-date" aria-label="class" />
+                        <!-- <input type="date" class="form-control" required
+                            id="update-expiry-date"name="update-expiry-date" aria-label="class" /> -->
+                            <select id="update-expiry-date" name="update-expiry-date"  class="select2 form-select"
+                                        data-allow-clear="true">
+                                        <option value="">Select Option</option>
+                                        <option value="One Year">One Year</option>
+                                        <option value="Six Months">Six Months</option>
+
+                             </select>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label class="form-label" for="update-valid-date">Valid Till</label>
                         <input type="date" class="form-control" required
                             id="update-valid-date"name="update-valid-date" aria-label="class" />
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                     <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
@@ -523,16 +547,18 @@
             function addCard() {
                 const toastAnimationExample = document.querySelector('.toast-ex');
                 var card_no = $('#card_no').val();
+                var serial_no = $('#serial_no').val();
                 var expiryDate = $('#expiryDate').val();
-                var validDate = $('#validDate').val();
+                // var validDate = $('#validDate').val();
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('user.store') }}',
                     data: {
                         _token: '{{ csrf_token() }}',
                         card_no: card_no,
+                        serial_no: serial_no,
                         expiryDate: expiryDate,
-                        validDate: validDate,
+                        // validDate: validDate,
                         check: "card",
                     },
                     success: function(response) {
@@ -550,6 +576,7 @@
                         toastAnimation = new bootstrap.Toast(toastAnimationExample);
                         toastAnimation.show();
                         $('#card_no').val('');
+                        $('#serial_no').val('');
                         // getData();
                         location.reload();
                     },
@@ -675,8 +702,12 @@
                     },
                     success: function(response) {
                         $('#update-card').val(response.User.card_no);
-                        $('#update-expiry-date').val(response.User.expiry_date);
-                        $('#update-valid-date').val(response.User.valid_date);
+                        $('#update_serial_no').val(response.User.serial_no);
+                        // $('#update-expiry-date').val(response.User.expiry_date);
+                        var updateValidDate = response.User.expiry_date;
+                        console.log(updateValidDate)
+                        $('#update-expiry-date').val(updateValidDate).trigger('change');
+                        // $('#update-valid-date').val(response.User.valid_date);
                         $('#cardId').val(response.User.id);
                         offcanvas2.show();
                     },
@@ -693,14 +724,16 @@
 
                 var _token = $('input[name="_token"]').val();
                 var card_no = $('#update-card').val();
+                var update_serial_no = $('#update_serial_no').val();
                 var expiry_date = $('#update-expiry-date').val();
-                var valid_date = $('#update-valid-date').val();
+                // var valid_date = $('#update-valid-date').val();
 
                 var formData = {
                     _token: _token,
                     card_no: card_no,
+                    update_serial_no: update_serial_no,
                     expiry_date: expiry_date,
-                    valid_date: valid_date
+                    // valid_date: valid_date
                 };
                 $.ajax({
                     url: "{{ route('user.update', '') }}" + "/" + id,

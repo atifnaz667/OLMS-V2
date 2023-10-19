@@ -37,14 +37,16 @@ class UserController extends Controller
     if (isset($request->check)) {
       $validatedData = $request->validate([
         'card_no' => 'required|unique:cards',
+        'serial_no' => 'required|unique:cards',
         'expiryDate' => 'required',
-        'validDate' => 'required',
+        // 'validDate' => 'required',
       ]);
       try {
         $card = new Card;
         $card->card_no = $validatedData['card_no'];
+        $card->serial_no = $validatedData['serial_no'];
         $card->expiry_date = $validatedData['expiryDate'];
-        $card->valid_date = $validatedData['validDate'];
+        // $card->valid_date = $validatedData['validDate'];
         $card->save();
 
         // Return success status and message
@@ -180,8 +182,9 @@ class UserController extends Controller
     if (isset($request->card_no)) {
       $card = Card::findOrFail($id);
       $card->card_no = $request->card_no;
+      $card->serial_no = $request->update_serial_no;
       $card->expiry_date = $request->expiry_date;
-      $card->valid_date = $request->valid_date;
+      // $card->valid_date = $request->valid_date;
       $card->save();
 
       return response()->json([
