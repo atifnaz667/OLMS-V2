@@ -15,189 +15,49 @@
 @section('content')
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">Home/</span>
-        Assigned Students List
+        My Teacher/Teacher Comment List
     </h4>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div
-                    class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                    <h5 class="card-title mb-sm-0 me-2">Listing</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md">
-                            <label class="form-label" for="board_id">Board</label>
-                            <select id="board_id" class="select2 form-select" data-allow-clear="true">
-                                <option value="">Select</option>
-                                @foreach ($boards as $board)
-                                    <option value="{{ $board->id }}">{{ $board->name }}</option>
-                                @endforeach
-
-                            </select>
-                        </div>
-          
-                        <div class="col-md">
-                            <label class="form-label" for="book_id">Book</label>
-                            <select id="book_id" class="select2 form-select" data-allow-clear="true">
-                                <option value="">Select</option>
-                                @foreach ($books as $book)
-                                    <option value="{{ $book->id }}">{{ $book->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md">
-                            <label class="form-label" for="class_id">Class</label>
-                            <select id="class_id" class="select2 form-select" data-allow-clear="true">
-                                <option value="">Select</option>
-                                @foreach ($classes as $class)
-                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <div
-                        class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                        <h5 class="card-title mb-sm-0 me-2"></h5>
-                        <div class="action-btns">
-                            <button type="button" onclick="fetchAssignedStudentRecords()" class="btn btn-primary">Filter</button>
-                        </div>
-                    </div>
-                </div>
+           
+       
                 <hr>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
-                                <th>Student Name</th>
-                                <th>Board</th>
-                                <th>Subject</th>
-                                <th>Class</th>
-                                <th>Actions</th>
-                                <!-- <th>View Comment</th> -->
+                                <th>Teacher Name</th>
+                                <th>Book</th>
+                                <th>Comments</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
+                           @foreach ($comments as $key => $comment)
+                                            <tr>
+                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $comment->teacher->name }}</td>
+                                                <td>{{ $comment->book->name }}</td>
+                                                <td>{{ $comment->comment }}</td>
+                                                <td>{{ $comment->created_at }}</td>
                                        
+                                             </tr>
+                               @endforeach       
                          </tbody>
                     </table>
                 </div>
                 <nav aria-label="Page navigation" class="pagination-nav">
                     <ul class="pagination"></ul>
-                </nav>
-                <!-- comment modal -->
-                <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="max-width: 50%;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="commentModalLabel">Comment</h5>
-                                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button> -->
-                            </div>
-                            <div class="modal-body">
-                            <input type="hidden" id="studentId" name="studentId" value="">
-                            <input type="hidden" id="book_id" name="book_id" value="">
-                            <div class="form-group">
-                                <label for="commentTextarea">Add Comment:</label>
-                                <textarea class="form-control" id="commentTextarea" name="commentTextarea" rows="4"></textarea>
-                            </div>
-                            </div>
-                            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="saveComment()">Save</button>
-            </div>
-                        </div>
-                    </div>
-                </div>           
-                
-                 <!-- view comment modal -->
-             <div class="modal fade" id="viewCommentModal" tabindex="-1" role="dialog"      aria-labelledby="viewCommentModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document" style="max-width: 50%;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="viewCommentModalLabel">All Comments</h5>
-                                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button> -->
-                            </div>
-                            <div class="modal-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Sr#</th>
-                                        <th>Date</th>
-                                        <th>Comments</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="showData">
-                                   
-                                    <!-- Add more rows as needed -->
-                                </tbody>
-                            </table>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onclick="closeModal()"  data-dismiss="modal">Close</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>    
-                <!-- edit comment modal -->
-                <div class="modal fade" id="editCommentModal" tabindex="-1" role="dialog" aria-labelledby="editCommentModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editCommentModalLabel">Edit Comment</h5>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Hidden input to store the comment ID -->
-                                <input type="hidden" id="editCommentId" name="editCommentId">
-                                <!-- <input type="text" id="editCommentValue" name="editCommentValue"> -->
-                                <label for="commentTextarea">Comment</label>
-                                <textarea class="form-control" id="editCommentValue" name="editCommentValue" rows="4"></textarea>
-                                <!-- Other form fields for editing the comment -->
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" onclick="closeEditModal()" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="saveEditedComment()">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <nav aria-label="Page navigation" class="pagination-nav">
-                    <ul class="pagination"></ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateChapter"
-        aria-labelledby="offcanvasUpdateChapterLabel">
-        <div class="offcanvas-header">
-            <h5 id="offcanvasUpdateChapterLabel" class="offcanvas-title">Edit Topic</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body mx-0 flex-grow-0">
-            <form class="update-class pt-0" id="addBookForm">
-                @csrf
-
-                <div class="mb-3">
-                    <label class="form-label" for="update-topic-name">Topic Name</label>
-                    <input type="text" class="form-control" required id="update-topic-name" name="update-topic-name"
-                        aria-label="Chapter" />
-                    <input type="hidden" class="form-control" required id="topicID" name="topicID" />
-                </div>
-                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
-                <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
-            </form>
+                </nav>          
+         
         </div>
     </div>
 @endsection
 
-@section('page2-script')
+<!-- @section('page2-script')
     <script>
 
         var currentPage = 1;
@@ -214,14 +74,13 @@
                 $('#editCommentModal').modal('hide');
             }
             
-        function viewCommentModal(studentId,bookId) {
+        function viewCommentModal(studentId) {
             $.ajax({
             url: '{{ route('showComments') }}',
             method: 'Get',
             data: {
                 _token: '{{ csrf_token() }}',
                 student_id: studentId,
-                book_id: bookId,
             },
             success: function(response) {
                 
@@ -249,15 +108,13 @@
     
         }
     
-        function openCommentModal(studentId,bookID) {
+        function openCommentModal(studentId) {
             $('#studentId').val(studentId); 
-            $('#book_id').val(bookID); 
         $('#commentModal').modal('show'); // Show the modal
         }
 
       function saveComment() {
         var studentId = $('#studentId').val();
-        var book_id = $('#book_id').val();
         var comment = $('#commentTextarea').val();
 
         $.ajax({
@@ -266,7 +123,6 @@
             data: {
                 _token: '{{ csrf_token() }}',
                 student_id: studentId,
-                book_id: book_id,
                 comment: comment
             },
             success: function(response) {
@@ -411,10 +267,10 @@
                                     "<td>" +
                                     "<a onclick=\"openCommentModal('" + student
                                     .student_id +
-                                    "', '" + student.book_id + "')\" class=\"btn-icon \"><i class=\"fas fa-comment ti-sm me-2\"></i></a>" +
+                                    "')\" class=\"btn-icon \"><i class=\"fas fa-comment ti-sm me-2\"></i></a>" +
                                     "<a onclick=\"viewCommentModal('" + student
                                     .student_id +
-                                    "', '" + student.book_id + "')\" class=\"btn-icon \"><i class=\"fas fa-eye ti-sm me-2\"></i></a>" +
+                                    "')\" class=\"btn-icon \"><i class=\"fas fa-eye ti-sm me-2\"></i></a>" +
                                     "</td>" +
 
                                     // "<td>" +
@@ -497,4 +353,4 @@
         fetchAssignedStudentRecords();
 
     </script>
-@endsection
+@endsection -->

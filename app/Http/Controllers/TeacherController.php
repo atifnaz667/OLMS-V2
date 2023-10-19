@@ -739,6 +739,7 @@ class TeacherController extends Controller
           'book' => $student->book->name,
           'class' => $student->student->class->name,
           'student_id' => $student->student_id,     
+          'book_id' => $student->book->id,     
         ];
       });
 
@@ -764,6 +765,7 @@ class TeacherController extends Controller
     
     $rules = array(
       'student_id' => 'required',
+      'book_id' => 'required',
       'comment' => 'required',
     );
     $validator = Validator::make($request->all(), $rules);
@@ -778,6 +780,7 @@ class TeacherController extends Controller
         $comment = new Comment();
         $comment->teacher_id = $teacher_id;
         $comment->student_id	 = $request->student_id;
+        $comment->book_id	 = $request->book_id;
         $comment->comment = $request->comment;
         $comment->save();
 
@@ -804,6 +807,7 @@ class TeacherController extends Controller
 
     try {
         $comments = Comment::where('student_id', $request->student_id)
+            ->where('book_id', $request->book_id)
             ->where('teacher_id', $teacher_id)
             ->get();
            $count =1;

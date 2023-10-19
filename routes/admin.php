@@ -7,6 +7,7 @@ use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\SelfAssessmentController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TeacherController;
@@ -103,6 +104,9 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
 
   Route::get('notice/board.ajax', [AnnouncementController::class, 'noticeBoard'])->name('notice.board.ajax');
+    //---------------------------------Student teacher and comment list routes-------------------
+    Route::get('myComment/list', [StudentController::class, 'getStudentComment'])->name('myComment/list');
+    Route::get('myTeacher/list', [StudentController::class, 'myTeacherList'])->name('myTeacher/list');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {
