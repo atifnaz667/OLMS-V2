@@ -14,6 +14,8 @@ use App\Models\AssignTeacherStudent;
 use App\Models\Board;
 use App\Models\Chapter;
 use App\Models\Classes;
+use App\Models\McqChoice;
+use App\Models\Comment;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestChild;
@@ -106,11 +108,11 @@ class TeacherController extends Controller
         $classes = $results['Classes'];
         $boards = $results['Boards'];
         $books = $results['Books'];
-  
+
         return view('assign-students.index', ['teachers' => $teachers, 'classes' => $classes, 'boards' => $boards,'books'=>$books]);
       } catch (\Exception $e) {
         $message = CustomErrorMessages::getCustomMessage($e);
-  
+
         return back()->with('error', $message);
       }
     }
@@ -276,11 +278,11 @@ class TeacherController extends Controller
         ->where('board_id', $req->board_id)
         ->where('class_id', $req->class_id)
         ->get();
-  
+
       $cols = '<div class="col-12 mb-2">
                <input class="form-check-input" style="margin-right:1em" id="select-all" onclick="selectCheckboxes()" type="checkBox"> Select All
            </div>';
-  
+
       foreach ($chapters as $chapter) {
         $topics = Topic::join('questions', 'questions.topic_id', '=', 'topics.id')
           ->select('topics.*')
@@ -288,11 +290,11 @@ class TeacherController extends Controller
           ->where('questions.question_type', '!=', 'mcq')
           ->distinct()
           ->get();
-  
+
         $cols .= '<div class="col-sm-12 mb-3">
                    <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" name="chapters[]" class="form-check-input checkboxes" value="' . $chapter->id . '"> <strong>Unit: ' . $chapter->name . '</strong>
                </div>';
-  
+
         $topicsInRow = 0;
         $cols .= '<div class="col-sm-12">';
         foreach ($topics as $topic) {
@@ -306,7 +308,7 @@ class TeacherController extends Controller
         }
         $cols .= '</div>';
       }
-  
+
       if (
         count($chapters) == 0
       ) {
@@ -315,10 +317,10 @@ class TeacherController extends Controller
       if (!$req->book_id) {
         $cols = '<div class="col-12"> <h6>Please select a book </h6></div>';
       }
-  
+
       return $cols;
-  
-  
+
+
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
@@ -338,7 +340,7 @@ class TeacherController extends Controller
       $cols = '<div class="col-12 mb-2">
       <input class="form-check-input" style="margin-right: 1em" id="select-all" onclick="selectCheckboxes()" type="checkbox"> Select All
      </div>';
-  
+
       foreach ($chapters as $chapter) {
         $cols .= '<div class="mb-2 p-2">
           <div class="form-check">
@@ -347,7 +349,7 @@ class TeacherController extends Controller
               <h5 class="form-check-h5" for="chapter_' . $chapter->id . '">' . $chapter->name . '</h5>
           </div>
           <div id="topicList_' . $chapter->id . '" class="row mb-4">';
-  
+
         foreach ($topics as $topic) {
           if ($topic->chapter_id === $chapter->id) {
             $cols .= '<div class="col-sm-4">
@@ -358,17 +360,17 @@ class TeacherController extends Controller
               </div>';
           }
         }
-  
+
         $cols .= '</div></div>';
       }
-  
+
       if (count($chapters) == 0) {
         $cols = '<div class="col-12"> <h6>No Chapters or Topics found against this book </h6></div>';
       }
       if (!$req->book_id) {
         $cols = '<div class="col-12"> <h6>Please select a book </h6></div>';
       }
-  
+
       return $cols;
     }
 
@@ -422,16 +424,32 @@ class TeacherController extends Controller
     }
     public function teacherStoreTest(Request $request)
   {
-    // return $request;
     $rules = array(
       'testDate' => 'required',
       'totalQuestions' => 'required|int|max:100',
       'chapters' => 'required',
       'book' => 'required',
+      'topics' => 'required|array',
     );
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
-      return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
+    }
+
+    if (isset($request->questions[0]['description'])) {
+      $validator = Validator::make($request->all(), [
+        'questions' => 'required|array',
+        'questions.*.description' => 'required|string',
+        'questions.*.option-a' => 'required|string',
+        'questions.*.option-b' => 'required|string',
+        'questions.*.option-c' => 'required|string',
+        'questions.*.option-d' => 'required|string',
+        'questions.*.correct-option' => 'required|in:a,b,c,d',
+      ]);
+
+      if ($validator->fails()) {
+        return response()->json(['status' => 'error', 'message' => 'Required fields are missing'], 400);
+      }
     }
     try {
       DB::beginTransaction();
@@ -444,50 +462,117 @@ class TeacherController extends Controller
       $questionTime = $request->questionTime;
       $users = $request->students;
       if (count($users) == 0) {
-        return back()->with(['status' => 'error', 'message' => 'Students not found'], 422);
+        return response()->json(['status' => 'error', 'message' => 'Students not found'], 422);
       }
       foreach ($users as $user) {
-        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book);
+        $storeTest = $this->storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book, $request->questions);
         if (!$storeTest) {
           DB::rollBack();
-          return back()->with(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
+          return response()->json(['status' => 'error', 'message' => 'Questions not found against these chapters'], 422);
         }
       }
       DB::commit();
-      return redirect('teacher/test/list')->with(['status' => 'success', 'message' => 'Test created successfully'], 200);
+      return response()->json(['status' => 'success', 'message' => 'Test created successfully'], 200);
     } catch (\Exception $e) {
       DB::rollBack();
       $message = CustomErrorMessages::getCustomMessage($e);
-      return back()->with(['status' => 'error', 'message' => $message], 500);
+      return response()->json(['status' => 'error', 'message' => $message], 500);
     }
   }
-  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book)
+  public function storeTest($topics, $totalQuestions, $createdBy, $user, $testDate, $questionTime, $book, $manualQuestions)
   {
     $student = User::find($user);
-    // $topics = Topic::whereIn('chapter_id', $chapters)->get()->pluck('id');
-    $questions = Question::inRandomOrder()->where('question_type', 'mcq')->whereIn('topic_id', $topics)->limit($totalQuestions)->get();
-    if (count($questions) == 0) {
-      return false;
-    }
+
     $test = new Test();
     $test->created_for = $student->id;
     $test->created_by = $createdBy;
     $test->status = 'Pending';
     $test->test_date = $testDate;
-    $test->test_type = 'Monthly';
+    $test->test_type = 'Teacher';
     $test->question_time = $questionTime;
-    $test->total_questions = count($questions);
+    $test->total_questions = 0;
     $test->book_id = $book;
     $test->class_id = $student->class_id;
     $test->board_id = $student->board_id;
     $test->save();
+
+    //------------Storing the manually created mcqs with the test id----------------
+    $this->storeMcqs($manualQuestions, $topics, $test->id);
+
+    //------------getting the manual mcqs first----------------
+    $questions = Question::inRandomOrder()->where('test_id', $test->id)->limit($totalQuestions)->get();
+    $totalManualQuestions = count($questions);
     foreach ($questions as $question) {
       $testChild = new TestChild();
       $testChild->test_id = $test->id;
       $testChild->question_id = $question->id;
       $testChild->save();
     }
+
+    //------------getting the remaining mcqs first----------------
+    $remainingQuestions = $totalQuestions - $totalManualQuestions;
+    $questions = Question::inRandomOrder()->where([['question_type', 'mcq'],['test_id',null]])->whereIn('topic_id', $topics)->limit($remainingQuestions)->get();
+    $remainingQuestions = count($questions);
+    foreach ($questions as $question) {
+      $testChild = new TestChild();
+      $testChild->test_id = $test->id;
+      $testChild->question_id = $question->id;
+      $testChild->save();
+    }
+
+    if ($totalManualQuestions + $remainingQuestions == 0) {
+      return false;
+    }
+
+    $test = Test::find($test->id);
+    $test->total_questions = $totalManualQuestions + $remainingQuestions;
+    $test->save();
     return true;
+  }
+
+  public function storeMcqs($questions, $topics, $test_id){
+      $topic_id = $topics[0];
+      $mcq = 'mcq';
+      foreach ($questions as $question) {
+        $insertData = [
+          'topic_id' => $topic_id,
+          'user_id' => Auth::user()->id,
+          'question_type' => $mcq,
+          'difficulty_level' => 'Easy',
+          'description' => $question['description'],
+          'test_id' => $test_id,
+        ];
+        $question_id = Question::insertGetId($insertData);
+
+        $choiceData = [
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-a'],
+            'is_true' => $question['correct-option'] === 'a' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-b'],
+            'is_true' => $question['correct-option'] === 'b' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-c'],
+            'is_true' => $question['correct-option'] === 'c' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+          [
+            'question_id' => $question_id,
+            'choice' => $question['option-d'],
+            'is_true' => $question['correct-option'] === 'd' ? 1 : 0,
+            'reason' => $question['answer'],
+          ],
+        ];
+
+        McqChoice::insert($choiceData);
+      }
   }
 
   public function fetchTestsRecords(Request $request)
@@ -564,6 +649,231 @@ class TeacherController extends Controller
       return response()->json([
         'status' => 'error',
         'message' => $message,
+      ], 500);
+    }
+  }
+
+  public function teacherAssignedStudents(Request $request){
+    $rules = [
+ 
+    ];
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return back()->withErrors($validator)->withInput();
+    }
+    try {
+      $book_id = $request->input('book_id');
+      $class_id = $request->input('class_id');
+      $board_id = $request->input('board_id');
+      $teacher_id = Auth::user()->id;
+      $students= AssignTeacherStudent::with('student.class','student.board','book')
+      ->when($book_id, function ($query, $book_id) {
+        return $query->where('book_id', $book_id);
+      })->where('teacher_id',$teacher_id)->get();
+ 
+      $teachers = User::where('role_id',3)->get();
+      $results = DropdownHelper::getBoardBookClass();
+      $classes = $results['Classes'];
+      $boards = $results['Boards'];
+      $books = $results['Books'];
+
+      return view('teacher.assign-students-list', ['students' => $students, 'classes' => $classes, 'boards' => $boards,'books'=>$books]);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return back()->with('error', $message);
+    }
+  }
+  public function fetchAssignedStudentRecords(Request $request)
+  {
+    $rules = [
+      'perPage' => 'integer|min:1',
+      'sort_by' => 'in:name,id'
+    ];
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+    }
+    try {
+      $perPage = $request->input('perPage', 10);
+      $sort = $request->input('sort_by', 'id');
+      $sort_order = $request->input('sort_order', 'asc');
+      $table = $request->input('table', 'assign_teacher_students');
+      $sorting = $table . '.' . $sort;
+
+      $board = $request->input('board_id');
+      $book = $request->input('book_id');
+      $class = $request->input('class_id');
+
+      $students = AssignTeacherStudent::with('student.class','student.board','book')
+        ->when($board, function ($query) use ($board) {
+          $query->whereHas('student', function ($query) use ($board) {
+            $query->whereHas('board', function ($query) use ($board) {
+            $query->where('id', $board);
+            });
+          });
+        })
+        ->when($book, function ($query) use ($book) {
+          $query->whereHas('book', function ($query) use ($book) {
+            $query->where('id', $book);
+          });
+        })
+        ->when($class, function ($query) use ($class) {
+          $query->whereHas('student', function ($query) use ($class) {
+           $query->whereHas('class', function ($query) use ($class) {
+            $query->where('id', $class);
+            });
+          });
+        })
+        ->orderBy($sorting, $sort_order)->paginate($perPage);
+
+        // $students= AssignTeacherStudent::with('student.class','student.board','book')
+        // ->when($book_id, function ($query, $book_id) {
+        //   return $query->where('book_id', $book_id);
+        // })->where('teacher_id',$teacher_id)->get();
+      $data = $students->map(function ($student) {
+        return [
+          'id' => $student->id,
+          'student_name' => $student->student->name,
+          'board' => $student->student->board->name,
+          'book' => $student->book->name,
+          'class' => $student->student->class->name,
+          'student_id' => $student->student_id,     
+          'book_id' => $student->book->id,     
+        ];
+      });
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Students retrieved successfully',
+        'data' => $data,
+        'current_page' => $students->currentPage(),
+        'last_page' => $students->lastPage(),
+        'per_page' => $students->perPage(),
+        'total' => $students->total(),
+      ]);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json([
+        'status' => 'error',
+        'message' => $message,
+      ], 500);
+    }
+  }
+  public function saveComment(Request $request){
+    
+    $rules = array(
+      'student_id' => 'required',
+      'book_id' => 'required',
+      'comment' => 'required',
+    );
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+    }
+  
+    $teacher_id = Auth::user()->id;
+
+    try {
+
+        $comment = new Comment();
+        $comment->teacher_id = $teacher_id;
+        $comment->student_id	 = $request->student_id;
+        $comment->book_id	 = $request->book_id;
+        $comment->comment = $request->comment;
+        $comment->save();
+
+        // Return success status and message
+        return response()->json([
+          'status' => 'success',
+          'message' => 'Comment stored successfully.',
+        ], 201);
+      } catch (\Exception $e) {
+        $message = CustomErrorMessages::getCustomMessage($e);
+        dd($message);
+        // Return error status and message
+        return response()->json([
+          'status' => 'error',
+          'message' => 'Failed to store Comment.',
+        ], 500);
+      }
+
+  }
+  public function showComments(Request $request)
+{
+    $teacher_id = Auth::user()->id;
+    $rows = '';
+
+    try {
+        $comments = Comment::where('student_id', $request->student_id)
+            ->where('book_id', $request->book_id)
+            ->where('teacher_id', $teacher_id)
+            ->get();
+           $count =1;
+        foreach ($comments as $comment) {
+            $rows .= '<tr>';
+            $rows .= '<td>' . $count++ . '</td>';
+            $rows .= '<td>' . $comment->created_at . '</td>';
+            $rows .= '<td>' . $comment->comment . '</td>';
+            $rows .= '<td onclick="openEditCommentModal(' . $comment->id . ')"><i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i></td>';
+            $rows .= '</tr>';
+        }
+
+        return response()->json([
+            'data' => $rows,
+        ]);
+
+    } catch (\Exception $e) {
+        $message = CustomErrorMessages::getCustomMessage($e);
+
+        return back()->with('error', $message);
+    }
+ }
+ public function editComment(Request $request){
+
+  try {
+      $comment = Comment::where('id', $request->comment_id)
+          ->first(); 
+
+      return response()->json([
+          'commentText' => $comment->comment,
+      ]);
+
+  } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return back()->with('error', $message);
+  }
+ }
+ public function updateComment(Request $request){
+    
+  $rules = array(
+    'editCommentId' => 'required',
+    'editCommentValue' => 'required',
+  );
+  $validator = Validator::make($request->all(), $rules);
+  if ($validator->fails()) {
+    return back()->with(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+  }
+  try {
+
+      $comment =  Comment::find($request->editCommentId);
+      $comment->comment = $request->editCommentValue;
+      $comment->save();
+
+      // Return success status and message
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Comment Update successfully.',
+      ], 201);
+    } catch (\Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+      dd($message);
+      // Return error status and message
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Failed to store Comment.',
       ], 500);
     }
   }

@@ -57,12 +57,14 @@ class HomePage extends Controller
     }
   }
 
-  public function getGraphDataAjax()
+  public function getGraphDataAjax(Request $req)
   {
     $user_id = Auth::user()->role_id == 4 ? Auth::user()->id : Auth::user()->assignUserAsParent->child_id;
     $books = Book::getBooksForParent($user_id);
     $resultsArray = [];
     $i = 0;
+    $to_date = $req->to_date;
+    $from_date = $req->from_date;
     foreach ($books as $book) {
       $test = Test::where([
         ['book_id', $book->id],
@@ -70,6 +72,12 @@ class HomePage extends Controller
         ['status', 'Attempted'],
         ['test_type', '!=', 'Self'],
       ])
+      ->when($from_date,function($q)use($from_date){
+        $q->whereDate('created_at','>=',$from_date);
+      })
+      ->when($to_date,function($q)use($to_date){
+        $q->whereDate('created_at','<=',$to_date);
+      })
         ->select(DB::raw('sum(total_questions) as total_marks'), DB::raw('sum(obtained_marks) as obtained_marks'))
         ->first();
 

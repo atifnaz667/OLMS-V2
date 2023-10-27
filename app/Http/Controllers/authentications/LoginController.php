@@ -158,6 +158,17 @@ class LoginController extends Controller
 
   public function storePendingUser(Request $request)
   {
+    $user = User::where('card_id', $request->card_id)->get();
+    if (count($user) > 0) {
+      if (count($user) >= 2) {
+        return back()->with(['status' => 'error', 'message' => 'Card Already used']);
+      }elseif ($user[0]->role_id == 4 && $request->type == "Student") {
+        return back()->with(['status' => 'error', 'message' => 'Card Already used']);
+      }elseif ($user[0]->role_id == 2 && $request->type != "Student") {
+        return back()->with(['status' => 'error', 'message' => 'Card Already used']);
+      }
+    }
+    $request->type == "Student";
     $rules = [
       'fullName' => 'required',
       'username' => 'required|unique:users,username',

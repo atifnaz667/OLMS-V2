@@ -60,4 +60,5 @@ class User extends Authenticatable
   public function assignUserAsStudent(){
     return $this->hasMany(AssignTeacherStudent::class,'teacher_id');
   }
+
 }
