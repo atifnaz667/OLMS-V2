@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
+use Cache;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
@@ -278,4 +280,28 @@ class UserController extends Controller
       ];
     }
   }
+
+  public function liveStatus($user_id)
+    {
+        // get user data
+        $user = User::find($user_id);
+
+        // check online status
+        if (Cache::has('user-is-online-' . $user->id))
+            $status = 'Online';
+        else
+            $status = 'Offline';
+
+        // check last seen
+        if ($user->last_seen != null)
+            $last_seen = "Active " . Carbon::parse($user->last_seen)->diffForHumans();
+        else
+            $last_seen = "No data";
+
+        // response
+        return response()->json([
+            'status' => $status,
+            'last_seen' => $last_seen,
+        ]);
+    }
 }
