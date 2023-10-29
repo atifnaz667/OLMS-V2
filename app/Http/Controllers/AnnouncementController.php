@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use App\Models\Announcement;
 use App\Models\AnnouncementClasses;
+use App\Models\AssignTeacherStudent;
 use App\Models\Board;
 use App\Models\Classes;
 use App\Models\User;
@@ -316,8 +317,13 @@ class AnnouncementController extends Controller
       $student = User::find( Auth::user()->id);
       $board_id = $student->board_id;
       $class_id = $student->class_id;
+      $teachers = AssignTeacherStudent::where('student_id', Auth::user()->id)->get()->pluck('teacher_id');
+      $admin = User::where('role_id',1)->get()->pluck('id');
+      $poster = $teachers->merge($admin);
+
       $announcements = Announcement::
       where([['status','Published']])
+      ->whereIn('posted_by',$poster)
       ->where(function($q)use($board_id){
         $q->where([['board_id',$board_id]])
         ->orWhere('board_id',null);

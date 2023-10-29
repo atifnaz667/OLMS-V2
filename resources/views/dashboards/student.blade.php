@@ -68,13 +68,13 @@
             <div class="col-12 col-sm-4">
               <div class="form-group">
                 <label for="" class="form-label">From Date</label>
-                <input type="date" name="from_date" id="from_date" class="form-control">
+                <input type="date" name="from_date" id="from_date" class="form-control" onchange="showChart()">
               </div>
             </div>
             <div class="col-12 col-sm-4">
               <div class="form-group">
                 <label for="" class="form-label">To Date</label>
-                <input type="date" name="to_date" id="to_date" class="form-control">
+                <input type="date" name="to_date" id="to_date" class="form-control" onchange="showChart()">
               </div>
             </div>
           </div>
@@ -146,7 +146,111 @@
     <script>
         $(document).ready(function() {
 
-            'use strict';
+
+        showChart();
+        fetchAnnouncementRecords();
+
+        });
+
+
+        function fetchAnnouncementRecords(page = 1) {
+
+            var title = $('#search-input').val();
+            var perPage = $('#perPageSelect').val();
+
+            $.ajax({
+                url: '{{ route('notice.board.ajax') }}',
+                method: 'GET',
+                data: {
+                    page: page,
+                    perPage: perPage,
+                    title: title,
+                },
+                success: function(response) {
+                    var tableBody = $('#tbody');
+                    tableBody.empty();
+
+                    if (response.status === 'success') {
+                        var announcements = response.data;
+                        currentPage = response.current_page;
+                        lastPage = response.last_page;
+
+                        if (announcements && announcements.length > 0) {
+                            $.each(announcements, function(index, announcement) {
+                              let date = announcement.date.split(', ')
+                                var row = '<tr>' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td "> ' + date[0] + ', ' + date[1] + ' <br> '+ date[2] +'</td>' +
+                                    '<td> <p class="text-primary" style="cursor:pointer" onclick="showModal('+announcement.id+')" >' + announcement.title + '</p></td>' +
+                                    '<td>' + announcement.user + '</td>' +
+
+                                    '</tr>';
+                                tableBody.append(row);
+                            });
+                        }
+                    } else {
+                        console.error(response.message);
+                    }
+
+                    updatePaginationUI();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+
+        function updatePaginationUI() {
+            var paginationContainer = $('.pagination');
+            paginationContainer.empty();
+
+            if (lastPage > 1) {
+                var paginationLinks = '';
+                if (currentPage > 1) {
+                    paginationLinks +=
+                        '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
+                    paginationLinks +=
+                        '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
+                            currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
+                }
+                for (var i = 1; i <= lastPage; i++) {
+                    var activeClass = (i === currentPage) ? 'active' : '';
+                    paginationLinks += '<li class="page-item ' + activeClass +
+                        '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+                if (currentPage < lastPage) {
+                    paginationLinks +=
+                        '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
+                            currentPage + 1) + '"><i class="ti ti-chevron-right ti-xs"></i></a></li>';
+                    paginationLinks +=
+                        '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' +
+                        lastPage +
+                        '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
+                }
+                paginationContainer.append(paginationLinks);
+            }
+        }
+
+        function showModal(id){
+          $.ajax({
+                url: "{{ route('announcement.show', '') }}" + "/" + id,
+                method: 'GET',
+                success: function(response) {
+                  $('#announcementTitle').html(response.announcement.title);
+                  $('#announcementDesc').html(response.announcement.description);
+                  $("#addAnnouncementModal").modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+
+        }
+
+        function showChart(){
+          $("#earningReportsTabsOrders").html('');
+          'use strict';
             (function() {
                 let cardColor, labelColor, shadeColor, legendColor, borderColor;
                 if (isDarkStyle) {
@@ -337,105 +441,6 @@
                 }
 
             })();
-
-        fetchAnnouncementRecords();
-
-        });
-
-
-        function fetchAnnouncementRecords(page = 1) {
-
-            var title = $('#search-input').val();
-            var perPage = $('#perPageSelect').val();
-
-            $.ajax({
-                url: '{{ route('notice.board.ajax') }}',
-                method: 'GET',
-                data: {
-                    page: page,
-                    perPage: perPage,
-                    title: title,
-                },
-                success: function(response) {
-                    var tableBody = $('#tbody');
-                    tableBody.empty();
-
-                    if (response.status === 'success') {
-                        var announcements = response.data;
-                        currentPage = response.current_page;
-                        lastPage = response.last_page;
-
-                        if (announcements && announcements.length > 0) {
-                            $.each(announcements, function(index, announcement) {
-                              let date = announcement.date.split(', ')
-                                var row = '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
-                                    '<td "> ' + date[0] + ', ' + date[1] + ' <br> '+ date[2] +'</td>' +
-                                    '<td> <p class="text-primary" style="cursor:pointer" onclick="showModal('+announcement.id+')" >' + announcement.title + '</p></td>' +
-                                    '<td>' + announcement.user + '</td>' +
-
-                                    '</tr>';
-                                tableBody.append(row);
-                            });
-                        }
-                    } else {
-                        console.error(response.message);
-                    }
-
-                    updatePaginationUI();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-
-
-        function updatePaginationUI() {
-            var paginationContainer = $('.pagination');
-            paginationContainer.empty();
-
-            if (lastPage > 1) {
-                var paginationLinks = '';
-                if (currentPage > 1) {
-                    paginationLinks +=
-                        '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
-                    paginationLinks +=
-                        '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
-                            currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
-                }
-                for (var i = 1; i <= lastPage; i++) {
-                    var activeClass = (i === currentPage) ? 'active' : '';
-                    paginationLinks += '<li class="page-item ' + activeClass +
-                        '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
-                }
-                if (currentPage < lastPage) {
-                    paginationLinks +=
-                        '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
-                            currentPage + 1) + '"><i class="ti ti-chevron-right ti-xs"></i></a></li>';
-                    paginationLinks +=
-                        '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' +
-                        lastPage +
-                        '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
-                }
-                paginationContainer.append(paginationLinks);
-            }
-        }
-
-        function showModal(id){
-          $.ajax({
-                url: "{{ route('announcement.show', '') }}" + "/" + id,
-                method: 'GET',
-                success: function(response) {
-                  $('#announcementTitle').html(response.announcement.title);
-                  $('#announcementDesc').html(response.announcement.description);
-                  $("#addAnnouncementModal").modal('show');
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-
         }
     </script>
 @endsection

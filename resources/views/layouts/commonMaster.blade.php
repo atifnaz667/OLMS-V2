@@ -32,7 +32,7 @@
         }
 
         .quick-access-btn {
-            background-color: #007bff;
+            background-color: #7367f0;
             color: #fff;
             border: none;
             border-radius: 50%;
@@ -89,22 +89,21 @@
     @if (Auth::user())
         @if (Auth::user()->role_id == 4)
             <div class="quick-access">
-                <button id="quick-access-btn" class="quick-access-btn">&#9776;</button>
-                <div class="quick-access-options">
-                    <button data-bs-toggle="modal" data-bs-target="#calculatorModal">Calculator</button>
-                </div>
+                <button id="quick-access-btn" class="quick-access-btn" data-bs-toggle="modal" data-bs-target="#calculatorModal"><i class="fa-solid fa-calculator"></i></button>
+
             </div>
         @endif
     @endif
+    <!-- Modal -->
     <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="calculatorModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen" id="modalClass">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="calculatorModalLabel">Calculator</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="modalBody">
                     <iframe src="https://www.desmos.com/scientific"
                         style="width: 100%; height: 500px; border: none;"></iframe>
                 </div>
@@ -151,6 +150,29 @@
     <!-- Include Scripts -->
     @include('layouts/sections/scripts')
 
+    <script>
+        $(document).ready(function () {
+            changeModalClass(); // Call it when the document is ready.
+
+            $(window).resize(function () {
+                changeModalClass(); // Call it when the window is resized.
+            });
+        });
+        function changeModalClass(){
+            let width = $(document).width(); // Get the width of the document
+            if (width < 797) {
+                $("#modalClass").removeClass('modal-lg');
+                $("#modalClass").addClass('modal-fullscreen');
+                $("#modalBody").addClass('p-1');
+                $("#modalBody").removeClass('modal-body');
+            } else {
+                $("#modalClass").addClass('modal-lg');
+                $("#modalClass").removeClass('modal-fullscreen');
+                $("#modalBody").removeClass('p-1');
+                $("#modalBody").addClass('modal-body');
+            }
+        }
+    </script>
     @yield('script')
 </body>
 
