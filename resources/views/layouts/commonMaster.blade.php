@@ -111,7 +111,7 @@
         </div>
     </div>
     <div class="bs-toast toast toast-ex animate__animated my-2" role="alert" aria-live="assertive" aria-atomic="true"
-        data-bs-delay="2000">
+        data-bs-delay="4000">
         <div class="toast-header">
             <i class="ti ti-bell ti-xs me-2"></i>
             <div class="me-auto fw-semibold">Error</div>

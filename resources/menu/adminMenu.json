@@ -55,10 +55,9 @@
       "slug": "admin/test/list.index"
     },
     {
-      "url": "#",
       "name": "Teacher",
       "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "",
+      "slug": "teacher",
       "submenu": [
         {
           "url": "assigned/students",
@@ -68,7 +67,7 @@
           "closed": true
         }
       ]
-    
+
     },
     {
       "url": "visuals",

@@ -31,10 +31,9 @@
       "slug": "test/list"
     },
     {
-      "url": "#",
-      "name": "My Teacher",
+      "name": "My Teachers",
       "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "",
+      "slug": "my",
       "submenu": [
         {
           "url": "myTeacher/list",
