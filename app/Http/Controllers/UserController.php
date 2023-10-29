@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
+use Cache;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
 use App\Models\Card;
+use App\Models\Note;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -78,7 +82,7 @@ class UserController extends Controller
         $user->username = $validatedData['username'];
         $user->name = $validatedData['full_name'];
         $user->email = $request->email;
-      //  $user->cardno = $validatedData['cardno'];
+        //  $user->cardno = $validatedData['cardno'];
         $user->password = Hash::make($validatedData['password']);
         $user->save();
 
@@ -90,7 +94,7 @@ class UserController extends Controller
       } catch (\Exception $e) {
         // Return error status and message
 
-       // dd($e);
+        // dd($e);
         return response()->json([
           'status' => 'error',
           'message' => 'Failed to store username and password.',
@@ -235,6 +239,89 @@ class UserController extends Controller
   {
     //
   }
+
+  public function notes()
+  {
+
+    $notes = Note::where('user_id', Auth::user()->id)->get();
+    return view('notes.index', ['notes' => $notes]);
+  }
+
+  public function viewNote($id)
+  {
+
+    $note = Note::where('id', $id)->first();
+    return view('notes.view', ['note' => $note]);
+  }
+
+
+  public function updateNote(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'note_name' => 'required',
+      'note' => 'required',
+    ]);
+    if ($validator->fails()) {
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+    }
+    try {
+      $note = Note::find($request->noteId);
+
+      $note->name = $request->note_name;
+      $note->note = $request->note;
+      $note->save();
+      DB::commit();
+      return response()->json(['status' => 'success', 'message' => 'Note updated successfully'], 201);
+    } catch (\Exception $e) {
+      DB::rollBack();
+
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
+    }
+  }
+
+  public function storeNote(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'note_name' => 'required',
+      'note' => 'required',
+    ]);
+    if ($validator->fails()) {
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+    }
+    try {
+      DB::beginTransaction();
+      $insertData = [
+        'user_id' => Auth::user()->id,
+        'name' => $request->note_name,
+        'note' => $request->note,
+      ];
+      Note::insert($insertData);
+
+      DB::commit();
+      return response()->json(['status' => 'success', 'message' => 'Notes created successfully'], 201);
+    } catch (\Exception $e) {
+      DB::rollBack();
+
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $message,
+        ],
+        500
+      );
+    }
+  }
+
   /**
    * get the specified resource from storage.
    */
@@ -281,5 +368,29 @@ class UserController extends Controller
         'message' => 'Failed to assign user. ' . $e->getMessage(),
       ];
     }
+  }
+
+  public function liveStatus($user_id)
+  {
+    // get user data
+    $user = User::find($user_id);
+
+    // check online status
+    if (Cache::has('user-is-online-' . $user->id))
+      $status = 'Online';
+    else
+      $status = 'Offline';
+
+    // check last seen
+    if ($user->last_seen != null)
+      $last_seen = "Active " . Carbon::parse($user->last_seen)->diffForHumans();
+    else
+      $last_seen = "No data";
+
+    // response
+    return response()->json([
+      'status' => $status,
+      'last_seen' => $last_seen,
+    ]);
   }
 }

@@ -147,10 +147,11 @@
                                             <th>Sr#</th>
                                             <th>User</th>
                                             <th>User name</th>
-                                            {{-- <th>Card No.</th> --}}
                                             <th>Role</th>
                                             <th>Card Sr#</th>
                                             <th>Account Status</th>
+                                            <th>Status</th>
+                                            <th>Last Seen</th>
                                             <th>Last Login At</th>
                                             <th>Last Activity At</th>
                                             <th>Action</th>
@@ -160,6 +161,7 @@
                                         @foreach ($users as $key => $user)
                                             <tr>
                                                 <td>{{ $key + 1 }}</td>
+
                                                 <td class="sorting_1">
                                                     <div class="d-flex justify-content-start align-items-center user-name">
                                                         <div class="d-flex flex-column"><a href="#"
@@ -206,6 +208,20 @@
                                                 <td><span class="badge bg-label-secondary"
                                                         text-capitalized="">{{ $user->status }}</span></td>
                                                 <?php  } ?>
+                                                <td>
+                                                @if(Cache::has('user-is-online-' . $user->id))
+                                                <span class="text-success">Online</span>
+                                                @else
+                                                <span class="text-secondary">Offline</span>
+                                                @endif
+                                                </td>
+                                                 <td>
+                                                  @if($user->last_seen != null)
+                                                      {{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}
+                                                  @else
+
+                                                  @endif
+                                                 </td>
                                                 <td>{{ $user->last_login_at }}</td>
                                                 <td>{{ $user->last_activity_at }}</td>
                                                 <td>

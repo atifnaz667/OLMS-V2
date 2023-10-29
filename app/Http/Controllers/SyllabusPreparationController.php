@@ -8,6 +8,7 @@ use App\Models\Chapter;
 use App\Models\Question;
 use App\Models\QuestionType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class SyllabusPreparationController extends Controller
@@ -283,9 +284,18 @@ class SyllabusPreparationController extends Controller
     $board_id = Auth::user()->board_id;
     $class_id = Auth::user()->class_id;
     $book = Book::where('id', $bookId)->first('name');
-    $questionTypes = QuestionType::where('type', '!=', 'long')
-      ->where('type', '!=', 'short')
+     $questionTypes = DB::table('question_types as a')
+      ->join('questions as b', 'a.type', '=', 'b.question_type')
+      ->join('topics as c', 'b.topic_id', '=', 'c.id')
+      ->join('chapters as d', 'c.chapter_id', '=', 'd.id')
+      ->select('a.*')
+      ->where('d.book_id', $bookId)
+      ->where('a.type', '!=', 'long')
+      ->where('a.type', '!=', 'short')
       ->get();
+    // $questionTypes = QuestionType::where('type', '!=', 'long')
+    //   ->where('type', '!=', 'short')
+    //   ->get();
     $chapters = Chapter::where('board_id', $board_id)
       ->where('class_id', $class_id)
       ->where('book_id', $bookId)

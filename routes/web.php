@@ -49,6 +49,16 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('/calculator', function () {
     return view('users.calculator');
   })->name('calculator');
+
+  Route::get('/add-notes', function () {
+    return view('notes.add');
+  })->name('add-notes');
+
+  Route::post('/store-note', [UserController::class, 'storeNote'])->name('store-note');
+  Route::post('/update-note', [UserController::class, 'updateNote'])->name('update-note');
+  Route::get('/view-note/{id}', [UserController::class, 'viewNote'])->name('viewNote');
+
+  Route::get('/notes', [UserController::class, 'notes'])->name('notes');
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
@@ -80,6 +90,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::apiResource('mcq-choice', McqChoiceController::class);
   Route::get('add-mcq-choice', [McqChoiceController::class, 'addMcqChoioce'])->name('add-mcq-choice');
   Route::resource('user', UserController::class);
+
   Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');
   Route::post('assign-user', [UserController::class, 'assignUser'])->name('assign-user');
   Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
@@ -100,6 +111,4 @@ Route::middleware([StaffMiddleware::class])->group(function () {
   Route::get('add-question', [QuestionController::class, 'addQuestion'])->name('add-question');
 
   Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
-
- 
 });

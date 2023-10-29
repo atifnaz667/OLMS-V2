@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Cache;
 
 class LoginController extends Controller
 {
@@ -140,6 +141,7 @@ class LoginController extends Controller
 
   public function logout()
   {
+    Cache::forget('user-is-online-' . auth()->user()->id);
     Auth::logout();
     return redirect()->to('/');
   }

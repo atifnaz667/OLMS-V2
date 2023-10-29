@@ -9,7 +9,7 @@
             <div class="px-3">
               <div class="row d-flex justify-content-center">
 
-                <div class="col-1 ">
+                <div class="col-5 col-sm-3 col-md-1  ">
                   <h3 style="border: 1px solid #d4c0c0;" class="p-3" id="timer">{{ $test->question_time }}</h3>
                   <div >
                   </div>
