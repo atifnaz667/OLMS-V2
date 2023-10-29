@@ -17,6 +17,12 @@
       "name": "Announcements",
       "icon": "menu-icon tf-icons ti ti-presentation",
       "slug": "announcements.index"
+    },
+    {
+      "url": "teacherAssignedStudents/list",
+      "name": "Student List",
+      "icon": "menu-icon tf-icons ti ti-user",
+      "slug": "teacherAssignedStudents/test/list.index"
     }
 
   ]

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
+use Cache;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
@@ -37,14 +39,16 @@ class UserController extends Controller
     if (isset($request->check)) {
       $validatedData = $request->validate([
         'card_no' => 'required|unique:cards',
+        'serial_no' => 'required|unique:cards',
         'expiryDate' => 'required',
-        'validDate' => 'required',
+        // 'validDate' => 'required',
       ]);
       try {
         $card = new Card;
         $card->card_no = $validatedData['card_no'];
+        $card->serial_no = $validatedData['serial_no'];
         $card->expiry_date = $validatedData['expiryDate'];
-        $card->valid_date = $validatedData['validDate'];
+        // $card->valid_date = $validatedData['validDate'];
         $card->save();
 
         // Return success status and message
@@ -180,8 +184,9 @@ class UserController extends Controller
     if (isset($request->card_no)) {
       $card = Card::findOrFail($id);
       $card->card_no = $request->card_no;
+      $card->serial_no = $request->update_serial_no;
       $card->expiry_date = $request->expiry_date;
-      $card->valid_date = $request->valid_date;
+      // $card->valid_date = $request->valid_date;
       $card->save();
 
       return response()->json([
@@ -281,4 +286,28 @@ class UserController extends Controller
       ];
     }
   }
+
+  public function liveStatus($user_id)
+    {
+        // get user data
+        $user = User::find($user_id);
+
+        // check online status
+        if (Cache::has('user-is-online-' . $user->id))
+            $status = 'Online';
+        else
+            $status = 'Offline';
+
+        // check last seen
+        if ($user->last_seen != null)
+            $last_seen = "Active " . Carbon::parse($user->last_seen)->diffForHumans();
+        else
+            $last_seen = "No data";
+
+        // response
+        return response()->json([
+            'status' => $status,
+            'last_seen' => $last_seen,
+        ]);
+    }
 }

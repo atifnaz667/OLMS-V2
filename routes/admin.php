@@ -7,11 +7,13 @@ use App\Http\Controllers\AttemptTestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\authentications\LoginController;
 use App\Http\Controllers\SelfAssessmentController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\VisualController;
+use App\Http\Controllers\NoteController;
 
 $controller_path = 'App\Http\Controllers';
 
@@ -99,10 +101,22 @@ Route::middleware([StudentMiddleware::class])->group(function () {
     'self/assessment/chapters'
   );
 
+  //---------------------------------Notes routes-------------------
+    Route::get('notes', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('notes/ajax', [NoteController::class, 'notesAjax'])->name('notes.ajax');
+    Route::get('notes/create', [NoteController::class, 'create'])->name('notes.create');
+    Route::post('add-notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::put('notes/update/{id}', [NoteController::class, 'update'])->name('notes.update');
+    Route::delete('notes/destroy/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    Route::get('notes/show/{id}', [NoteController::class, 'show'])->name('notes.show');
+
   Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
   Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');
 
   Route::get('notice/board.ajax', [AnnouncementController::class, 'noticeBoard'])->name('notice.board.ajax');
+    //---------------------------------Student teacher and comment list routes-------------------
+    Route::get('myComment/list', [StudentController::class, 'getStudentComment'])->name('myComment/list');
+    Route::get('myTeacher/list', [StudentController::class, 'myTeacherList'])->name('myTeacher/list');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {
@@ -127,4 +141,10 @@ Route::middleware([TeacherMiddleware::class])->group(function () {
     Route::post('add-announcement', [AnnouncementController::class, 'store'])->name('announcement.store');
     Route::put('announcement/update/{id}', [AnnouncementController::class, 'update'])->name('announcement.update');
     Route::delete('announcement/destroy/{id}', [AnnouncementController::class, 'destroy'])->name('announcement.destroy');
+  Route::get('teacherAssignedStudents/list', [TeacherController::class, 'teacherAssignedStudents'])->name('teacherAssignedStudents/list');
+  Route::get('fetchAssignedStudentRecords', [TeacherController::class, 'fetchAssignedStudentRecords'])->name('fetchAssignedStudentRecords');
+  Route::post('saveComment',[TeacherController::class,'saveComment'])->name('saveComment');
+  Route::get('showComments', [TeacherController::class, 'showComments'])->name('showComments');
+  Route::get('editComment', [TeacherController::class, 'editComment'])->name('editComment');
+  Route::post('updateComment',[TeacherController::class,'updateComment'])->name('updateComment');
 });
