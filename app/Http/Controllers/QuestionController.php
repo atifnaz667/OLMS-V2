@@ -43,13 +43,12 @@ class QuestionController extends Controller
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
       $questionType = $results['questionType'];
-
-    }else{
+    } else {
       $results = DropdownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
-    $questionType = $results['questionType'];
+      $questionType = $results['questionType'];
     }
 
 
@@ -82,13 +81,13 @@ class QuestionController extends Controller
     $question_nature = $request->input('nature');
     $searchQuery = $request->input('searchQuery');
 
-    if($user_id == 1){
+    if ($user_id == 1) {
       $questions = Question::orderBy($sort, $sort_order);
-    }else{
-      $questions = Question::orderBy($sort, $sort_order)->where('user_id',$user_id);
+    } else {
+      $questions = Question::orderBy($sort, $sort_order)->where('user_id', $user_id);
     }
 
-     $questions = $questions->where('question_type', '!=', 'mcq')
+    $questions = $questions->where('question_type', '!=', 'mcq')
       ->when($topicId, function ($q) use ($topicId) {
         $q->where('topic_id', $topicId);
       })
@@ -175,13 +174,12 @@ class QuestionController extends Controller
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
       $questionType = $results['questionType'];
-
-    }else{
+    } else {
       $results = DropdownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
-    $questionType = $results['questionType'];
+      $questionType = $results['questionType'];
     }
     return view('questions.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
