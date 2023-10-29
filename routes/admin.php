@@ -12,6 +12,7 @@ use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\VisualController;
 
 $controller_path = 'App\Http\Controllers';
@@ -79,6 +80,13 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('assign/students', [TeacherController::class, 'assignStudents'])->name('assign/students');
   Route::get('get/students/ajax', [TeacherController::class, 'getStudents'])->name('get/students/ajax');
   Route::post('assignStudent/store', [TeacherController::class, 'store'])->name('assignStudent/store');
+
+  // --------------------------------- Upload book Pdf routes------------------------------------
+  Route::get('upload/book/Pdf', [UploadController::class, 'index'])->name('upload/book/Pdf');
+  Route::post('book/upload', [UploadController::class, 'uploadBookFile'])->name('book/upload');
+  Route::get('fetchUploadedBookPdfRecords', [UploadController::class, 'fetchUploadedBookPdfRecords'])->name('fetchUploadedBookPdfRecords');
+  Route::delete('bookPdf/destroy/{id}', [UploadController::class, 'destroy'])->name('bookPdf/destroy');
+
 });
 
 Route::middleware([StudentMiddleware::class])->group(function () {
@@ -107,6 +115,8 @@ Route::middleware([StudentMiddleware::class])->group(function () {
     //---------------------------------Student teacher and comment list routes-------------------
     Route::get('myComment/list', [StudentController::class, 'getStudentComment'])->name('myComment/list');
     Route::get('myTeacher/list', [StudentController::class, 'myTeacherList'])->name('myTeacher/list');
+ // --------------------------------- get Uploaded book Pdf routes------------------------------------
+    Route::get('fetchStudentBookPdfRecords', [UploadController::class, 'fetchStudentBookPdfRecords'])->name('fetchStudentBookPdfRecords');
 });
 
 Route::middleware([ParentMiddleware::class])->group(function () {

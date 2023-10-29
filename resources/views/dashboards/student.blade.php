@@ -20,6 +20,58 @@
             font-size: 40px;
             margin-right: 10px;
         }
+    /* Add your CSS styles for the slider and buttons here */
+    .slider-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .slider {
+        display: flex;
+        flex-wrap: nowrap;
+        transition: all 0.5s ease;
+        justify-content: space-between;
+    }
+
+    .slide {
+        flex-grow: 1; 
+        flex-basis: 200;
+        /* width: 50%;  */
+        text-align: center;
+    }
+
+    .prev-button, .next-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        /* background-color: #007BFF; */
+        /* color: #fff; */
+        /* border: none; */
+        cursor: pointer;
+    }
+
+    .next-button {
+        right: 0;
+    }
+
+    /* @media (max-width: 768px) {
+        .slider {
+        justify-content: center; 
+    }
+        .slide {
+            flex-grow: 1; 
+             flex-basis: 200;
+        }
+
+    } */
+    @media (max-width: 768px) {
+        .slide {
+            flex: 0 0 50%;
+        }
+    }
+</style>
+
     </style>
 @endsection
 @section('vendor-script')
@@ -32,6 +84,42 @@
 
 @section('content')
     {{-- <h4> {{ Auth::user()->role->role }} Home Page</h4> --}}
+
+
+    <div class="card">
+      <h4 class="card-header text-primary">Download Pdf Books</h4>
+      <div class="card-body mx-4">
+      <div class="slider-container">
+      <div class="slider">
+        @forelse ($bookPdfArray as $bookPd)
+            <div class="slide">
+               <h5 class="m-0">
+                         @if ($bookPd->book->file != null)
+                          <img src="files/books/{{ $bookPd->book->file }}" alt="Book Icon"
+                                  style=" height: 8em; width:8em;">
+                            @else
+                         <i class="fa-solid fa-book fa-2xl" style=""></i>
+                        @endif
+                 </h5>
+                <a href="{{ asset('files/booksPdf/' . $bookPd->book_pdf) }}" target="_blank" class="button-link">
+                    <button class="open-pdf-button btn btn-primary btn-sm">
+                        {{ $bookPd->book->name }}
+                    </button>
+                </a>
+            </div>
+        @empty
+            <div class="slide">
+                <p>No books available.</p>
+            </div>
+        @endforelse
+      </div>
+
+      <!-- Previous and Next Buttons -->
+       <button class="btn btn-sm btn-success prev-button">Previous</button>
+      <button class="btn btn-sm btn-success next-button">Next</button>
+    </div>
+    </div>
+    </div>
 
     <div class="row mt-5">
         <div class="col-sm-3 mb-2">
@@ -339,6 +427,7 @@
             })();
 
         fetchAnnouncementRecords();
+        fetchBookPdfRecords();
 
         });
 
@@ -383,6 +472,30 @@
                     }
 
                     updatePaginationUI();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+        function fetchBookPdfRecords() {
+            $.ajax({
+                url: '{{ route('fetchStudentBookPdfRecords') }}',
+                method: 'GET',
+                success: function(response) {
+                            console.log(response);
+                    if (response.status === 'success') {
+                        var bookPdfRecords = response.data;
+
+                        if (bookPdfRecords && bookPdfRecords.length > 0) {
+                            $.each(bookPdfRecords, function(index, bookPdfRecord) {
+                            // i want to from here data to slider
+                            });
+                        }
+                    } else {
+                        console.error(response.message);
+                    }
+
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -438,4 +551,26 @@
 
         }
     </script>
+
+<script>
+    // Add your JavaScript for the slider here
+    const slider = document.querySelector('.slider');
+    const slides = document.querySelectorAll('.slide');
+    let currentIndex = 0;
+
+    document.querySelector('.prev-button').addEventListener('click', () => {
+        currentIndex = (currentIndex - 5 + slides.length) % slides.length;
+        updateSlider();
+    });
+
+    document.querySelector('.next-button').addEventListener('click', () => {
+        currentIndex = (currentIndex + 5) % slides.length;
+        updateSlider();
+    });
+
+    function updateSlider() {
+        const translateValue = -currentIndex * 20 + '%';
+        slider.style.transform = `translateX(${translateValue})`;
+    }
+</script>
 @endsection

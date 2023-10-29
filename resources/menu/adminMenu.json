@@ -83,6 +83,12 @@
       "slug": "announcements.index"
     },
     {
+      "url": "upload/book/Pdf",
+      "name": "Upload Book Pdf",
+      "icon": "menu-icon tf-icons ti ti-book",
+      "slug": "upload/book/Pdf.index"
+    },
+    {
       "url": "suggestion/list",
       "name": "Human Error & Suggestions",
       "icon": "menu-icon tf-icons ti ti-chart-infographic",
