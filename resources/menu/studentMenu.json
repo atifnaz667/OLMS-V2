@@ -19,6 +19,12 @@
       "slug": "pages-misc-error"
     },
     {
+      "url": "notes",
+      "name": "Notes",
+      "icon": "menu-icon tf-icons ti ti-clipboard-text",
+      "slug": "pages-misc-error"
+    },
+    {
       "url": "test/list",
       "name": "Digital Task",
       "icon": "menu-icon tf-icons ti ti-file-certificate",
@@ -43,7 +49,7 @@
           "slug": "myComment/list"
         }
       ]
-    
+
     },
     {
       "url": "suggestion/create",

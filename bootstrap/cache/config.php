@@ -198,7 +198,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'D:\\laragon\\www\\OLMS-V2\\storage\\framework/cache/data',
+        'path' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -399,13 +399,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'D:\\laragon\\www\\OLMS-V2\\storage\\app',
+        'root' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\app',
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'D:\\laragon\\www\\OLMS-V2\\storage\\app/public',
+        'root' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
         'throw' => false,
@@ -425,7 +425,7 @@
     ),
     'links' => 
     array (
-      'D:\\laragon\\www\\OLMS-V2\\public\\storage' => 'D:\\laragon\\www\\OLMS-V2\\storage\\app/public',
+      'D:\\xampp\\htdocs\\OLMS-V2\\public\\storage' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -464,14 +464,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'D:\\laragon\\www\\OLMS-V2\\storage\\logs/laravel.log',
+        'path' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'D:\\laragon\\www\\OLMS-V2\\storage\\logs/laravel.log',
+        'path' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -536,7 +536,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'D:\\laragon\\www\\OLMS-V2\\storage\\logs/laravel.log',
+        'path' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -602,7 +602,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'D:\\laragon\\www\\OLMS-V2\\resources\\views/vendor/mail',
+        0 => 'D:\\xampp\\htdocs\\OLMS-V2\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -709,7 +709,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'D:\\laragon\\www\\OLMS-V2\\storage\\framework/sessions',
+    'files' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -757,9 +757,9 @@
   array (
     'paths' => 
     array (
-      0 => 'D:\\laragon\\www\\OLMS-V2\\resources\\views',
+      0 => 'D:\\xampp\\htdocs\\OLMS-V2\\resources\\views',
     ),
-    'compiled' => 'D:\\laragon\\www\\OLMS-V2\\storage\\framework\\views',
+    'compiled' => 'D:\\xampp\\htdocs\\OLMS-V2\\storage\\framework\\views',
   ),
   'flare' => 
   array (
@@ -836,7 +836,7 @@
     array (
     ),
     'enable_runnable_solutions' => NULL,
-    'remote_sites_path' => 'D:\\laragon\\www\\OLMS-V2',
+    'remote_sites_path' => 'D:\\xampp\\htdocs\\OLMS-V2',
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
     'settings_file_path' => '',
