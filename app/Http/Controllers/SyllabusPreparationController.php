@@ -104,7 +104,22 @@ class SyllabusPreparationController extends Controller
         })
         ->distinct()
         ->get();
-    } else {
+    }elseif ($questionType === 'Visual') {
+      $chapters = Chapter::whereHas('topics', function ($query) {
+          $query->whereHas('visuals');
+        })
+        ->where('book_id', $bookId)
+        ->where('board_id', $board_id)
+        ->where('class_id', $class_id)
+        ->get();
+
+
+      $topics = Topic::join('visuals', 'visuals.topic_id', '=', 'topics.id')
+        ->select('topics.*')
+        ->whereIn('topics.chapter_id', $chapters->pluck('id'))
+        ->distinct()
+        ->get();
+    }else {
       $chapters = Chapter::whereHas('topics', function ($query) {
         $query
           ->join('questions', 'questions.topic_id', '=', 'topics.id')
