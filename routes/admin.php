@@ -110,13 +110,13 @@ Route::middleware([StudentMiddleware::class])->group(function () {
   );
 
   //---------------------------------Notes routes-------------------
-    Route::get('notes', [NoteController::class, 'index'])->name('notes.index');
-    Route::get('notes/ajax', [NoteController::class, 'notesAjax'])->name('notes.ajax');
-    Route::get('notes/create', [NoteController::class, 'create'])->name('notes.create');
-    Route::post('add-notes', [NoteController::class, 'store'])->name('notes.store');
-    Route::put('notes/update/{id}', [NoteController::class, 'update'])->name('notes.update');
-    Route::delete('notes/destroy/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
-    Route::get('notes/show/{id}', [NoteController::class, 'show'])->name('notes.show');
+    // Route::get('notes', [NoteController::class, 'index'])->name('notes.index');
+    // Route::get('notes/ajax', [NoteController::class, 'notesAjax'])->name('notes.ajax');
+    // Route::get('notes/create', [NoteController::class, 'create'])->name('notes.create');
+    // Route::post('add-notes', [NoteController::class, 'store'])->name('notes.store');
+    // Route::put('notes/update/{id}', [NoteController::class, 'update'])->name('notes.update');
+    // Route::delete('notes/destroy/{id}', [NoteController::class, 'destroy'])->name('notes.destroy');
+    // Route::get('notes/show/{id}', [NoteController::class, 'show'])->name('notes.show');
 
   Route::post('get/visuals', [VisualController::class, 'getVisualsForStudent'])->name('get.visuals');
   Route::post('get/visuals/ajax', [VisualController::class, 'getVisualsForStudentAjax'])->name('get.visuals.ajax');

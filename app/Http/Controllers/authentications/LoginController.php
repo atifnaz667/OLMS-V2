@@ -168,6 +168,11 @@ class LoginController extends Controller
         return back()->with(['status' => 'error', 'message' => 'Card Already used']);
       }
     }
+    $password = $request->input('password');
+    $confirm_password = $request->input('confirm_password');
+    if($password != $confirm_password){
+      return back()->with(['status' => 'error', 'message' => 'Passwords do not match!']);
+    }
     $request->type == "Student";
     $rules = [
       'fullName' => 'required',
@@ -197,6 +202,7 @@ class LoginController extends Controller
     $user->card_id = $request->card_id;
     $user->name = $request->fullName;
     $user->email = $request->email;
+    $user->phone_no = $request->phone_no;
     $user->username = $request->username;
     $user->password = Hash::make($password);
     if ($class_id) {

@@ -76,10 +76,22 @@
                                     placeholder="Enter your username" autofocus>
                             </div>
                             <div class="mb-3">
+                                <label for="phone_no" class="form-label">Phone Number</label>
+                                <input required type="text" class="form-control" id="phone_no" name="phone_no"
+                                    placeholder="Enter your phone No" autofocus>
+                            </div>
+                            <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input required type="password" id="password" class="form-control" name="password"
                                     placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                     aria-describedby="password" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <input required type="password" id="confirm_password" class="form-control" name="confirm_password"
+                                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                    aria-describedby="password" />
+                                    <div id="password_error" style="color: red;"></div>
                             </div>
 
                             @if ($type == 'Student')
@@ -141,6 +153,21 @@
                 var message = $("#tostMessage").val();
                 showNotification(status, message);
             }
+            
+            const passwordField = document.getElementById('password');
+            const confirmField = document.getElementById('confirm_password');
+            const passwordError = document.getElementById('password_error');
+
+            function validatePassword() {
+                if (passwordField.value !== confirmField.value) {
+                    passwordError.textContent = "Passwords do not match!";
+                } else {
+                    passwordError.textContent = "";
+                }
+            }
+
+            passwordField.addEventListener('input', validatePassword);
+            confirmField.addEventListener('input', validatePassword);
 
         });
 
@@ -157,5 +184,8 @@
             toastAnimation = new bootstrap.Toast(toastAnimationExample);
             toastAnimation.show();
         }
+
+
+        
     </script>
 @endsection
