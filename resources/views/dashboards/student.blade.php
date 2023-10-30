@@ -35,7 +35,7 @@
     }
 
     .slide {
-        flex-grow: 1; 
+        flex-grow: 1;
         flex-basis: 200;
         /* width: 50%;  */
         text-align: center;
@@ -57,10 +57,10 @@
 
     /* @media (max-width: 768px) {
         .slider {
-        justify-content: center; 
+        justify-content: center;
     }
         .slide {
-            flex-grow: 1; 
+            flex-grow: 1;
              flex-basis: 200;
         }
 
@@ -531,9 +531,8 @@
             })();
 
         fetchAnnouncementRecords();
-        fetchBookPdfRecords();
 
-        });
+        };
 
 
         function fetchAnnouncementRecords(page = 1) {
@@ -576,30 +575,6 @@
                     }
 
                     updatePaginationUI();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-        function fetchBookPdfRecords() {
-            $.ajax({
-                url: '{{ route('fetchStudentBookPdfRecords') }}',
-                method: 'GET',
-                success: function(response) {
-                            console.log(response);
-                    if (response.status === 'success') {
-                        var bookPdfRecords = response.data;
-
-                        if (bookPdfRecords && bookPdfRecords.length > 0) {
-                            $.each(bookPdfRecords, function(index, bookPdfRecord) {
-                            // i want to from here data to slider
-                            });
-                        }
-                    } else {
-                        console.error(response.message);
-                    }
-
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
