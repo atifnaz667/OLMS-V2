@@ -18,12 +18,7 @@
       "icon": "menu-icon tf-icons ti ti-clipboard-text",
       "slug": "pages-misc-error"
     },
-    {
-      "url": "notes",
-      "name": "Notes",
-      "icon": "menu-icon tf-icons ti ti-clipboard-text",
-      "slug": "pages-misc-error"
-    },
+   
     {
       "url": "test/list",
       "name": "Digital Task",
@@ -49,25 +44,7 @@
         }
       ]
     },
-    {
-      "name": "My Teachers",
-      "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "my",
-      "submenu": [
-        {
-          "url": "myTeacher/list",
-          "name": "My Teacher List",
-          "icon": "menu-icon tf-icons ti ti-file",
-          "slug": "myTeacher/list"
-        },
-        {
-          "url": "myComment/list",
-          "name": "Comment List",
-          "icon": "menu-icon tf-icons ti ti-file",
-          "slug": "myComment/list"
-        }
-      ]
-    },
+  
     {
       "url": "notes",
       "name": "Notes",
