@@ -88,6 +88,8 @@ class NoteController extends Controller
      */
     public function store(Request $request)
     {
+
+     
         $rules = array(
           'note' => 'required',
         );
