@@ -243,49 +243,107 @@ class UserController extends Controller
   public function notes()
   {
 
-    $notes = Note::where('user_id', Auth::user()->id)->get();
+    $notes = Note::where('user_id', Auth::user()->id)->paginate(15);
     return view('notes.index', ['notes' => $notes]);
   }
 
+  // public function viewNote($id)
+  // {
+
+  //   $note = Note::where('id', $id)->first();
+  //   return view('notes.view', ['note' => $note]);
+  // }
+
   public function viewNote($id)
   {
+    $note = Note::with('user')->find($id);
+      if (!$note) {
+        return response()->json([
+          'status' => 'error',
+          'message' => 'Invalid Notes',
+        ], 500);
+      }
 
-    $note = Note::where('id', $id)->first();
-    return view('notes.view', ['note' => $note]);
+    return response()->json([
+      'status' => 'success',
+      'message' => 'Notes retrieved successfully',
+      'note' => $note,
+    ]);
   }
 
+  public function updateNote(Request $request, $id)
+    {
 
-  public function updateNote(Request $request)
-  {
-    $validator = Validator::make($request->all(), [
-      'note_name' => 'required',
-      'note' => 'required',
-    ]);
-    if ($validator->fails()) {
-      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
-    }
-    try {
-      $note = Note::find($request->noteId);
+      $note = Note::find($id);
+        if (!$note) {
+          return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid Notes',
+          ], 500);
+        }
+        $rules = array(
+          'update_description' => 'required',
+        );
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+          return response()->json([
+            'status' => 'error',
+            'message' => $validator->errors()->first(),
+          ], 500);
+        }
+        try {
+          DB::transaction(function()use($request, $note){
+            $note->name = $request->note_name;
+            $note->note = $request->update_description;
+            $note->save();
+          });
 
-      $note->name = $request->note_name;
-      $note->note = $request->note;
-      $note->save();
-      DB::commit();
-      return response()->json(['status' => 'success', 'message' => 'Note updated successfully'], 201);
-    } catch (\Exception $e) {
-      DB::rollBack();
+          return response()->json([
+            'status' => 'success',
+            'message' => 'Notes Updated Successfully',
+          ]);
+        } catch (Exception $e) {
+          $message = CustomErrorMessages::getCustomMessage($e);
 
-      $message = CustomErrorMessages::getCustomMessage($e);
-
-      return response()->json(
-        [
+        return response()->json([
           'status' => 'error',
           'message' => $message,
-        ],
-        500
-      );
+        ], 500);
+        }
     }
-  }
+
+
+  // public function updateNote(Request $request)
+  // {
+  //   $validator = Validator::make($request->all(), [
+  //     'note_name' => 'required',
+  //     'note' => 'required',
+  //   ]);
+  //   if ($validator->fails()) {
+  //     return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+  //   }
+  //   try {
+  //     $note = Note::find($request->noteId);
+
+  //     $note->name = $request->note_name;
+  //     $note->note = $request->note;
+  //     $note->save();
+  //     DB::commit();
+  //     return response()->json(['status' => 'success', 'message' => 'Note updated successfully'], 201);
+  //   } catch (\Exception $e) {
+  //     DB::rollBack();
+
+  //     $message = CustomErrorMessages::getCustomMessage($e);
+
+  //     return response()->json(
+  //       [
+  //         'status' => 'error',
+  //         'message' => $message,
+  //       ],
+  //       500
+  //     );
+  //   }
+  // }
 
   public function storeNote(Request $request)
   {

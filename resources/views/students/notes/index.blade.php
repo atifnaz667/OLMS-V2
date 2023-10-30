@@ -37,7 +37,7 @@
                       <hr>
                     </div>
                 </div>
-                
+
                 <div class="row px-3 pb-3">
                   <div class="col-2">
                       <label class="form-label" for="state">Records per Page</label>
@@ -125,7 +125,7 @@
                       <div class="row">
                           <div class="col mb-3">
                               <input type="hidden" id="note_id" name="note_id" />
-                             
+
                           </div>
                       </div>
                       <div class="row g-2">

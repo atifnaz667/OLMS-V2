@@ -24,36 +24,57 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div
-                    class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
-                    <h5 class="card-title mb-sm-0 me-2">Listing</h5>
-                    <div class="action-btns">
-                        <a href="{{ route('add-notes') }}" class="btn btn-primary">Add Record</a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach ($notes as $note)
-                            <div class="col">
-                                <a href="{{ route('viewNote', ['id' => $note->id]) }}">
+        <div class="d-flex justify-content-end">
 
-                                    <div class="d-flex align-items-center" style="flex-direction: column;">
-                                        <div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="2em" viewBox="0 0 384 512">
-                                                <path
-                                                    d="M320 464c8.8 0 16-7.2 16-16V160H256c-17.7 0-32-14.3-32-32V48H64c-8.8 0-16 7.2-16 16V448c0 8.8 7.2 16 16 16H320zM0 64C0 28.7 28.7 0 64 0H229.5c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64z" />
-                                            </svg>
-                                        </div>
-                                        <div class="ml-2 mt-1">{{ $note->name }}</div>
-                                    </div>
-                                </a>
+                        <a href="{{ route('add-notes') }}" class="btn btn-primary mb-3 ">Add Record</a>
+           </div>
+                <div class="row">
+                    @foreach ($notes as $note)
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <a class="btn-icon edit-record" onclick="editNote('{{ $note->id }}')">
+                                        <div class="badge rounded-pill p-2 bg-label-danger mb-2"><i class="fa-regular fa-clipboard fa-2xl"></i></div>
+                                    </a>
+                                    <h5 class="card-title mb-2">{{ substr($note->name, 0, 15) }}</h5>
+
+                                </div>
                             </div>
-                        @endforeach
-                    </div>
-
+                        </div>
+                    @endforeach
                 </div>
+            <div class="col-md-0" style="color: #582120">
+    
             </div>
+
+            <div class="col-md-12 d-flex justify-content-end">
+                <nav aria-label="Page navigation" class="pagination-nav">
+                    <ul class="pagination">
+                        @if ($notes->currentPage() > 1)
+                            <li class="page-item"><a class="page-link pagination-link" href="{{ $notes->previousPageUrl() }}" data-page="{{ $notes->currentPage() - 1 }}">Previous</a></li>
+                        @endif
+
+                        @for ($i = 1; $i <= $notes->lastPage(); $i++)
+                            <li class="page-item {{ $i == $notes->currentPage() ? 'active' : '' }}">
+                                <a class="page-link pagination-link" href="{{ $notes->url($i) }}" data-page="{{ $i }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+
+                        @if ($notes->hasMorePages())
+                            <li class="page-item next"><a class="page-link pagination-link" href="{{ $notes->nextPageUrl() }}" data-page="{{ $notes->currentPage() + 1 }}"><i class="ti ti-chevron-right ti-xs"></i></a></li>
+                            <li class="page-item last"><a class="page-link pagination-link" href="{{ $notes->url($notes->lastPage()) }}" data-page="{{ $notes->lastPage() }}"><i class="ti ti-chevrons-right ti-xs"></i></a></li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
+
+@if ($notes->total() == 0)
+    <div class="col-12 text-center">
+        No record available.
+    </div>
+@endif
+
+            
         </div>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasViewQuestion"
@@ -116,6 +137,47 @@
             </form>
         </div>
     </div>
+
+    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+          <form class="update-class pt-0" id="viewNoteForm">
+              @csrf
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel3">View Note</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+                      <div class="row">
+                          <div class="col mb-3">
+                              <input type="hidden" id="note_id" name="note_id" />
+
+                          </div>
+                      </div>
+
+                      <div class="col mb-3">
+                                <label class="form-label" for="note_name">Name</label>
+
+                                <input class="form-control"  type="text" name="note_name"
+                                    id="note_name">
+                            </div>
+                      <div class="row g-2">
+                          <div class="col mb-0">
+                              <label class="form-label" for="">Note</label>
+                              <textarea required id="update_description" name="update_description" rows="10" class="form-control summernote"></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+
+                      <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Save changes</button>
+                  </div>
+              </div>
+
+      </div>
+      </form>
+  </div>
 @endsection
 
 @section('page2-script')
@@ -401,7 +463,7 @@
                         console.error(response.message);
                     }
 
-                    updatePaginationUI();
+                    
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -474,56 +536,10 @@
             fetchQuestionRecords();
         });
 
-        // Handle pagination click event
-        $(document).on('click', '.pagination-link', function(e) {
-            e.preventDefault();
-            var page = $(this).attr('data-page');
-            if (page !== currentPage) {
-                fetchQuestionRecords(page);
-            }
-        });
+       
 
-        // Update pagination UI
-        function updatePaginationUI() {
-            var paginationContainer = $('.pagination');
-            paginationContainer.empty();
-
-            if (lastPage > 1) {
-                var paginationLinks = '';
-                var maxVisiblePages = 5; // Set the maximum number of visible page links
-
-                if (currentPage > 1) {
-                    paginationLinks +=
-                        '<li class="page-item first"><a class="page-link pagination-link" href="#" data-page="1"><i class="ti ti-chevrons-left ti-xs"></i></a></li>';
-                    paginationLinks +=
-                        '<li class="page-item prev"><a class="page-link pagination-link" href="#" data-page="' + (
-                            currentPage - 1) + '"><i class="ti ti-chevron-left ti-xs"></i></a></li>';
-                }
-
-                var startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-                var endPage = Math.min(lastPage, startPage + maxVisiblePages - 1);
-
-                for (var i = startPage; i <= endPage; i++) {
-                    var activeClass = (i === currentPage) ? 'active' : '';
-                    paginationLinks += '<li class="page-item ' + activeClass +
-                        '"><a class="page-link pagination-link" href="#" data-page="' + i + '">' + i + '</a></li>';
-                }
-
-                if (currentPage < lastPage) {
-                    paginationLinks +=
-                        '<li class="page-item next"><a class="page-link pagination-link" href="#" data-page="' + (
-                            currentPage + 1) + '"><i class="ti ti-chevron-right ti-xs"></i></a></li>';
-                    paginationLinks +=
-                        '<li class="page-item last"><a class="page-link pagination-link" href="#" data-page="' + lastPage +
-                        '"><i class="ti ti-chevrons-right ti-xs"></i></a></li>';
-                }
-
-                paginationContainer.append(paginationLinks);
-            }
-        }
-
-        // Initial fetch and pagination UI update
-        fetchQuestionRecords();
+       
+       
 
         $("#search-input").keypress(function(e) {
 
@@ -531,5 +547,73 @@
                 fetchQuestionRecords();
             }
         });
+          function editNote(id) {
+            $.ajax({
+                url: "{{ route('viewNote', '') }}" + "/" + id,
+                type: 'GET',
+                success: function(response) {
+                    // Update the form fields with the fetched data
+                    $('#update_description').summernote('code', response.note.note);
+                    $('#note_id').val(response.note.id);
+                    $('#note_name').val(response.note.name);
+                    $('#largeModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    // Handle error if necessary
+                }
+            });
+        }
+
+        $('#viewNoteForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var note_id = $('#note_id').val();
+            updateNote(note_id);
+        });
+
+          function updateNote(id) {
+            var _token = '{{ csrf_token() }}';
+            var note_name = $('#note_name').val();
+            var update_description = $('#update_description').val();
+            var formData = {
+              _token: _token,
+                note_name: note_name,
+                update_description: update_description,
+            };
+            $.ajax({
+                url: "{{ route('notes.update', '') }}" + "/" + id,
+                type: 'PUT',
+                data: formData,
+                success: function(response) {
+                    var status = response.status;
+                    var message = response.message;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-success";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                     location.reload(true);
+
+
+
+                },
+                error: function(xhr, status, error) {
+                    var response = JSON.parse(xhr.responseText);
+                    var status = response.status;
+                    var message = response.message;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-warning";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                }
+            });
+        }
     </script>
 @endsection

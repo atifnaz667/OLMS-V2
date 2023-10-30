@@ -55,10 +55,13 @@ Route::middleware([CommonRoutes::class])->group(function () {
   })->name('add-notes');
 
   Route::post('/store-note', [UserController::class, 'storeNote'])->name('store-note');
-  Route::post('/update-note', [UserController::class, 'updateNote'])->name('update-note');
+  //Route::post('/update-note', [UserController::class, 'updateNote'])->name('update-note');
   Route::get('/view-note/{id}', [UserController::class, 'viewNote'])->name('viewNote');
-
+  Route::get('notes/show/{id}', [NoteController::class, 'show'])->name('notes.show');
   Route::get('/notes', [UserController::class, 'notes'])->name('notes');
+  Route::put('notes/update/{id}', [UserController::class, 'updateNote'])->name('notes.update');
+
+
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route
