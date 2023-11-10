@@ -203,10 +203,10 @@ class UserController extends Controller
     ]);
 
     // Update the username if it has changed
-    if ($request->username !== $user->username) {
-      $user->username = $request->username;
-    }
-
+    // if ($request->username !== $user->username) {
+    //   $user->username = $request->username;
+    // }
+     
     // Update the password if it is provided
     if (!is_null($request->password)) {
       $user->password = Hash::make($request->password);
@@ -217,9 +217,9 @@ class UserController extends Controller
     if (!is_null($request->name)) {
       $user->name = $request->name;
     }
-    if (!is_null($request->email)) {
-      $user->email = $request->email;
-    }
+    // if (!is_null($request->email)) {
+    //   $user->email = $request->email;
+    // }
     if (!is_null($request->class_id)) {
       $user->class_id = $request->class_id;
     }
