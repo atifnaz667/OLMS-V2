@@ -185,7 +185,7 @@ class SyllabusPreparationController extends Controller
 
     if ($test_type === 'Objective') {
       $questions = Question::whereIn('topic_id', $topics)
-        ->where([['question_type', 'mcq'],['test_id',null]])
+        ->where([['question_type', 'mcq'], ['test_id', null]])
         ->inRandomOrder()
         ->take($totalQuestions)
         ->with('mcqChoices')
@@ -299,14 +299,14 @@ class SyllabusPreparationController extends Controller
     $board_id = Auth::user()->board_id;
     $class_id = Auth::user()->class_id;
     $book = Book::where('id', $bookId)->first('name');
-     $questionTypes = DB::table('question_types as a')
+    $questionTypes = DB::table('question_types as a')
       ->join('questions as b', 'a.type', '=', 'b.question_type')
       ->join('topics as c', 'b.topic_id', '=', 'c.id')
       ->join('chapters as d', 'c.chapter_id', '=', 'd.id')
       ->select('a.*')
       ->where('d.book_id', $bookId)
-      ->where('a.type', '!=', 'long')
-      ->where('a.type', '!=', 'short')
+      ->whereNotIn('a.type', ['long', 'short'])
+      ->distinct()
       ->get();
     // $questionTypes = QuestionType::where('type', '!=', 'long')
     //   ->where('type', '!=', 'short')
