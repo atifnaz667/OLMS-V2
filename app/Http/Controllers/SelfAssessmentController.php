@@ -109,7 +109,7 @@ class SelfAssessmentController extends Controller
         ->get();
 
       $cols .= '<div class="col-sm-12 mb-3">
-                 <input style="margin-right:1em" onclick="selectCheckbox()" type="checkBox" hidden name="chapters[]" class="form-check-input checkboxes" value="' . $chapter->id . '"> <strong>Unit: ' . $chapter->name . '</strong>
+                 <input style="margin-right:1em" onclick="checkTopics('.$chapter->id.')" type="checkBox"  name="chapters[]" class="form-check-input checkboxes chap'.$chapter->id.'" value="' . $chapter->id . '"> <strong>' . $chapter->name . '</strong>
              </div>';
 
       $topicsInRow = 0;
@@ -119,7 +119,7 @@ class SelfAssessmentController extends Controller
           $cols .= '</div><div class="col-sm-12">';
         }
         $cols .= '<div class="col-sm-4 mb-2" style="display: inline-block; margin-right: 10px;">
-                     <input style="margin-right:1em"  onclick="selectCheckbox()" type="checkBox" name="topics[]" class="form-check-input checkboxes" value="' . $topic->id . '"> ' . $topic->name . '
+                     <input style="margin-right:1em"  onclick="selectCheckbox()" type="checkBox" name="topics[]" class="form-check-input checkboxes topic'.$chapter->id.'" value="' . $topic->id . '"> ' . $topic->name . '
                  </div>';
         $topicsInRow++;
       }
@@ -142,7 +142,7 @@ class SelfAssessmentController extends Controller
   {
     $rules = array(
       'totalQuestions' => 'required|int|max:100',
-      'chapters' => 'required',
+      'topics' => 'required',
       'book' => 'required',
     );
     $validator = Validator::make($request->all(), $rules);

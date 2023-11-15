@@ -108,6 +108,16 @@
             }
         }
 
+        function checkTopics(id){
+          var isChecked = $('.chap'+id).prop('checked');
+            if (isChecked == 1) {
+              $('.topic'+id).prop('checked', true);
+            } else {
+              $('.topic'+id).prop('checked', false);
+            }
+            selectCheckbox();
+        }
+
         $(document).ready(function() {
             var status = $("#tostStatus").val();
             if (status) {
