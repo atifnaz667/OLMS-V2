@@ -33,10 +33,14 @@ class HomePage extends Controller
         ]);
       } else {
         $books = Book::getBooksForParent($user_id);
-        $bookPdf = BookPdf::with('book')->where([['board_id',Auth::user()->board_id],['class_id',Auth::user()->class_id]])->get();
         $bookNames = json_encode($books->pluck('name'));
+        $testCount = Test::
+        where('test_type','!=','Self')
+        ->where('created_for',$user_id)
+        ->where('status','Pending')->count();
         return view('dashboards.student', [
-          'bookNames' => $bookNames,'bookPdfArray'=>$bookPdf
+          'bookNames' => $bookNames,
+          'testCount' => $testCount,
         ]);
       }
     } elseif ($role_id == 2) {

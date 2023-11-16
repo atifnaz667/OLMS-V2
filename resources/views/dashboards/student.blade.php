@@ -85,6 +85,42 @@
 @section('content')
     {{-- <h4> {{ Auth::user()->role->role }} Home Page</h4> --}}
 
+
+    <div class="card">
+      <h4 class="card-header text-primary">Download Pdf Books</h4>
+      <div class="card-body mx-4">
+      <div class="slider-container">
+      <div class="slider">
+        @forelse ($bookPdfArray as $bookPd)
+            <div class="slide">
+               <h5 class="m-0">
+                         @if ($bookPd->book->file != null)
+                          <img src="files/books/{{ $bookPd->book->file }}" alt="Book Icon"
+                                  style=" height: 8em; width:8em;">
+                            @else
+                         <i class="fa-solid fa-book fa-2xl" style=""></i>
+                        @endif
+                 </h5>
+                <a href="{{ asset('files/booksPdf/' . $bookPd->book_pdf) }}" target="_blank" class="button-link">
+                    <button class="open-pdf-button btn btn-primary btn-sm">
+                        {{ $bookPd->book->name }}
+                    </button>
+                </a>
+            </div>
+        @empty
+            <div class="slide">
+                <p>No books available.</p>
+            </div>
+        @endforelse
+      </div>
+
+      <!-- Previous and Next Buttons -->
+       <button class="btn btn-sm btn-success prev-button">Previous</button>
+      <button class="btn btn-sm btn-success next-button">Next</button>
+    </div>
+    </div>
+    </div>
+
     <div class="row mt-5">
         <div class="col-sm-3 mb-2">
             <a href="syllabus-preparation" class="form-control btn btn-success custom-btn">
@@ -98,6 +134,7 @@
         </div>
         <div class="col-sm-3 mb-2">
             <a href="test/list" class="form-control btn btn-warning custom-btn">
+              <span class="badge badge-center  bg-dark" style="position: absolute; top:1; right:1;">{{ $testCount }}</span>
                 <i class="menu-icon tf-icons ti ti-file-certificate"></i> Digital Task
             </a>
         </div>
@@ -154,7 +191,7 @@
     </div>
 
     <div class="card" style="border-left:3px solid #7367f0; border-right:3px solid #7367f0">
-      <h4 class="card-header text-center text-primary">Notice Board</h4>
+      <h4 class="card-header text-center "><b>Notice Board</b></h4>
       <div class="table-responsive text-nowrap mb-5">
         <table class="table table-hover">
           <thead>
@@ -205,52 +242,7 @@
         });
 
 
-        function fetchAnnouncementRecords(page = 1) {
 
-            var title = $('#search-input').val();
-            var perPage = $('#perPageSelect').val();
-
-            $.ajax({
-                url: '{{ route('notice.board.ajax') }}',
-                method: 'GET',
-                data: {
-                    page: page,
-                    perPage: perPage,
-                    title: title,
-                },
-                success: function(response) {
-                    var tableBody = $('#tbody');
-                    tableBody.empty();
-
-                    if (response.status === 'success') {
-                        var announcements = response.data;
-                        currentPage = response.current_page;
-                        lastPage = response.last_page;
-
-                        if (announcements && announcements.length > 0) {
-                            $.each(announcements, function(index, announcement) {
-                              let date = announcement.date.split(', ')
-                                var row = '<tr>' +
-                                    '<td>' + (index + 1) + '</td>' +
-                                    '<td "> ' + date[0] + ', ' + date[1] + ' <br> '+ date[2] +'</td>' +
-                                    '<td> <p class="text-primary" style="cursor:pointer" onclick="showModal('+announcement.id+')" >' + announcement.title + '</p></td>' +
-                                    '<td>' + announcement.user + '</td>' +
-
-                                    '</tr>';
-                                tableBody.append(row);
-                            });
-                        }
-                    } else {
-                        console.error(response.message);
-                    }
-
-                    updatePaginationUI();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
 
 
         function updatePaginationUI() {
@@ -527,7 +519,7 @@
                                 var row = '<tr>' +
                                     '<td>' + (index + 1) + '</td>' +
                                     '<td "> ' + date[0] + ', ' + date[1] + ' <br> '+ date[2] +'</td>' +
-                                    '<td> <p class="text-primary" style="cursor:pointer" onclick="showModal('+announcement.id+')" >' + announcement.title + '</p></td>' +
+                                    '<td> <p class="text-primary " style="cursor:pointer" onclick="showModal('+announcement.id+')" ><b>' + announcement.title + '&nbsp;&nbsp;&nbsp;&nbsp; </b><i class="fa-solid fa-eye"></i></p></td>' +
                                     '<td>' + announcement.user + '</td>' +
 
                                     '</tr>';

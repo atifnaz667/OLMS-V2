@@ -61,6 +61,11 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('/notes', [UserController::class, 'notes'])->name('notes');
   Route::put('notes/update/{id}', [UserController::class, 'updateNote'])->name('notes.update');
 
+  Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
+
+  Route::resource('user', UserController::class);
+
+
 
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
@@ -92,11 +97,11 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   Route::apiResource('mcq-choice', McqChoiceController::class);
   Route::get('add-mcq-choice', [McqChoiceController::class, 'addMcqChoioce'])->name('add-mcq-choice');
-  Route::resource('user', UserController::class);
+
 
   Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');
   Route::post('assign-user', [UserController::class, 'assignUser'])->name('assign-user');
-  Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
+ 
   Route::resource('assignRole', AssignRoleController::class);
   Route::get('edit-assignRole', [AssignRoleController::class, 'editUser'])->name('edit-assignRole');
 });
