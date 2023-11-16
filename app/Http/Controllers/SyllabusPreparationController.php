@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\BookPdf;
 use App\Models\Topic;
 use App\Models\Chapter;
 use App\Models\Question;
@@ -31,7 +32,10 @@ class SyllabusPreparationController extends Controller
       })
       ->get()
       ->pluck('book');
-    return view('syllabus-preparation.list', ['books' => $books]);
+
+      $bookPdf = BookPdf::with('book')->where([['board_id',Auth::user()->board_id],['class_id',Auth::user()->class_id]])->get();
+
+    return view('syllabus-preparation.list', ['books' => $books,'bookPdf'=>$bookPdf]);
   }
   public function fetchData($bookId, Request $request)
   {
