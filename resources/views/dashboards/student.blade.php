@@ -84,43 +84,6 @@
 
 @section('content')
     {{-- <h4> {{ Auth::user()->role->role }} Home Page</h4> --}}
-
-
-    <div class="card">
-      <h4 class="card-header text-primary">Download Pdf Books</h4>
-      <div class="card-body mx-4">
-      <div class="slider-container">
-      <div class="slider">
-        @forelse ($bookPdfArray as $bookPd)
-            <div class="slide">
-               <h5 class="m-0">
-                         @if ($bookPd->book->file != null)
-                          <img src="files/books/{{ $bookPd->book->file }}" alt="Book Icon"
-                                  style=" height: 8em; width:8em;">
-                            @else
-                         <i class="fa-solid fa-book fa-2xl" style=""></i>
-                        @endif
-                 </h5>
-                <a href="{{ asset('files/booksPdf/' . $bookPd->book_pdf) }}" target="_blank" class="button-link">
-                    <button class="open-pdf-button btn btn-primary btn-sm">
-                        {{ $bookPd->book->name }}
-                    </button>
-                </a>
-            </div>
-        @empty
-            <div class="slide">
-                <p>No books available.</p>
-            </div>
-        @endforelse
-      </div>
-
-      <!-- Previous and Next Buttons -->
-       <button class="btn btn-sm btn-success prev-button">Previous</button>
-      <button class="btn btn-sm btn-success next-button">Next</button>
-    </div>
-    </div>
-    </div>
-
     <div class="row mt-5">
         <div class="col-sm-3 mb-2">
             <a href="syllabus-preparation" class="form-control btn btn-success custom-btn">
