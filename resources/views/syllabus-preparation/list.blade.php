@@ -24,11 +24,52 @@
     }
 </style>
 @section('content')
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <h4 class="fw-bold py-3 mb-2">
+    Books Pdf
+</h4>
+    <div class="card">
+    <!-- <h4 class="card-header text-primary">Books Pdf</h4> -->
+    <!-- <div class="container"> -->
+    <div id="carouselExampleIndicators" class="carousel slide ml-5" data-ride="carousel" style="height: 200px;">
+        <div class="carousel-inner">
+            @foreach ($bookPdf->chunk(3) as $chunk)
+                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                    <div class="row justify-content-center">
+                    @foreach ($chunk as $bookPd)
+                        <div class="col-md-4">
+                            <div class="d-md-flex">
+                                <img class="d-block w-100" src="{{ asset('files/books/' . $bookPd->book->file) }}"
+                                    alt="{{ $bookPd->book->name }}" style="max-height: 200px; max-width: 350px;">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5 style="color: black;">{{ $bookPd->book->name }}</h5>
+                                    <a href="{{ asset('files/booksPdf/' . $bookPd->book_pdf) }}" class="button-link" target="_blank" style="color: blue;">
+                                        View Book
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon  text-primary" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon btn-primary" aria-hidden="true"></span>
+            <span class="sr-only  ">Next</span>
+        </a>
+    </div>
+</div>
     <h4 class="fw-bold py-3 mb-2">
 
         Preparation
     </h4>
-
     <!-- The modal -->
     <div class="modal fade" id="chapterModal" tabindex="-1" aria-labelledby="chapterModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl">
@@ -358,4 +399,9 @@
             });
         });
     </script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 @endsection
