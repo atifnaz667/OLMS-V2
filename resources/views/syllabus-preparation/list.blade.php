@@ -3,7 +3,10 @@
 @endphp
 
 @extends('layouts/layoutMaster')
+@section('vendor-style')
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+@endsection
 @section('title', 'My Digital Bag')
 <style>
     .card-header.header-elements,
@@ -24,9 +27,7 @@
     }
 </style>
 @section('content')
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <h4 class="fw-bold py-3 mb-2">
     Books Pdf
 </h4>
@@ -400,7 +401,7 @@
         });
     </script>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
