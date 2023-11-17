@@ -180,6 +180,43 @@ class UserController extends Controller
   /**
    * Update the specified resource in storage.
    */
+  public function updateUserInfo(Request $request)
+  {
+    $rules = [
+      'name' => 'required|min:5',
+    ];
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+    }
+
+    $user = User::find(Auth::user()->id);
+
+    if (isset($request->oldPassword)) {
+      if(Hash::check($request->oldPassword, $user->password)){
+        $rules = [
+          'password' => 'required|min:5',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
+          return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
+        }
+        $user->password = Hash::make($request->password);
+      }else{
+        return response()->json(['status' => 'error', 'message' => 'Incorrect Old Password'], 400);
+      }
+    }
+    $user->name = $request->name;
+    $user->save();
+
+    return response()->json([
+      'status' => 'success',
+      'message' => 'Info updated successfully.',
+    ]);
+  }
+  /**
+   * Update the specified resource in storage.
+   */
   public function update(Request $request, $id)
   {
     if (isset($request->card_no)) {
@@ -206,7 +243,7 @@ class UserController extends Controller
     // if ($request->username !== $user->username) {
     //   $user->username = $request->username;
     // }
-     
+
     // Update the password if it is provided
     if (!is_null($request->password)) {
       $user->password = Hash::make($request->password);

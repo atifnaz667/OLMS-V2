@@ -62,6 +62,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::put('notes/update/{id}', [UserController::class, 'updateNote'])->name('notes.update');
 
   Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
+  Route::put('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
 
   Route::resource('user', UserController::class);
 
@@ -101,7 +102,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');
   Route::post('assign-user', [UserController::class, 'assignUser'])->name('assign-user');
- 
+
   Route::resource('assignRole', AssignRoleController::class);
   Route::get('edit-assignRole', [AssignRoleController::class, 'editUser'])->name('edit-assignRole');
 });

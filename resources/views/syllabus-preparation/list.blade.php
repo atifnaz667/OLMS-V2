@@ -4,8 +4,19 @@
 
 @extends('layouts/layoutMaster')
 @section('vendor-style')
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="{{asset('assets/vendor/libs/swiper/swiper.css')}}" />
+@endsection
 
+@section('page-style')
+<link rel="stylesheet" href="{{asset('assets/vendor/css/pages/ui-carousel.css')}}" />
+@endsection
+
+@section('vendor-script')
+<script src="{{asset('assets/vendor/libs/swiper/swiper.js')}}"></script>
+@endsection
+
+@section('page-script')
+<script src="{{asset('assets/js/ui-carousel.js')}}"></script>
 @endsection
 @section('title', 'My Digital Bag')
 <style>
@@ -31,7 +42,7 @@
     <h4 class="fw-bold py-3 mb-2">
     Books Pdf
 </h4>
-    <div class="card">
+    {{-- <div class="card">
     <!-- <h4 class="card-header text-primary">Books Pdf</h4> -->
     <!-- <div class="container"> -->
     <div id="carouselExampleIndicators" class="carousel slide ml-5" data-ride="carousel" style="height: 200px;">
@@ -66,7 +77,26 @@
             <span class="sr-only  ">Next</span>
         </a>
     </div>
-</div>
+</div> --}}
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div class="swiper" id="swiper-3d-coverflow-effect">
+          <div class="swiper-wrapper">
+            @foreach ($bookPdf as $bookPdf)
+              <div class="swiper-slide" style="background-image:url({{ asset('files/books/' . $bookPdf->book->file) }})">
+                <a href="{{ asset('files/booksPdf/' . $bookPdf->book_pdf) }}"  target="_blank" style="color:white; font-weight:bold; background-color:black">
+                {{ $bookPdf->book->name }}
+                </a>
+              </div>
+            </a>
+            @endforeach
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+    </div>
+
+
     <h4 class="fw-bold py-3 mb-2">
 
         Preparation
@@ -401,8 +431,5 @@
         });
     </script>
 
-{{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 @endsection
