@@ -89,15 +89,16 @@ class UserController extends Controller
         // Return success status and message
         return response()->json([
           'status' => 'success',
-          'message' => 'Username and password stored successfully.',
+          'message' => 'User created successfully.',
         ]);
       } catch (\Exception $e) {
         // Return error status and message
 
         // dd($e);
+        $message = CustomErrorMessages::getCustomMessage($e);
         return response()->json([
           'status' => 'error',
-          'message' => 'Failed to store username and password.',
+          'message' => $message,
         ]);
       }
     }
