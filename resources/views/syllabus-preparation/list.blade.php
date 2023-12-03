@@ -83,7 +83,7 @@
         <div class="swiper" id="swiper-3d-coverflow-effect">
           <div class="swiper-wrapper">
             @foreach ($bookPdf as $bookPdf)
-              <div class="swiper-slide" style="background-image:url({{ asset('files/books/' . $bookPdf->book->file) }})">
+              <div class="swiper-slide" style="width: 200px; height: 250px; background-image:url({{ asset('files/books/' . $bookPdf->book->file) }})">
                 <a href="{{ asset('files/booksPdf/' . $bookPdf->book_pdf) }}"  target="_blank" style="color:white; font-weight:bold; background-color:black">
                 {{ $bookPdf->book->name }}
                 </a>

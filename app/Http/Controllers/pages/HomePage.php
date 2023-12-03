@@ -41,6 +41,7 @@ class HomePage extends Controller
         return view('dashboards.student', [
           'bookNames' => $bookNames,
           'testCount' => $testCount,
+          // 'testCount' => 0,
         ]);
       }
     } elseif ($role_id == 2) {
