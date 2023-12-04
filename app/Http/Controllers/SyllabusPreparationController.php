@@ -179,6 +179,7 @@ class SyllabusPreparationController extends Controller
    */
   public function show(Request $request)
   {
+    // return  $request->totalLongQuestions;
     $book_id = $request->bookId;
     $book = Book::findOrFail($book_id);
     $test_type = $request->testType;
@@ -266,6 +267,8 @@ class SyllabusPreparationController extends Controller
       'totalQuestions' => $totalQuestions,
       'questions' => $questions,
       'shortQuestions' => $shortQuestions,
+      'totalShortQuestions' => $totalShortQuestions,
+      'totalLongQuestions' => $totalLongQuestions,
     ]);
     $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     $response->header('Pragma', 'no-cache');

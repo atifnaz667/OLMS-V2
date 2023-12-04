@@ -41,14 +41,19 @@
     <div class="card mb-3">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#form-tabs-short" role="tab"
-                        aria-selected="true">Short Question</button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link " data-bs-toggle="tab" data-bs-target="#form-tabs-long" role="tab"
-                        aria-selected="false">Long Question</button>
-                </li>
+              <li class="nav-item">
+                @if($totalShortQuestions > 0)
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#form-tabs-short" role="tab"
+                      aria-selected="true">Short Question</button>
+              </li>
+              @endif
+
+              <li class="nav-item">
+                @if($totalLongQuestions > 0)
+                  <button class="nav-link " data-bs-toggle="tab" data-bs-target="#form-tabs-long" role="tab"
+                      aria-selected="false">Long Question</button>
+                      @endif
+              </li>
             </ul>
         </div>
 
@@ -59,8 +64,16 @@
                     <div class="row mt-4">
                         <div class="col">
                             <div class="card">
+
                                 <div class="card-body">
-                                    <h5 class="card-title">Q1.{{ $questionIndex }} {!! $question->description !!}</h5>
+                                  <h5 class="card-title accordion-header" >
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionWithIcon-{{$loop->index + 1}}" aria-expanded="false">
+
+                                      Q1.{{ $questionIndex }} {!! $question->description !!}
+                                    </button>
+                                    {{-- Q1.{{ $questionIndex }} {!! $question->description !!} --}}
+                                  </h5>
+                                  <hr>
                                     <div class="row">
                                         <div class="col-6">
                                             <ul class="list-group">
@@ -94,15 +107,25 @@
                                                 @endforeach
                                             </ul>
                                         </div>
+                                        <div id="accordionWithIcon-{{$loop->index + 1}}" class="card mt-3 accordion-collapse collapse" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Answer:</h5>
+                                                {!! $question->answer->answer !!}
+                                                @if ($question->answer->image)
+                                                    <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
-                                        id="btn{{ $questionIndex }}">Show Answer</button>
+
+                                    {{-- <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
+                                        id="btn{{ $questionIndex }}">Show Answer</button> --}}
                                 </div>
                             </div>
 
                             <!-- Answer Card (Hidden by default) -->
-                            <div class="card mt-3 d-none" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
+                            {{-- <div class="card mt-3 d-none" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
                                 <div class="card-body">
                                     <h5 class="card-title">Answer:</h5>
                                     {!! $question->answer->answer !!}
@@ -110,7 +133,7 @@
                                         <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @php
@@ -132,7 +155,16 @@
                         <div class="col">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Q.{{ $i }} {!! $question->description !!}</h5>
+                                  <h5 class="card-title">
+
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionWithIconn-{{$loop->index + 1}}" aria-expanded="false">
+
+                                      Q.{{ $i }} {!! $question->description !!}
+                                    </button>
+
+                                  </h5>
+                                  <hr>
+                                    {{-- <h5 class="card-title">Q.{{ $i }} {!! $question->description !!}</h5> --}}
                                     <div class="row">
                                         <div class="col-6">
                                             <ul class="list-group">
@@ -150,15 +182,27 @@
                                                 @endforeach
                                             </ul>
                                         </div>
+                                        <div  style="border:1px solid #7367f0;" id="accordionWithIconn-{{$loop->index + 1}}" class="card mt-3 accordion-collapse collapse" id="accordionWithIconn-{{$loop->index + 1}}"
+                                       >
+                                          <div class="card-body">
+                                              <h5 class="card-title">Answer:</h5>
+                                              {!! $question->answer->answer !!}
+                                              @if ($question->answer->image)
+                                                  <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
+                                              @endif
+                                          </div>
+                                      </div>
                                     </div>
 
-                                    <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
-                                        id="btn{{ $questionIndex }}">Show Answer</button>
+
+                                    {{-- <button class="btn btn-primary mt-3 mb-3" onclick="toggleAnswer({{ $questionIndex }})"
+                                        id="btn{{ $questionIndex }}">Show Answer</button> --}}
                                 </div>
                             </div>
 
                             <!-- Answer Card (Hidden by default) -->
-                            <div class="card mt-3 d-none" style="border:1px solid #7367f0;" id="answer{{ $questionIndex }}">
+
+                            {{-- <div id="accordionWithIconn-{{$loop->index + 1}}" class="card mt-3 accordion-collapse collapse">
                                 <div class="card-body">
                                     <h5 class="card-title">Answer:</h5>
                                     {!! $question->answer->answer !!}
@@ -166,7 +210,7 @@
                                         <img src="data:image/png;base64,{{ $question->answer->image }}" alt="Answer Image">
                                     @endif
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     @php
