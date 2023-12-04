@@ -17,9 +17,6 @@
                     <div
                         class="card-header sticky-element bg-label-secondary d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                         <h5 class="card-title mb-sm-0 me-2">Upload Book Pdf</h5>
-                        <!-- <div class="action-btns">
-                            <a href="{{ route('chapter.index') }}" class="btn btn-label-primary me-3">Back</a>
-                        </div> -->
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -31,7 +28,6 @@
                                     @foreach ($boards as $board)
                                         <option value="{{ $board->id }}">{{ $board->name }}</option>
                                     @endforeach
-
                                 </select>
                             </div>
                             <div class="col-md">
@@ -54,14 +50,27 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="row mt-3">
                             <div class="col-md">
                                 <label class="form-label" for="book_file">Upload Book Pdf</label>
-                                <input type="file" class="form-control" id="book_file" name="book_file" placeholder="Full Name" />
+                                <input type="file" class="form-control" id="book_file" name="book_file"
+                                    placeholder="Full Name" />
+                            </div>
+                            <div class="col-md">
+                                <label class="form-label" for="book_link">Upload Book Pdf from Link</label>
+                                <input type="text" class="form-control" id="book_link" name="book_link"
+                                    placeholder="Enter PDF link">
+                            </div>
+                            <div class="col-md">
+                                <label class="form-label" for="bookIcon">Book Icon</label>
+                                <input type="file" class="form-control" id="bookIcon" name="bookIcon">
                             </div>
                         </div>
 
                         <div
-                            class="card-header sticky-element  d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
+                            class="card-header sticky-element d-flex justify-content-sm-between align-items-sm-center flex-column flex-sm-row">
                             <h5 class="card-title mb-sm-0 me-2"></h5>
                             <div class="action-btns">
                                 <button type="button" id="submitBookPdf" class="btn btn-primary">Submit</button>
@@ -74,27 +83,28 @@
         </div>
         <br>
     </form>
+
     <!-- /Form Repeater -->
     <div class="table-responsive text-nowrap">
-                    <table class="table">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Sr#</th>
-                                <th>Board</th>
-                                <th>Book</th>
-                                <th>Class</th>
-                                <!-- <th>Book Pdf</th> -->
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                                       
-                         </tbody>
-                    </table>
-                </div>
-                <nav aria-label="Page navigation" class="pagination-nav">
-                    <ul class="pagination"></ul>
-                </nav>
+        <table class="table">
+            <thead class="table-light">
+                <tr>
+                    <th>Sr#</th>
+                    <th>Board</th>
+                    <th>Book</th>
+                    <th>Class</th>
+                    <!-- <th>Book Pdf</th> -->
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+
+            </tbody>
+        </table>
+    </div>
+    <nav aria-label="Page navigation" class="pagination-nav">
+        <ul class="pagination"></ul>
+    </nav>
 
 @endsection
 
@@ -109,29 +119,49 @@
                     form.addClass('was-validated');
                     return;
                 }
-                var file_data = $('#book_file').prop('files')[0];
-                var board_id = $('#board_id').val();
-                var book_id = $('#book_id').val();
-                var class_id = $('#class_id').val();
-                // var form_data = new FormData();
+
                 var formData = new FormData();
-                formData.append('file', file_data);
-                formData.append('book_id', book_id);
-                formData.append('class_id', class_id);
-                formData.append('board_id', board_id);
-                // formData.append('file', file_data);
-                 console.log(file_data);
+                formData.append('book_id', $('#book_id').val());
+                formData.append('class_id', $('#class_id').val());
+                formData.append('board_id', $('#board_id').val());
+                formData.append('bookIcon', $('#bookIcon').val());
+                if ($('#bookIcon')[0].files.length > 0) {
+                    var file_data = $('#bookIcon').prop('files')[0];
+                    formData.append('bookIcon', file_data);
+                } else
+                    formData.append('bookIcon', null);
+
+                // Check if a file is provided
+                if ($('#book_file')[0].files.length > 0) {
+                    var file_data = $('#book_file').prop('files')[0];
+                    formData.append('file', file_data);
+                } else if ($('#book_link').val() !== '') {
+                    var pdfLink = $('#book_link').val();
+                    formData.append('pdf_link', pdfLink);
+                } else {
+                    $('.toast-ex .fw-semibold').text('error');
+                    $('.toast-ex .toast-body').text('Please upload a file or provide a link.');
+                    selectedType = "text-warning";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                    return;
+                }
+
+
                 $.ajax({
                     headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     url: '{{ route('book/upload') }}',
                     method: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                 console.log(response);
+                        console.log(response);
 
                         $('#bookUploadForm [data-repeater-item]').remove();
                         var status = response.status;
@@ -165,44 +195,46 @@
                 });
             });
 
+
             function fetchUploadedBookPdfRecords() {
-            var book_id = $('#book_id').val();
-            var class_id = $('#class_id').val();
-            var board_id = $('#board_id').val();
-            var check = "ajax";
-            $.ajax({
-                url: '{{ route('fetchUploadedBookPdfRecords') }}',
-                method: 'GET',
-                // data: {
-                //     book_id: book_id,
-                //     class_id: class_id,
-                //     board_id: board_id,
-                //     check: check,
-                //     page: page,
-                //     perPage: perPage
-                // },
-                success: function(response) {
-                    // console.log(response);
+                var book_id = $('#book_id').val();
+                var class_id = $('#class_id').val();
+                var board_id = $('#board_id').val();
+                var check = "ajax";
+                $.ajax({
+                    url: '{{ route('fetchUploadedBookPdfRecords') }}',
+                    method: 'GET',
+                    // data: {
+                    //     book_id: book_id,
+                    //     class_id: class_id,
+                    //     board_id: board_id,
+                    //     check: check,
+                    //     page: page,
+                    //     perPage: perPage
+                    // },
+                    success: function(response) {
+                        // console.log(response);
 
-                    var tableBody = $('.table tbody');
-                    tableBody.empty();
+                        var tableBody = $('.table tbody');
+                        tableBody.empty();
 
-                    if (response.status === 'success') {
-                        var fetchRecords = response.data;
-                        currentPage = response.current_page;
-                        lastPage = response.last_page;
-                        console.log(fetchRecords)
+                        if (response.status === 'success') {
+                            var fetchRecords = response.data;
+                            currentPage = response.current_page;
+                            lastPage = response.last_page;
+                            console.log(fetchRecords)
 
-                        if (fetchRecords && fetchRecords.length > 0) {
+                            if (fetchRecords && fetchRecords.length > 0) {
 
-                            $.each(fetchRecords, function(index, fetchRecord) {
-                            var pdfFilePath = baseUrl + 'files/booksPdf/' + fetchRecord.book_pdf;
-                            var row = `<tr>
+                                $.each(fetchRecords, function(index, fetchRecord) {
+                                    var pdfFilePath = baseUrl + 'files/booksPdf/' + fetchRecord
+                                        .book_pdf;
+                                    var row = `<tr>
                                 <td>${index + 1}</td>
                                 <td>${fetchRecord.board}</td>
                                 <td>${fetchRecord.book}</td>
                                 <td>${fetchRecord.class}</td>
-                              
+
                                 <td>
                                 <a href="${pdfFilePath}" target="_blank"><i class="fas fa-download"></i> </a>
                                     <button class="btn btn-sm btn-icon delete-book-pdf" data-id="${fetchRecord.id}">
@@ -210,80 +242,81 @@
                                     </button>
                                 </td>
                             </tr>`;
-                                tableBody.append(row);
-                            });
+                                    tableBody.append(row);
+                                });
+                            }
+                        } else {
+                            console.error(response.message);
                         }
-                    } else {
-                        console.error(response.message);
+
+                        // updatePaginationUI();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
                     }
-
-                    // updatePaginationUI();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-        $(document).on('click', '.delete-book-pdf', function() {
-            var _token = $('input[name="_token"]').val();
-            var book_pdf_id = $(this).data('id'),
-                dtrModal = $('.dtr-bs-modal.show');
-            if (dtrModal.length) {
-                dtrModal.modal('hide');
+                });
             }
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to delete this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
-                customClass: {
-                    confirmButton: 'btn btn-primary me-3',
-                    cancelButton: 'btn btn-label-secondary'
-                },
-                buttonsStyling: false
-            }).then(function(result) {
-                if (result.value) {
-                    $.ajax({
-                        type: 'DELETE',
-                        url: "{{ route('bookPdf/destroy', '') }}" + "/" + book_pdf_id,
-                        data: {
-                            _token: _token,
-                        },
-                        success: function success(response) {
-                            fetchUploadedBookPdfRecords();
-                            var status = response.status;
-                            var message = response.message;
-                            Swal.fire({
-                                icon: 'success',
-                                title: status,
-                                text: message,
-                                customClass: {
-                                    confirmButton: 'btn btn-success'
-                                }
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            var response = JSON.parse(xhr.responseText);
-                            var status = response.status;
-                            var message = response.message;
-                            Swal.fire({
-                                title: status.charAt(0).toUpperCase() + status.slice(1),
-                                text: message,
-                                icon: 'error',
-                                customClass: {
-                                    confirmButton: 'btn btn-success'
-                                }
-                            });
-                        }
-                    });
+            $(document).on('click', '.delete-book-pdf', function() {
+                var _token = $('input[name="_token"]').val();
+                var book_pdf_id = $(this).data('id'),
+                    dtrModal = $('.dtr-bs-modal.show');
+                if (dtrModal.length) {
+                    dtrModal.modal('hide');
                 }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to delete this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-3',
+                        cancelButton: 'btn btn-label-secondary'
+                    },
+                    buttonsStyling: false
+                }).then(function(result) {
+                    if (result.value) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: "{{ route('bookPdf/destroy', '') }}" + "/" + book_pdf_id,
+                            data: {
+                                _token: _token,
+                            },
+                            success: function success(response) {
+                                fetchUploadedBookPdfRecords();
+                                var status = response.status;
+                                var message = response.message;
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: status,
+                                    text: message,
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    }
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                var response = JSON.parse(xhr.responseText);
+                                var status = response.status;
+                                var message = response.message;
+                                Swal.fire({
+                                    title: status.charAt(0).toUpperCase() +
+                                        status.slice(1),
+                                    text: message,
+                                    icon: 'error',
+                                    customClass: {
+                                        confirmButton: 'btn btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             });
-        });
 
 
 
-        fetchUploadedBookPdfRecords();
+            fetchUploadedBookPdfRecords();
         });
     </script>
 @endsection
