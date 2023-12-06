@@ -150,7 +150,7 @@ class SyllabusPreparationController extends Controller
     $topics = array_merge($getTopics, $reqTopics);
 
     if ($test_type === 'Objective') {
-      return $questions = Question::whereIn('topic_id', $topics)
+      $questions = Question::whereIn('topic_id', $topics)
         ->where([['question_type', 'mcq'], ['test_id', null]])
         ->inRandomOrder()
         ->take($totalQuestions)
