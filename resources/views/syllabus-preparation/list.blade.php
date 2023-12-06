@@ -5,6 +5,7 @@
 @extends('layouts/layoutMaster')
 @section('vendor-style')
 <link rel="stylesheet" href="{{asset('assets/vendor/libs/swiper/swiper.css')}}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 @endsection
 
 @section('page-style')
@@ -13,6 +14,7 @@
 
 @section('vendor-script')
 <script src="{{asset('assets/vendor/libs/swiper/swiper.js')}}"></script>
+<script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
 @endsection
 
 @section('page-script')
@@ -42,7 +44,7 @@
     <h4 class="fw-bold py-3 mb-2">
     Books Pdf
 </h4>
-    {{-- <div class="card">
+{{-- <div class="card">
     <!-- <h4 class="card-header text-primary">Books Pdf</h4> -->
     <!-- <div class="container"> -->
     <div id="carouselExampleIndicators" class="carousel slide ml-5" data-ride="carousel" style="height: 200px;">
@@ -109,7 +111,7 @@
                     <h5 class="modal-title" id="chapterModalLabel">Select Units and Topics</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="modal-body">
                     <div class="px-2">
                         <div class="row">
                             <div class="form-check">
@@ -122,7 +124,6 @@
                         <div id="chapterList" class="row mt-3">
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <div class="row">
@@ -267,53 +268,58 @@
                     method: "GET",
                     success: function(response) {
                         // Build the chapter and topic checkboxes dynamically
-                        var chapterList = "";
-                        $.each(response.chapters, function(index, chapter) {
-                            chapterList +=
-                                '<div class="mb-2 p-2" ><div class="form-check">';
-                            chapterList +=
-                                '<input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' +
-                                chapter.id + '">';
-                            chapterList +=
-                                '<input type="hidden" id="book_id" value="' +
-                                chapter.book_id + '">';
-                            chapterList +=
-                                '<h5 class="form-check-h5" for="chapter_' +
-                                chapter.id + '">' + chapter.name + '</h5>';
-                            chapterList += '</div>';
-                            chapterList += '<div id="topicList_' + chapter.id +
-                                '" class="row mb-4 " ></div></div>';
-                        });
-                        $('#chapterList').html(chapterList);
+                        // var chapterList = "";
+                        // $.each(response.chapters, function(index, chapter) {
+                        //     chapterList +=
+                        //         '<div class="mb-2 p-2" ><div class="form-check">';
+                        //     chapterList +=
+                        //         '<input class="form-check-input chapter-checkbox" type="checkbox" id="chapter_' +
+                        //         chapter.id + '">';
+                        //     chapterList +=
+                        //         '<input type="hidden" id="book_id" value="' +
+                        //         chapter.book_id + '">';
+                        //     chapterList +=
+                        //         '<h5 class="form-check-h5" for="chapter_' +
+                        //         chapter.id + '">' + chapter.name + '</h5>';
+                        //     chapterList += '</div>';
+                        //     chapterList += '<div id="topicList_' + chapter.id +
+                        //         '" class="row mb-4 " ></div></div>';
+                        // });
+                        // $('#chapterList').html(chapterList);
 
-                        // Handle chapter checkbox change event
-                        $('.chapter-checkbox').change(function() {
-                            var chapterId = $(this).attr('id').split('_')[1];
-                            var isChecked = $(this).prop('checked');
-                            $('#topicList_' + chapterId).find('.topic-checkbox').prop(
-                                'checked', isChecked);
-                        });
+                        // // Handle chapter checkbox change event
+                        // $('.chapter-checkbox').change(function() {
+                        //     var chapterId = $(this).attr('id').split('_')[1];
+                        //     var isChecked = $(this).prop('checked');
+                        //     $('#topicList_' + chapterId).find('.topic-checkbox').prop(
+                        //         'checked', isChecked);
+                        // });
 
-                        // Build the topic checkboxes dynamically
-                        $.each(response.topics, function(index, topic) {
-                            var topicList =
-                                '<div class="col-sm-4"><div class="form-check">';
-                            topicList +=
-                                '<input class="form-check-input topic-checkbox" type="checkbox" id="topic_' +
-                                topic.id + '">';
-                            topicList += '<h6 class="form-check-h6" for="topic_' +
-                                topic.id + '">' + topic.name + '</h6>';
-                            topicList += '</div></div>';
-                            $('#topicList_' + topic.chapter_id).append(topicList);
+                        // // Build the topic checkboxes dynamically
+                        // $.each(response.topics, function(index, topic) {
+                        //     var topicList =
+                        //         '<div class="col-sm-4"><div class="form-check">';
+                        //     topicList +=
+                        //         '<input class="form-check-input topic-checkbox" type="checkbox" id="topic_' +
+                        //         topic.id + '">';
+                        //     topicList += '<h6 class="form-check-h6" for="topic_' +
+                        //         topic.id + '">' + topic.name + '</h6>';
+                        //     topicList += '</div></div>';
+                        //     $('#topicList_' + topic.chapter_id).append(topicList);
+                        // });
+
+                        $("#chapterList").html(response);
+                        $('.select2').select2({
+                            dropdownParent: $('#chapterModal'),
+                            placeholder: "Select topics",
                         });
                     }
                 });
             });
 
-            $('#checkAllChapters').change(function() {
+            $('#checkAllChapters').click(function() {
                 var isChecked = $(this).prop('checked');
                 $('.chapter-checkbox').prop('checked', isChecked);
-                $('.topic-checkbox').prop('checked', isChecked);
             });
 
             $('#startPreparation').click(function() {
@@ -324,12 +330,19 @@
                 var totalLongQuestions = $('#total-long-questions').val();
                 var totalShortQuestions = $('#total-short-questions').val();
 
-                $('.chapter-checkbox:checked').each(function() {
-                    selectedChapters.push($(this).attr('id').split('_')[1]);
+                $(".chapter-checkbox:checked").each(function() {
+                    selectedChapters.push($(this).val());
                 });
 
-                $('.topic-checkbox:checked').each(function() {
-                    selectedTopics.push($(this).attr('id').split('_')[1]);
+                $(".topic_ids").each(function() {
+                    var selectedTopicValues = $(this).val();
+
+                    if (selectedTopicValues) {
+                        // Push an object with chapter ID and selected topic values to the array
+                        selectedTopics.push({
+                            topics: selectedTopicValues
+                        });
+                    }
                 });
 
                 if (selectedTopics.length === 0) {
@@ -410,14 +423,26 @@
                     'value': bookId
                 });
                 form.append(bookIdInput);
-                $.each(selectedTopics, function(index, topicId) {
-                    var topicInput = $('<input>', {
-                        'type': 'hidden',
-                        'name': 'topics[]',
-                        'value': topicId
-                    });
-                    form.append(topicInput);
-                });
+                // $.each(selectedTopics, function(index, topicId) {
+                //     var topicInput = $('<input>', {
+                //         'type': 'hidden',
+                //         'name': 'topics[]',
+                //         'value': topicId
+                //     });
+                //     form.append(topicInput);
+                // });
+
+                $.each(selectedTopics, function(index, topicData) {
+                  var topics = topicData.topics;
+                  $.each(topics, function(index, topicValue) {
+                      var topicInput = $('<input>', {
+                          'type': 'hidden',
+                          'name': 'topics[]', // Use an array structure to group topics by chapter
+                          'value': topicValue
+                      });
+                      form.append(topicInput);
+                  });
+              });
 
                 form.append(csrfToken);
                 form.append(totalQuestionsInput);
@@ -428,7 +453,29 @@
                 $('body').append(form);
                 form.submit();
             });
+
+            // $('#startPreparation').click(function() {
+            //   getSelectedValues();
+            // });
         });
+        // function getSelectedValues() {
+        //   var selectedTopics = [];
+
+        //   $(".topic_ids").each(function() {
+        //       var selectedTopicValues = $(this).val();
+
+        //       if (selectedTopicValues) {
+        //           // Push an object with chapter ID and selected topic values to the array
+        //           selectedTopics.push({
+        //               topics: selectedTopicValues
+        //           });
+        //       }
+        //   });
+
+        //   // Display the selected values (you can modify this part based on your needs)
+        //   console.log("Selected Chapters:", selectedChapters);
+        //   console.log("Selected Topics:", selectedTopics);
+        // }
     </script>
 
 
