@@ -196,8 +196,13 @@
                 if (response.students == '<option value="">Select Students</option>') {
                   showNotification('error','Students not found against this board and class');
                 }
+                $('.select2').select2({
+                    placeholder: "Select Students",
+                    closeOnSelect: false
+                });
               }
           });
         }
+
     </script>
 @endsection
