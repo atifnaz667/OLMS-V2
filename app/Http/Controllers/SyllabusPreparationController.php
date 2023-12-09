@@ -320,4 +320,13 @@ class SyllabusPreparationController extends Controller
 
     return $cols;
   }
+
+  public function bookPdfView($id){
+    try {
+      $book = BookPdf::with('book')->findOrFail($id);
+      return view('syllabus-preparation.book-view',['book'=>$book]);
+    } catch (\Exception $e) {
+      return back()->with(['status' => 'error', 'message' => $e->getMessage()], 422);
+    }
+  }
 }

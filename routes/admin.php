@@ -92,6 +92,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
 Route::middleware([StudentMiddleware::class])->group(function () {
   Route::get('syllabus-preparation', [SyllabusPreparationController::class, 'index'])->name('syllabus-preparation');
+  Route::get('book/pdf/view/{bookId}', [SyllabusPreparationController::class, 'bookPdfView'])->name('book.pdf.view');
   Route::get('keyPoints/{bookId}', [SyllabusPreparationController::class, 'keyPoints']);
   Route::get('load-notes/{chapter}/{questionType}', [SyllabusPreparationController::class, 'loadNotes']);
 
