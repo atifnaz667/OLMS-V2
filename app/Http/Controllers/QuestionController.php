@@ -52,6 +52,8 @@ class QuestionController extends Controller
     }
 
 
+
+
     return view('questions.add', ['books' => $books, 'boards' => $boards, 'classes' => $classes, 'questionType' => $questionType]);
   }
   public function index(Request $request)
