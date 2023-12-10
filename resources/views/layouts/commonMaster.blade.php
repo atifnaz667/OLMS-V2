@@ -127,18 +127,18 @@
     <!--/ Layout Content -->
 
     <script>
-        document.getElementById("quick-access-btn").addEventListener("click", function(event) {
-            var options = document.querySelector(".quick-access-options");
-            options.style.display = options.style.display === "none" || options.style.display === "" ? "block" :
-                "none";
-            event.stopPropagation();
-        });
+        // document.getElementById("quick-access-btn").addEventListener("click", function(event) {
+        //     var options = document.querySelector(".quick-access-options");
+        //     options.style.display = options.style.display === "none" || options.style.display === "" ? "block" :
+        //         "none";
+        //     event.stopPropagation();
+        // });
 
         // Add a click event listener to the document body to hide the options when anywhere outside the options is clicked
-        document.body.addEventListener("click", function() {
-            var options = document.querySelector(".quick-access-options");
-            options.style.display = "none";
-        });
+        // document.body.addEventListener("click", function() {
+        //     var options = document.querySelector(".quick-access-options");
+        //     options.style.display = "none";
+        // });
 
         function handleOptionClick(option) {
             alert("Selected Option: " + option);
