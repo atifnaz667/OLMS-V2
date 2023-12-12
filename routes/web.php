@@ -98,6 +98,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
   Route::apiResource('mcq-choice', McqChoiceController::class);
   Route::get('add-mcq-choice', [McqChoiceController::class, 'addMcqChoioce'])->name('add-mcq-choice');
+  Route::get('mcq-choice-details/{id}', [McqChoiceController::class, 'McqChoioceDetails'])->name('mcq-choice-details');
 
 
   Route::get('get-dropdown-for-assign', [UserController::class, 'getDropDown'])->name('get-dropdown-for-assign');

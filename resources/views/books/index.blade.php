@@ -119,7 +119,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="row">
                                     <label class="col-sm-3 col-form-label text-sm-end" for="book-icon">Book Icon</label>
                                     <div class="col-sm-9">
@@ -127,7 +127,7 @@
                                             accept="image/*">
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row mt-4">
                             <div class="col-md-6">
@@ -251,7 +251,7 @@
                                     <tr>
                                         <th>SR#</th>
                                         <th>Book</th>
-                                        <th>Icon</th>
+                                        <!-- <th>Icon</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -326,11 +326,11 @@
                                     <input type="hidden" class="form-control" required id="bookId"
                                         placeholder="FBISE" name="bookId" />
                                 </div>
-                                <div class="mb-3">
+                                <!-- <div class="mb-3">
                                     <label class="form-label" for="updateBookIcon">Book Icon</label>
                                     <input type="file" id="updateBookIcon" name="updateBookIcon" class="form-control"
                                         accept="image/*">
-                                </div>
+                                </div> -->
                                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                                 <button type="reset" class="btn btn-label-secondary"
                                     data-bs-dismiss="offcanvas">Cancel</button>
@@ -626,7 +626,7 @@
             var bookName = $('#book-name').val();
             var formData = new FormData();
             formData.append('name', bookName);
-            formData.append('book-icon', $('#book-icon')[0].files[0]);
+            // formData.append('book-icon', $('#book-icon')[0].files[0]);
             formData.append('_token', '{{ csrf_token() }}');
 
             $.ajax({
@@ -650,7 +650,7 @@
                     toastAnimation = new bootstrap.Toast(toastAnimationExample);
                     toastAnimation.show();
                     $('#book-name').val('');
-                    $('#book-icon').val('');
+                    // $('#book-icon').val('');
                     getData();
                 },
                 error: function(xhr) {
@@ -997,8 +997,6 @@
                         var row = "<tr>" +
                             "<td>" + (index + 1) + "</td>" +
                             "<td>" + book.name + "</td>" +
-                            "<td>" + (book.file != null ? "<img src='files/books/" + book.file +
-                                "' alt='Book Icon' width='50' height='50'>" : "") + "</td>" +
                             "<td>" +
                             "<button onclick=\"editBook('" + book.id +
                             "')\" class=\"btn btn-sm btn-icon edit-record\" data-id='" + book.id +

@@ -116,7 +116,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
+                                <th>Topic name</th>
                                 <th>Type</th>
+                                <th>Nature</th>
+                                <th>Difficulity Level</th>
                                 <th>Question</th>
                                 <th>Action</th>
                             </tr>
@@ -190,6 +193,37 @@
                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
             </form>
+        </div>
+    </div>
+    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel3">View Question Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+            
+                        </div>
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label class="form-label" for="update-question">Question</label>
+                                <textarea required id="question_description" name="question_description" rows="3" class="form-control" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3" id="question_options">
+           
+                        </div>
+                        <div class="row mb-3" id="correct_options">
+           
+                        </div>
+                        <div class="row mb-3" id="question_reason">
+           
+                        </div>
+                    </div>
+                </div>
+
         </div>
     </div>
 @endsection
@@ -345,6 +379,51 @@
                 }
             });
         }
+        function viewQuestionDetails(id) {
+            // Your logic to view question details using the provided questionId
+            console.log("Viewing details for question with ID: " + id);
+ 
+
+            $.ajax({
+                url: "{{ route('mcq-choice-details', '') }}" + "/" + id,
+                type: 'GET',
+                success: function(response) {
+    console.log(response)
+                    $('#question_description').val(response.Question.description);
+                    $('#question_options').empty();
+                    $('#correct_options').empty();
+                    $('#question_reason').empty();
+                    $.each(response.Question.mcq_choices, function(index, choice) {
+                var optionHtml = '<div class="col mb-3">';
+                optionHtml += '<label class="form-label" for="option_' + choice.id + '">Option ' + (index + 1) + '</label>';
+                optionHtml += '<textarea id="option_' + choice.id + '" name="option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
+                optionHtml += '</div>';
+                $('#question_options').append(optionHtml);
+
+                if (choice.is_true === 1) {
+            // Append the correct option to correct_options div
+            var correctOptionHtml = '<div class="col mb-3">';
+            correctOptionHtml += '<label class="form-label text-success">Correct Option</label>';
+            correctOptionHtml += '<textarea id="correct_option_' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
+            correctOptionHtml += '</div>';
+
+            $('#correct_options').append(correctOptionHtml);
+            var correctOptionReasonHtml = '<div class="col mb-3">';
+            correctOptionReasonHtml += '<label class="form-label text-success">Reason</label>';
+            correctOptionReasonHtml += '<textarea id="question_reason' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.reason + '</textarea>';
+            correctOptionReasonHtml += '</div>';
+
+            $('#question_reason').append(correctOptionReasonHtml);
+        }
+            });
+                    $('#largeModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    // Handle error if necessary
+                }
+            });
+        }
 
         function updateQuestion(id) {
             // Get the form data
@@ -458,8 +537,11 @@
                                     // '<td>' + question.book + '</td>' +
                                     // '<td>' + question.class + '</td>' +
                                     // '<td>' + question.question_no + '</td>' +
-                                    '<td>' + question.question_type + '</td>' +
-                                    '<td>' + question.description + '</td>' +
+                                    '<td>' + (question.topic_name ? question.topic_name : '') + '</td>' +
+                                    '<td>' + (question.question_type ? question.question_type : '') + '</td>' +
+                                    '<td>' + (question.question_nature ? question.question_nature : '') + '</td>' +
+                                    '<td>' + (question.difficulty_level ? question.difficulty_level : '') + '</td>' +
+                                    '<td>' + (question.description ? question.description : '') + '</td>'+
                                     "<td>" +
                                     "<a onclick=\"viewQuestion('" + question
                                     .id +
@@ -468,6 +550,11 @@
                                     "'><i class=\"ti ti-edit\"></i></a>" +
                                     "<a class=\"btn-icon delete-question\" data-id='" + question.id +
                                     "'><i class=\"ti ti-trash\"></i></a>" +
+                                    "<a onclick=\"viewQuestionDetails('" + question
+                                    .id +
+                                    "')\" class=\"btn-icon view-details\"data-id='" + question
+                                    .id +
+                                    "'><i class=\"ti ti-eye\"></i></a>" +
                                     "</td>" +
                                     '</tr>';
                                 tableBody.append(row);

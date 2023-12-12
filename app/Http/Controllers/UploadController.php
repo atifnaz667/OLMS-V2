@@ -45,7 +45,16 @@ class UploadController extends Controller
       'board_id' => 'required',
       'class_id' => 'required',
     ]);
-
+    $check_bookPdf=BookPdf::where('book_id',$request->book_id)
+    ->where('board_id',$request->board_id)
+    ->where('class_id',$request->class_id)
+    ->first();
+    if($check_bookPdf){
+      return response()->json([
+        'status' => 'Error',
+        'message' => 'Book Pdf and Icon Already Uploaded',
+      ]);
+    }
     $bookPdf = new BookPdf();
 
     if ($request->hasFile('file')) {
@@ -124,6 +133,7 @@ class UploadController extends Controller
           'board' => $bookPdfRecord->board->name,
           'book' => $bookPdfRecord->book->name,
           'class' => $bookPdfRecord->class->name,
+          'book_icon' => $bookPdfRecord->icon,
           'book_pdf' => $bookPdfRecord->book_pdf,
         ];
       });

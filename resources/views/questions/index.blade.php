@@ -138,8 +138,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
+                                <th>Topic name</th>
                                 <th>Type</th>
                                 <th>Nature</th>
+                                <th>Difficulity Level</th>
                                 <th>Question</th>
                                 <th>Action</th>
                             </tr>
@@ -468,8 +470,10 @@
                                     // '<td>' + question.book + '</td>' +
                                     // '<td>' + question.class + '</td>' +
                                     // '<td>' + question.question_no + '</td>' +
+                                    '<td>' + question.topic_name + '</td>' +
                                     '<td>' + question.question_type + '</td>' +
                                     '<td>' + question.question_nature + '</td>' +
+                                    '<td>' + question.difficulty_level + '</td>' +
                                     '<td>' + question.description + '</td>' +
                                     "<td>" +
                                     "<a onclick=\"viewQuestion('" + question
