@@ -15,6 +15,10 @@ use App\Http\Controllers\QuestionTypeController;
 use App\Http\Controllers\SyllabusPreparationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AssignRoleController;
+use App\Http\Controllers\NoteController;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CommonRoutes;
+use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Support\Facades\Artisan;
 
 /*
@@ -62,12 +66,10 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::put('notes/update/{id}', [UserController::class, 'updateNote'])->name('notes.update');
 
   Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
+  Route::get('detail-user/{id}', [UserController::class, 'details']);
   Route::put('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
 
   Route::resource('user', UserController::class);
-
-
-
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route

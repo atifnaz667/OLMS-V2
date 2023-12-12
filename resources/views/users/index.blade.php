@@ -60,9 +60,9 @@
                             <label class="form-label" for="role_id">Role</label>
                             <select id="role_id" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
-                            @foreach ($roles as $roles)
-                                <option value="{{ $roles->id }}">{{ $roles->name }}</option>
-                            @endforeach
+                                @foreach ($roles as $roles)
+                                    <option value="{{ $roles->id }}">{{ $roles->name }}</option>
+                                @endforeach
 
                             </select>
                         </div>
@@ -77,7 +77,8 @@
                     <div class="row mb-3">
                         <div class="col-md">
                             <label class="form-label" for="serial_no">Serial No.</label>
-                            <input type="text" class="form-control" required id="serial_no" placeholder="Serial Number" />
+                            <input type="text" class="form-control" required id="serial_no"
+                                placeholder="Serial Number" />
                         </div>
                         <div class="col-md">
                             <label class="form-label" for="card_no">Card No.</label>
@@ -88,26 +89,26 @@
                             <div class="form-password-toggle">
                                 <label class="form-label" for="expiryDate">Expiry Date</label>
                                 <!-- <div class="input-group input-group-merge">
-                                    <input type="date" id="expiryDate" class="form-control" />
-                                </div> -->
+                                                                                                                                                                                                                                                        <input type="date" id="expiryDate" class="form-control" />
+                                                                                                                                                                                                                                                    </div> -->
                                 <select id="expiryDate" name="expiryDate" class="select2 form-select"
-                                        data-allow-clear="true">
-                                        <option value="">Select Option</option>
-                                        <option value="One Year">One Year</option>
-                                        <option value="Six Months">Six Months</option>
+                                    data-allow-clear="true">
+                                    <option value="">Select Option</option>
+                                    <option value="One Year">One Year</option>
+                                    <option value="Six Months">Six Months</option>
 
-                                    </select>
+                                </select>
                             </div>
                         </div>
 
                         <!-- <div class="col-md">
-                            <div class="form-password-toggle">
-                                <label class="form-label" for="validDate">Valid Till</label>
-                                <div class="input-group input-group-merge">
-                                    <input type="date" id="validDate" class="form-control" />
-                                </div>
-                            </div>
-                        </div> -->
+                                                                                                                                                                                                                                                <div class="form-password-toggle">
+                                                                                                                                                                                                                                                    <label class="form-label" for="validDate">Valid Till</label>
+                                                                                                                                                                                                                                                    <div class="input-group input-group-merge">
+                                                                                                                                                                                                                                                        <input type="date" id="validDate" class="form-control" />
+                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                            </div> -->
                     </div>
                     <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
@@ -154,6 +155,7 @@
                                             <th>Last Seen</th>
                                             <th>Last Login At</th>
                                             <th>Last Activity At</th>
+                                            <th>View</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -209,34 +211,35 @@
                                                         text-capitalized="">{{ $user->status }}</span></td>
                                                 <?php  } ?>
                                                 <td>
-                                                @if(Cache::has('user-is-online-' . $user->id))
-                                                <span class="text-success">Online</span>
-                                                @else
-                                                <span class="text-secondary">Offline</span>
-                                                @endif
+                                                    @if (Cache::has('user-is-online-' . $user->id))
+                                                        <span class="text-success">Online</span>
+                                                    @else
+                                                        <span class="text-secondary">Offline</span>
+                                                    @endif
                                                 </td>
-                                                 <td>
-                                                  @if($user->last_seen != null)
-                                                      {{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}
-                                                  @else
-
-                                                  @endif
-                                                 </td>
+                                                <td>
+                                                    @if ($user->last_seen != null)
+                                                        {{ \Carbon\Carbon::parse($user->last_seen)->diffForHumans() }}
+                                                    @else
+                                                    @endif
+                                                </td>
                                                 <td>{{ $user->last_login_at }}</td>
                                                 <td>{{ $user->last_activity_at }}</td>
+                                                <td> <button type="button" class="btn"
+                                                        onclick="details({{ $user->id }})">
+                                                        <i class="ti ti-eye ti-sm" aria-hidden="true"></i>
+                                                    </button></td>
                                                 <td>
                                                     <!-- Edit Icon -->
                                                     <a href="#" onclick="editUser({{ $user->id }})">
-                                                        <i class="ti ti-edit ti-sm me-2" aria-hidden="true"></i>
+                                                        <i class="ti ti-edit ti-sm" aria-hidden="true"></i>
                                                     </a>
-
                                                     <!-- Delete Icon -->
-                                                    {{-- <a href="{{ route('user.destroy', $user->id) }}"
-                                                onclick="event.preventDefault();
-                                                document.getElementById('delete-user-{{ $user->id }}').submit();">
-                                                <i class="ti ti-trash ti-sm mx-2" aria-hidden="true"></i>
-                                            </a> --}}
-                                                    <form id="delete-user-{{ $user->id }}"
+                                                    <a href="#" class="delete-user-btn"
+                                                        data-user-id="{{ $user->id }}">
+                                                        <i class="ti ti-trash ti-sm" aria-hidden="true"></i>
+                                                    </a>
+                                                    <form class="delete-user-form" data-user-id="{{ $user->id }}"
                                                         action="{{ route('user.destroy', $user->id) }}" method="POST"
                                                         style="display: none;">
                                                         @csrf
@@ -335,11 +338,12 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0">
                 <form class="update-card pt-0" id="addCardForm">
-                @csrf
+                    @csrf
                     <div class="col-md">
-                            <label class="form-label" for="update_serial_no">Serial No.</label>
-                            <input type="text" class="form-control" required name="update_serial_no" id="update_serial_no" placeholder="Serial Number" />
-                        </div>
+                        <label class="form-label" for="update_serial_no">Serial No.</label>
+                        <input type="text" class="form-control" required name="update_serial_no"
+                            id="update_serial_no" placeholder="Serial Number" />
+                    </div>
                     <div class="mb-3">
                         <label class="form-label" for="update-card">Card No</label>
                         <input type="text" class="form-control" required id="update-card" name="update-card"
@@ -349,20 +353,20 @@
                     <div class="mb-3">
                         <label class="form-label" for="update-expiry-date">Expiry Date</label>
                         <!-- <input type="date" class="form-control" required
-                            id="update-expiry-date"name="update-expiry-date" aria-label="class" /> -->
-                            <select id="update-expiry-date" name="update-expiry-date"  class="select2 form-select"
-                                        data-allow-clear="true">
-                                        <option value="">Select Option</option>
-                                        <option value="One Year">One Year</option>
-                                        <option value="Six Months">Six Months</option>
+                                                                                                                                                                                                                                                id="update-expiry-date"name="update-expiry-date" aria-label="class" /> -->
+                        <select id="update-expiry-date" name="update-expiry-date" class="select2 form-select"
+                            data-allow-clear="true">
+                            <option value="">Select Option</option>
+                            <option value="One Year">One Year</option>
+                            <option value="Six Months">Six Months</option>
 
-                             </select>
+                        </select>
                     </div>
                     <!-- <div class="mb-3">
-                        <label class="form-label" for="update-valid-date">Valid Till</label>
-                        <input type="date" class="form-control" required
-                            id="update-valid-date"name="update-valid-date" aria-label="class" />
-                    </div> -->
+                                                                                                                                                                                                                                            <label class="form-label" for="update-valid-date">Valid Till</label>
+                                                                                                                                                                                                                                            <input type="date" class="form-control" required
+                                                                                                                                                                                                                                                id="update-valid-date"name="update-valid-date" aria-label="class" />
+                                                                                                                                                                                                                                        </div> -->
 
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                     <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
@@ -464,6 +468,38 @@
 
             </div>
             </form>
+        </div>
+        <div class="modal fade" id="largeModal2" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <form class="update-class pt-0" id="AssignUserForm">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel3">Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0" id="details">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Assign</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
         </div>
     @endsection
 
@@ -622,7 +658,7 @@
                 var full_name = $('#full_name').val();
                 var email = $('#email').val();
                 // var card_no = $('#card_no').val();
-                 console.log(full_name)
+                console.log(full_name)
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('user.store') }}',
@@ -689,6 +725,53 @@
             var currentPage = 1;
             var lastPage = 1;
             var perPage = 10;
+
+            function details(id) {
+                $.ajax({
+                    url: "{{ url('detail-user', '') }}" + "/" + id,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        $('#details').empty();
+                        var heading = '';
+                        if (response.role == 2) {
+                            heading = 'Child: ';
+                            if (response.details) {
+                                $('#details').append('<tr><td>' + heading + response.details + '</td></tr>');
+                            }
+                        } else if (response.role == 3) {
+                            heading = '';
+                            if (response.details) {
+                                response.details.forEach(function(detail) {
+                                    $('#details').append('<tr><td>' + heading + detail.name + '</td></tr>');
+                                });
+                            }
+                        } else if (response.role == 4) {
+                            heading = 'Parent: ';
+                            if (response.details) {
+                                $('#details').append('<tr><td>' + heading + response.details + '</td></tr>');
+                            }
+                            if (response.class) {
+
+                                $('#details').append('<tr><td>Class: ' + response.class + '</td></tr>');
+                            }
+                        }
+
+                        // $('#details').append('<tr><th>' + heading + '</th></tr>');
+
+                        // Display class if available
+                        // if (response.class) {
+                        //     $('#details').append('<tr><th>Class</th></tr>');
+                        //     $('#details').append('<tr><td>' + response.class + '</td></tr>');
+                        // }
+
+                        $('#largeModal2').modal('show');
+                    },
+                    error: function(error) {
+                        console.error('Error fetchings details:', error);
+                    }
+                });
+            }
 
             function editUser(id) {
                 $.ajax({
@@ -837,8 +920,6 @@
                     }
                 });
             }
-
-
 
             function getData(page = 1) {
                 $.ajax({
@@ -990,6 +1071,48 @@
                     paginationContainer.append(paginationLinks);
                 }
             }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.delete-user-btn').forEach(function(button) {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        var userId = this.getAttribute('data-user-id');
+                        var confirmDelete = confirm('Are you sure you want to delete this user?');
+                        if (confirmDelete) {
+                            fetch('{{ route('user.destroy', ':userId') }}'.replace(':userId',
+                                    userId), {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    },
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        var status = response.status;
+                                        var message = response.message;
+                                        $('.toast-ex .fw-semibold').text(status);
+                                        $('.toast-ex .toast-body').text(message);
+                                        selectedType = "text-success";
+                                        selectedAnimation = "animate__fade";
+                                        toastAnimationExample.classList.add(selectedAnimation);
+                                        toastAnimationExample.querySelector('.ti').classList.add(
+                                            selectedType);
+                                        toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                                        toastAnimation.show();
+                                        location.reload();
+                                    } else {
+                                        console.error('Error deleting user');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Network error:', error);
+                                });
+                        }
+                    });
+                });
+            });
         </script>
 
     @endsection

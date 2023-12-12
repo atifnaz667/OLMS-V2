@@ -15,6 +15,8 @@ use App\Models\Book;
 use App\Models\Board;
 use App\Models\Classes;
 use App\Models\AssignRole;
+use App\Models\Chapter;
+use App\Models\Topic;
 
 class QuestionController extends Controller
 {
@@ -254,8 +256,18 @@ class QuestionController extends Controller
     }
 
     $question = Question::with('answer')->findOrFail($id);
+    $topic_id = $question->topic_id;
+    $result = Topic::select('topics.id', 'chapters.id as chapter_id', 'chapters.board_id', 'chapters.book_id', 'chapters.class_id')
+      ->join('chapters', 'topics.chapter_id', '=', 'chapters.id')
+      ->where('topics.id', '=', $topic_id)
+      ->first();
+    $topics = Topic::where('chapter_id', $result->chapter_id)->get();
+    $chapters = Chapter::where('board_id', $result->board_id)
+      ->where('book_id', $result->book_id)
+      ->where('class_id', $result->class_id)
+      ->get();
 
-    return response()->json(['Question' => $question], 200);
+    return response()->json(['topic_id' => $topic_id, 'topics' => $topics, 'chapter_id' => $result->chapter_id, 'chapters' => $chapters, 'Question' => $question], 200);
   }
 
   public function update(Request $request, $id)
@@ -265,6 +277,7 @@ class QuestionController extends Controller
       'answer' => 'required',
       'question_nature' => 'required',
       'question_type' => 'required',
+      'topic_id_edit' => 'required',
     ]);
 
     if ($validator->fails()) {
@@ -277,6 +290,7 @@ class QuestionController extends Controller
       $question->question_nature = $request->input('question_nature');
       $question->question_type = $request->input('question_type');
       $question->difficulty_level = $request->input('difficulty_level');
+      $question->topic_id = $request->input('topic_id_edit');
       $question->save();
 
       $answer = $question->answer;
