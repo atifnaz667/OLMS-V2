@@ -380,8 +380,7 @@
                     // }).reason);
 
                     // Show the offcanvas
-                    // offcanvas.show();
-                    $('#largeModal').modal('show');
+                    offcanvas.show();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
