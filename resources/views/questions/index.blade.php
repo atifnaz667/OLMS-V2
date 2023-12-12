@@ -85,7 +85,7 @@
                                     <option value="{{ $questionType->type }}">{{ $questionType->type }}</option>
                                 @endforeach
                                 {{-- <option value="long">Long</option>
-    <option value="short">Short</option> --}}
+                                <option value="short">Short</option> --}}
                             </select>
 
                         </div>
