@@ -381,7 +381,7 @@ class AdminTestController extends Controller
       return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 422);
     }
     try {
-      $getStudents = User::where([['board_id', $req->board_id], ['class_id', $req->class_id], ['status', 'Active']])->orderBy('name')->get();
+      $getStudents = User::where('role_id',4)->where([['board_id', $req->board_id], ['class_id', $req->class_id], ['status', 'Active']])->orderBy('name')->get();
 
       $students = '<option value="">Select Students</option>';
 

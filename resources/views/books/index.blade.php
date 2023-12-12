@@ -270,7 +270,7 @@
                                     <tr>
                                         <th>SR#</th>
                                         <th>Question Type</th>
-                                        {{-- <th>Action</th> --}}
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="questionType-body">
@@ -366,12 +366,12 @@
                     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasUpdateQuestionType"
                         aria-labelledby="offcanvasUpdateQuestionTypeLabel">
                         <div class="offcanvas-header">
-                            <h5 id="offcanvasUpdateQuestionTypeLabel" class="offcanvas-title">Edit Class</h5>
+                            <h5 id="offcanvasUpdateQuestionTypeLabel" class="offcanvas-title">Edit Question Type</h5>
                             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
                                 aria-label="Close"></button>
                         </div>
                         <div class="offcanvas-body mx-0 flex-grow-0">
-                            <form class="update-class pt-0" id="addClassForm">
+                            <form class="update-class pt-0" id="addQuestionTypeForm">
                                 <div class="mb-3">
                                     <label class="form-label" for="question-type">Question Type</label>
                                     <input type="text" class="form-control" required id="update-question-type"
@@ -417,6 +417,9 @@
         var offcanvasElementclass = document.getElementById('offcanvasUpdateClass');
         var offcanvasclass = new bootstrap.Offcanvas(offcanvasElementclass);
 
+        var offcanvasElementUpdatequestionType = document.getElementById('offcanvasUpdateQuestionType');
+        var offcanvasquestionType = new bootstrap.Offcanvas(offcanvasElementUpdatequestionType);
+
         function editBook(id) {
             $.ajax({
                 url: "{{ route('book.show', '') }}" + "/" + id,
@@ -442,6 +445,22 @@
                     $('#update-class-name').val(response.Class.name);
                     $('#classId').val(response.Class.id);
                     offcanvasclass.show();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    // Handle error if necessary
+                }
+            });
+        }
+
+        function editquestionType(id) {
+            $.ajax({
+                url: "{{ route('questionType.show', '') }}" + "/" + id,
+                type: 'GET',
+                success: function(response) {
+                    $('#update-question-type').val(response.questionType.type);
+                    $('#questionTypeId').val(response.questionType.id);
+                    offcanvasquestionType.show();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -556,6 +575,49 @@
                 }
             });
         }
+        function updateQuestionType(id) {
+            // Get the form data
+            var _token = $('input[name="_token"]').val();
+            var type = $('#update-question-type').val();
+            var formData = {
+                _token: _token,
+                type: type
+            };
+            $.ajax({
+                url: "{{ route('questionType.update', '') }}" + "/" + id,
+                type: 'PUT',
+                data: formData,
+                success: function(response) {
+                    var status = response.status;
+                    var message = response.message;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-success";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                    getData();
+                    offcanvasquestionType.hide();
+
+                },
+                error: function(xhr, status, error) {
+                    var response = JSON.parse(xhr.responseText);
+                    var status = response.status;
+                    var message = response.message;
+                    $('.toast-ex .fw-semibold').text(status);
+                    $('.toast-ex .toast-body').text(message);
+                    selectedType = "text-warning";
+                    selectedAnimation = "animate__fade";
+                    toastAnimationExample.classList.add(selectedAnimation);
+                    toastAnimationExample.querySelector('.ti').classList.add(selectedType);
+                    toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                    toastAnimation.show();
+                }
+            });
+        }
+
 
         function updateBoard(id) {
             // Get the form data
@@ -619,6 +681,12 @@
             event.preventDefault(); // Prevent the default form submission
             var boardId = $('#boardId').val();
             updateBoard(boardId);
+        });
+        $('#addQuestionTypeForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var questionTypeId = $('#questionTypeId').val();
+            alert(questionTypeId);
+            updateQuestionType(questionTypeId);
         });
 
         function addBook() {
@@ -1062,15 +1130,15 @@
                         var row = "<tr>" +
                             "<td>" + (index + 1) + "</td>" +
                             "<td>" + questionTypes.type + "</td>" +
-                            // "<td>" +
-                            // "<button  onclick=\"editClass('" + questionTypes.id +
-                            // "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + questionTypes
-                            // .id +
-                            // "'><i class=\"ti ti-edit\"></i></button>" +
-                            // "<button class=\"btn btn-sm btn-icon delete-class\" data-id='" +
-                            // questionTypes
-                            // .id + "'><i class=\"ti ti-trash\"></i></button>" +
-                            // "</td>" +
+                             "<td>" +
+                            "<button  onclick=\"editquestionType('" + questionTypes.id +
+                             "')\" class=\"btn btn-sm btn-icon edit-record\"data-id='" + questionTypes
+                             .id +
+                             "'><i class=\"ti ti-edit\"></i></button>" +
+                              "<button class=\"btn btn-sm btn-icon delete-class\" data-id='" +
+                              questionTypes
+                              .id + "'><i class=\"ti ti-trash\"></i></button>" +
+                            "</td>" +
                             "</tr>";
                         classesTableBody.append(row);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\DropdownHelper;
 use App\Models\Chapter;
+use App\Models\Topic;
 use App\Models\Visual;
 use App\Services\CustomErrorMessages;
 use Illuminate\Http\Request;
@@ -282,7 +283,11 @@ class VisualController extends Controller
 
   public function getVisualsForStudent(Request $req)
   {
-    return view('visuals.list', ['topics' => $req->topics]);
+    $chapters = $req->chapters ?? [];
+    $getTopics = Topic::whereIn('chapter_id', $chapters)->pluck('id')->toArray();
+    $reqTopics = $req->topics ?? [];
+    $topics = array_merge($getTopics, $reqTopics);
+    return view('visuals.list', ['topics' => $topics]);
   }
 
   public function getVisualsForStudentAjax(Request $req)
