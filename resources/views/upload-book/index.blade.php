@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-md">
                                 <label class="form-label" for="bookIcon">Book Icon</label>
-                                <input type="file" class="form-control" id="bookIcon" name="bookIcon">
+                                <input type="file" class="form-control" id="bookIcon" name="bookIcon" required>
                             </div>
                         </div>
 
@@ -93,7 +93,7 @@
                     <th>Board</th>
                     <th>Book</th>
                     <th>Class</th>
-                    <!-- <th>Book Pdf</th> -->
+                    <th>Icon</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -229,12 +229,13 @@
                                 $.each(fetchRecords, function(index, fetchRecord) {
                                     var pdfFilePath = baseUrl + 'files/booksPdf/' + fetchRecord
                                         .book_pdf;
+                                    var iconHtml = (fetchRecord.book_icon != null) ? `<img src='files/booksIcon/${fetchRecord.book_icon}' alt='Book Icon' width='50' height='50'>` : '';
                                     var row = `<tr>
                                 <td>${index + 1}</td>
                                 <td>${fetchRecord.board}</td>
                                 <td>${fetchRecord.book}</td>
                                 <td>${fetchRecord.class}</td>
-
+                                <td>${iconHtml}</td>
                                 <td>
                                 <a href="${pdfFilePath}" target="_blank"><i class="fas fa-download"></i> </a>
                                     <button class="btn btn-sm btn-icon delete-book-pdf" data-id="${fetchRecord.id}">

@@ -67,18 +67,18 @@ class BookController extends Controller
     }
     try {
       DB::transaction(function () use ($request) {
-        $filePath = 'NULL';
-        if ($request->hasFile('book-icon')) {
-          $file = $request->file('book-icon');
-          $ext = $file->getClientOriginalExtension();
-          $filename = time() . rand(1, 100) . '.' . $ext;
-          $file->move(public_path('files/books'), $filename);
-          $filePath = $filename;
-        }
+        // $filePath = 'NULL';
+        // if ($request->hasFile('book-icon')) {
+        //   $file = $request->file('book-icon');
+        //   $ext = $file->getClientOriginalExtension();
+        //   $filename = time() . rand(1, 100) . '.' . $ext;
+        //   $file->move(public_path('files/books'), $filename);
+        //   $filePath = $filename;
+        // }
 
         Book::create([
           'name' => $request['name'],
-          'file' => $filePath,
+          // 'file' => $filePath,
         ]);
       });
       return response()->json(['status' => 'success', 'message' => 'Book stored successfully'], 200);

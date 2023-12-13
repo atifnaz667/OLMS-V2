@@ -9,13 +9,16 @@ use App\Models\AssignUser;
 use Illuminate\Http\Request;
 use App\Helpers\DropdownHelper;
 use App\Models\Card;
+use App\Models\Classes;
 use App\Models\Note;
 use App\Models\Role;
+use App\Models\Test;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Builder\Class_;
 
 class UserController extends Controller
 {
@@ -194,7 +197,7 @@ class UserController extends Controller
     $user = User::find(Auth::user()->id);
 
     if (isset($request->oldPassword)) {
-      if(Hash::check($request->oldPassword, $user->password)){
+      if (Hash::check($request->oldPassword, $user->password)) {
         $rules = [
           'password' => 'required|min:5',
         ];
@@ -203,7 +206,7 @@ class UserController extends Controller
           return response()->json(['status' => 'error', 'message' => $validator->errors()->first()], 400);
         }
         $user->password = Hash::make($request->password);
-      }else{
+      } else {
         return response()->json(['status' => 'error', 'message' => 'Incorrect Old Password'], 400);
       }
     }
@@ -273,9 +276,34 @@ class UserController extends Controller
   /**
    * Remove the specified resource from storage.
    */
-  public function destroy(string $id)
+  public function destroy(Request $request, $id)
   {
-    //
+    $user = User::find($id);
+
+    if (!$user) {
+      return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+    }
+
+    $testsCreatedBy = Test::where('created_by', $user->id)->get();
+    if ($testsCreatedBy) {
+      foreach ($testsCreatedBy as $test) {
+        $test->testChildren()->delete();
+      }
+      $testsCreatedBy = Test::where('created_by', $user->id)->delete();
+    }
+
+    $testsCreatedFor = Test::where('created_for', $user->id)->get();
+    if ($testsCreatedFor) {
+      foreach ($testsCreatedFor as $test) {
+        $test->testChildren()->delete();
+      }
+      $testsCreatedFor = Test::where('created_for', $user->id)->delete();
+    }
+    $user->assignUserAsParent()->delete();
+    $user->assignUserAsChild()->delete();
+    $user->assignUserAsStudent()->delete();
+    $user->delete();
+    return response()->json(['status' => 'success', 'message' => 'User deleted successfully']);
   }
 
   public function notes()
@@ -295,12 +323,12 @@ class UserController extends Controller
   public function viewNote($id)
   {
     $note = Note::with('user')->find($id);
-      if (!$note) {
-        return response()->json([
-          'status' => 'error',
-          'message' => 'Invalid Notes',
-        ], 500);
-      }
+    if (!$note) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Invalid Notes',
+      ], 500);
+    }
 
     return response()->json([
       'status' => 'success',
@@ -310,45 +338,45 @@ class UserController extends Controller
   }
 
   public function updateNote(Request $request, $id)
-    {
+  {
 
-      $note = Note::find($id);
-        if (!$note) {
-          return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid Notes',
-          ], 500);
-        }
-        $rules = array(
-          'update_description' => 'required',
-        );
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-          return response()->json([
-            'status' => 'error',
-            'message' => $validator->errors()->first(),
-          ], 500);
-        }
-        try {
-          DB::transaction(function()use($request, $note){
-            $note->name = $request->note_name;
-            $note->note = $request->update_description;
-            $note->save();
-          });
-
-          return response()->json([
-            'status' => 'success',
-            'message' => 'Notes Updated Successfully',
-          ]);
-        } catch (Exception $e) {
-          $message = CustomErrorMessages::getCustomMessage($e);
-
-        return response()->json([
-          'status' => 'error',
-          'message' => $message,
-        ], 500);
-        }
+    $note = Note::find($id);
+    if (!$note) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Invalid Notes',
+      ], 500);
     }
+    $rules = array(
+      'update_description' => 'required',
+    );
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      return response()->json([
+        'status' => 'error',
+        'message' => $validator->errors()->first(),
+      ], 500);
+    }
+    try {
+      DB::transaction(function () use ($request, $note) {
+        $note->name = $request->note_name;
+        $note->note = $request->update_description;
+        $note->save();
+      });
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Notes Updated Successfully',
+      ]);
+    } catch (Exception $e) {
+      $message = CustomErrorMessages::getCustomMessage($e);
+
+      return response()->json([
+        'status' => 'error',
+        'message' => $message,
+      ], 500);
+    }
+  }
 
 
   // public function updateNote(Request $request)
@@ -416,6 +444,44 @@ class UserController extends Controller
         500
       );
     }
+  }
+
+  public function details($id)
+  {
+    $user = User::with('class')->where('id', $id)->first();
+    if ($user) {
+      $role = $user->role_id;
+      $class = "";
+      if ($role == 4) {
+        # student
+        $details = User::join('assign_users', 'users.id', '=', 'assign_users.parent_id')
+          ->where('assign_users.child_id', $id)
+          ->pluck('users.name')
+          ->first();
+        $data = Classes::select('name')->where('id', $user->class_id)->first();
+        $class = $data->name;
+      } else if ($role == 2) {
+        # parent
+        $details = User::join('assign_users', 'users.id', '=', 'assign_users.child_id')
+          ->where('assign_users.parent_id', $id)
+          ->pluck('users.name')
+          ->first();
+      } else if ($role == 3) {
+        # teacher
+        $details = User::join('assign_teacher_students', 'users.id', '=', 'assign_teacher_students.student_id')
+          ->where('assign_teacher_students.teacher_id', $id)
+          ->select('users.name')
+          ->get();
+      }
+    }
+    return response()->json(
+      [
+        'details' => $details,
+        'class' => $class,
+        'role' => $role,
+      ]
+    );
+    return $details;
   }
 
   /**

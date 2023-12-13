@@ -85,7 +85,7 @@
                                     <option value="{{ $questionType->type }}">{{ $questionType->type }}</option>
                                 @endforeach
                                 {{-- <option value="long">Long</option>
-    <option value="short">Short</option> --}}
+                                <option value="short">Short</option> --}}
                             </select>
 
                         </div>
@@ -138,8 +138,10 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
+                                <th>Topic name</th>
                                 <th>Type</th>
                                 <th>Nature</th>
+                                <th>Difficulity Level</th>
                                 <th>Question</th>
                                 <th>Action</th>
                             </tr>
@@ -166,7 +168,23 @@
                     </div>
                     <div class="modal-body">
                         <div class="row mb-3">
-                            <div class="col-6 col-sm-4">
+
+                            <div class="col-6 col-sm-4 mb-2">
+                                <label class="form-label" for="chapter_id_edit">Chapter</label>
+                                <select id="chapter_id_edit" name="chapter_id_edit" class="select2 form-select"
+                                    data-allow-clear="true">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                            <div class="col-6 col-sm-4 mb-2">
+                                <label class="form-label" for="topic_id_edit">Topic</label>
+                                <select id="topic_id_edit" name="topic_id_edit" class="select2 form-select"
+                                    data-allow-clear="true">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="col-6 col-sm-4 mb-2">
                                 <div class="form-group">
                                     <label class="form-label" for="form-repeater-1-3">Question Type</label>
                                     <select id="question_type" required name="question_type" class="form-select">
@@ -175,7 +193,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-6 col-sm-4">
+                            <div class="col-6 col-sm-4 mb-2">
                                 <div class="form-group">
                                     <label class="form-label" for="form-repeater-1-4">Question Nature</label>
                                     <select id="question_nature" required name="question_nature" class="form-select">
@@ -323,6 +341,36 @@
                 });
 
             });
+            $('#chapter_id_edit').change(function() {
+                $.ajax({
+                    url: '{{ route('topicDropDown') }}',
+                    method: 'GET',
+                    data: {
+
+                        chapter: $('#chapter_id_edit').val()
+                    },
+                    success: function(response) {
+                        var topicSelect = $('#topic_id_edit');
+                        topicSelect.empty().append('<option value="">Select</option>');
+
+                        if (response.status === 'success') {
+                            var topics = response.Topics;
+                            if (topics && topics.length > 0) {
+                                $.each(topics, function(index, topic) {
+                                    topicSelect.append('<option value="' + topic
+                                        .id + '">' + topic.name + '</option>');
+                                });
+                            }
+                        } else {
+                            console.error(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+
+            });
         });
     </script>
     <script>
@@ -337,6 +385,26 @@
                 url: "{{ route('question.show', '') }}" + "/" + id,
                 type: 'GET',
                 success: function(response) {
+                    let chapterDropDown = '';
+                    let topicDropDown = '';
+                    response.chapters.forEach(chapter => {
+                        if (chapter.id == response.chapter_id) {
+                            chapterDropDown += '<option value="' + chapter.id + '" selected>' + chapter
+                                .name + '</option>';
+                        } else {
+                            chapterDropDown += '<option value="' + chapter.id + '">' + chapter.name +
+                                '</option>';
+                        }
+                    });
+                    response.topics.forEach(topic => {
+                        if (topic.id == response.topic_id) {
+                            topicDropDown += '<option value="' + topic.id + '" selected>' + topic
+                                .name + '</option>';
+                        } else {
+                            topicDropDown += '<option value="' + topic.id + '">' + topic.name +
+                                '</option>';
+                        }
+                    });
                     // Update the form fields with the fetched data
                     // $('#update-question').val(response.Question.description);
                     $('#update-question').summernote('code', response.Question.description);
@@ -357,6 +425,8 @@
                     $('#difficulty_level').html(difficulty_level);
                     $('#question_nature').html(question_nature);
                     $('#question_type').html(question_type);
+                    $('#topic_id_edit').html(topicDropDown);
+                    $('#chapter_id_edit').html(chapterDropDown);
                     $('#questionId').val(response.Question.id);
                     $('#largeModal').modal('show');
                 },
@@ -371,6 +441,7 @@
             var _token = $('input[name="_token"]').val();
             var question = $('#update-question').val();
             var answer = $('#update-question-answer').val();
+            var topic_id_edit = $('#topic_id_edit').val();
             var question_nature = $('#question_nature').val();
             var question_type = $('#question_type').val();
             var difficulty_level = $('#difficulty_level').val();
@@ -378,6 +449,7 @@
                 question: question,
                 _token: _token,
                 answer: answer,
+                topic_id_edit: topic_id_edit,
                 question_type: question_type,
                 question_nature: question_nature,
                 difficulty_level: difficulty_level,
@@ -468,8 +540,10 @@
                                     // '<td>' + question.book + '</td>' +
                                     // '<td>' + question.class + '</td>' +
                                     // '<td>' + question.question_no + '</td>' +
+                                    '<td>' + question.topic_name + '</td>' +
                                     '<td>' + question.question_type + '</td>' +
                                     '<td>' + question.question_nature + '</td>' +
+                                    '<td>' + question.difficulty_level + '</td>' +
                                     '<td>' + question.description + '</td>' +
                                     "<td>" +
                                     "<a onclick=\"viewQuestion('" + question

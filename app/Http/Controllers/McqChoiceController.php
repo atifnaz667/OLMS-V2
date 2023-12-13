@@ -90,11 +90,11 @@ class McqChoiceController extends Controller
         });
       })
       ->paginate($perPage);
-
     if ($request->check) {
       $data = $questions->map(function ($question) {
         return [
           'id' => $question->id,
+          'topic_name' => $question->topic->name,
           'question_type' => $question->question_type,
           'question_nature' => $question->question_nature ?? 'NA',
           'difficulty_level' => $question->difficulty_level ?? 'NA',
@@ -288,7 +288,32 @@ class McqChoiceController extends Controller
 
     return response()->json(['Question' => $question], 200);
   }
+  /**
+   * Display the specified resource.
+   */
+  public function McqChoioceDetails($id)
+  {
+    $validator = Validator::make(
+      ['id' => $id],
+      [
+        'id' => 'required|int|exists:questions,id',
+      ]
+    );
 
+    if ($validator->fails()) {
+      return response()->json(
+        [
+          'status' => 'error',
+          'message' => $validator->errors()->first(),
+        ],
+        400
+      );
+    }
+
+    $question = Question::with('mcqChoices')->findOrFail($id);
+
+    return response()->json(['Question' => $question], 200);
+  }
   /**
    * Update the specified resource in storage.
    */
