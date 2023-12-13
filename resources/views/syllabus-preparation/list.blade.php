@@ -86,7 +86,7 @@
           <div class="swiper-wrapper">
             @foreach ($bookPdf as $bookPdf)
               <div class="swiper-slide" style="width: 200px; height: 250px; background-image:url({{ asset('files/books/' . $bookPdf->book->file) }})">
-                <a href="{{ route('book.pdf.view',$bookPdf->id) }}"  target="_blank" style="color:white; font-weight:bold; background-color:black">
+                <a href="{{ route('book.pdf.view',$bookPdf->id) }}"   style="color:white; font-weight:bold; background-color:black">
                 {{ $bookPdf->book->name }}
                 </a>
               </div>

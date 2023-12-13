@@ -116,7 +116,11 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Sr#</th>
+                                <th>Unit Number</th>
+                                <th>Topic</th>
                                 <th>Type</th>
+                                <th>Nature</th>
+                                <th>Difficulty</th>
                                 <th>Question</th>
                                 <th>Action</th>
                             </tr>
@@ -454,11 +458,11 @@
                             $.each(questions, function(index, question) {
                                 var row = '<tr>' +
                                     '<td>' + (++numbering) + '</td>' +
-                                    // '<td>' + question.board + '</td>' +
-                                    // '<td>' + question.book + '</td>' +
-                                    // '<td>' + question.class + '</td>' +
-                                    // '<td>' + question.question_no + '</td>' +
+                                    '<td>' + question.unit_no + '</td>' +
+                                    '<td>' + question.topic + '</td>' +
                                     '<td>' + question.question_type + '</td>' +
+                                    '<td>' + question.difficulty_level + '</td>' +
+                                    '<td>' + question.question_nature + '</td>' +
                                     '<td>' + question.description + '</td>' +
                                     "<td>" +
                                     "<a onclick=\"viewQuestion('" + question

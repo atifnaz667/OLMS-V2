@@ -58,7 +58,7 @@
                   </div>
                   <div class="col-sm-3 mb-3">
                     <label for="nameExLarge" class="form-label">Select Students</label>
-                    <select id="students" name="students[]" class="select2 form-select" multiple  >
+                    <select id="students" name="students[]" class="select2 form-select multipleSelect" multiple  >
                     </select>
                   </div>
                   <div class="col-sm-3 mb-3">
@@ -196,7 +196,7 @@
                 if (response.students == '<option value="">Select Students</option>') {
                   showNotification('error','Students not found against this board and class');
                 }
-                $('.select2').select2({
+                $('.multipleSelect').select2({
                     placeholder: "Select Students",
                     closeOnSelect: false
                 });
