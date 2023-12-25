@@ -233,15 +233,16 @@ class LoginController extends Controller
 
         $card->status = "partial";
         $card->count = 1;
-      } else {
-        $card->status = "used";
-        $card->count = 2;
         $time = strtotime(date('Y-m-d'));
         if ($card->expiry_date == 'One Year') {
           $card->valid_date = date("Y-m-d", strtotime("+12 months", $time));
         }else{
           $card->valid_date = date("Y-m-d", strtotime("+6 months", $time));
         }
+      } else {
+        $card->status = "used";
+        $card->count = 2;
+
       }
       $card->save();
 

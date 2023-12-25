@@ -46,7 +46,7 @@ class McqChoiceController extends Controller
     $chapter_id = $request->input('chapter_id');
     $difficulty_level = $request->input('difficulty_level');
 
-    if($user_id == 1){
+    if($role_id == 1){
       $questions = Question::with('topic.chapter')->orderBy($sort, $sort_order);
     }else{
       $questions = Question::with('topic.chapter')->orderBy($sort, $sort_order)->where('user_id',$user_id);

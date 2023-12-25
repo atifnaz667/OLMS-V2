@@ -83,7 +83,7 @@ class QuestionController extends Controller
     $question_nature = $request->input('nature');
     $searchQuery = $request->input('searchQuery');
 
-    if ($user_id == 1) {
+    if ($role_id == 1) {
       $questions = Question::with('topic')->orderBy($sort, $sort_order);
     } else {
       $questions = Question::with('topic')->orderBy($sort, $sort_order)->where('user_id', $user_id);
