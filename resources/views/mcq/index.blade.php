@@ -137,102 +137,104 @@
         </div>
     </div>
     <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-          <form class="update-class pt-0" id="viewQuestionForm">
-              @csrf
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="offcanvasViewQuestionLabel">View Mcq</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
-                          <label class="form-label" for="update-question">Question</label>
-                          <textarea required id="update-question" name="update-question" rows="3" class="form-control update-question"></textarea>
-                      </div>
-
-                      <div class="row">
-                          <div class="mb-3">
-                              <label class="form-label" for="form-repeater-1-1">Option A</label>
-                              <textarea class="form-control" name="option-a" id="form-repeater-1-1" rows="2" class="form-control"></textarea>
-                              {{-- <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" /> --}}
-                              <input type="hidden" name="option-a-id" id="option-a-id" class="form-control" />
-                              <input type="hidden" name="questionId" id="questionId" class="form-control" />
-                          </div>
-                          <div class="mb-3">
-                              <label class="form-label" for="form-repeater-1-2">Option B</label>
-                              <textarea class="form-control" name="option-b" id="form-repeater-1-2" rows="2" class="form-control"></textarea>
-                              {{-- <input type="text" name="option-b" id="form-repeater-1-2" class="form-control" /> --}}
-                              <input type="hidden" name="option-b-id" id="option-b-id" class="form-control" />
-                          </div>
-                          <div class="mb-3">
-                              <label class="form-label" for="form-repeater-1-3">Option C</label>
-                              <textarea class="form-control" name="option-c" id="form-repeater-1-3" rows="2" class="form-control"></textarea>
-                              {{-- <input type="text" name="option-c" id="form-repeater-1-3" class="form-control" /> --}}
-                              <input type="hidden" name="option-c-id" id="option-c-id" class="form-control" />
-                          </div>
-                          <div class="mb-3">
-                              <label class="form-label" for="form-repeater-1-4">Option D</label>
-                              <textarea class="form-control" name="option-d" id="form-repeater-1-4" rows="2" class="form-control"></textarea>
-                              {{-- <input type="text" name="option-d" id="form-repeater-1-4" class="form-control" /> --}}
-                              <input type="hidden" name="option-d-id" id="option-d-id" class="form-control" />
-                          </div>
-                          <div class="mb-3">
-                              <label class="form-label">Correct Option</label>
-                              <select id="correct-option" name="correct-option" class=" form-select" data-allow-clear="true">
-                                  <option value="a">Option A</option>
-                                  <option value="b">Option b</option>
-                                  <option value="c">Option C</option>
-                                  <option value="d">Option D</option>
-                              </select>
-                          </div>
-                          <div class="mb-3">
-                              <label class="form-label" for="form-repeater-1-2">Reason</label>
-                              <textarea id="autosize-demo" name="answer" rows="3" class="form-control update-question"></textarea>
-                          </div>
-                      </div>
-
-
-
-
-                  </div>
-                  <div class="modal-footer">
-                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                      <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
-                  </div>
-              </div>
-
-      </div>
-      </form>
-  </div>
-    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
+            <form class="update-class pt-0" id="viewQuestionForm">
+                @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel3">View Question Details</h5>
+                        <h5 class="modal-title" id="offcanvasViewQuestionLabel">View Mcq</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="row mb-3">
-
+                        <div class="mb-12 col-lg-12 col-xl-12 col-12 mb-0">
+                            <label class="form-label" for="update-question">Question</label>
+                            <textarea required id="update-question" name="update-question" rows="3" class="form-control update-question"></textarea>
                         </div>
+
                         <div class="row">
-                            <div class="col mb-3">
-                                <label class="form-label" for="update-question">Question</label>
-                                <textarea required id="question_description" name="question_description" rows="3" class="form-control" disabled></textarea>
+                            <div class="mb-3">
+                                <label class="form-label" for="form-repeater-1-1">Option A</label>
+                                <textarea class="form-control" name="option-a" id="form-repeater-1-1" rows="2" class="form-control"></textarea>
+                                {{-- <input type="text" name="option-a" id="form-repeater-1-1" class="form-control" /> --}}
+                                <input type="hidden" name="option-a-id" id="option-a-id" class="form-control" />
+                                <input type="hidden" name="questionId" id="questionId" class="form-control" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="form-repeater-1-2">Option B</label>
+                                <textarea class="form-control" name="option-b" id="form-repeater-1-2" rows="2" class="form-control"></textarea>
+                                {{-- <input type="text" name="option-b" id="form-repeater-1-2" class="form-control" /> --}}
+                                <input type="hidden" name="option-b-id" id="option-b-id" class="form-control" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="form-repeater-1-3">Option C</label>
+                                <textarea class="form-control" name="option-c" id="form-repeater-1-3" rows="2" class="form-control"></textarea>
+                                {{-- <input type="text" name="option-c" id="form-repeater-1-3" class="form-control" /> --}}
+                                <input type="hidden" name="option-c-id" id="option-c-id" class="form-control" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="form-repeater-1-4">Option D</label>
+                                <textarea class="form-control" name="option-d" id="form-repeater-1-4" rows="2" class="form-control"></textarea>
+                                {{-- <input type="text" name="option-d" id="form-repeater-1-4" class="form-control" /> --}}
+                                <input type="hidden" name="option-d-id" id="option-d-id" class="form-control" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Correct Option</label>
+                                <select id="correct-option" name="correct-option" class=" form-select"
+                                    data-allow-clear="true">
+                                    <option value="a">Option A</option>
+                                    <option value="b">Option b</option>
+                                    <option value="c">Option C</option>
+                                    <option value="d">Option D</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="form-repeater-1-2">Reason</label>
+                                <textarea id="autosize-demo" name="answer" rows="3" class="form-control update-question"></textarea>
                             </div>
                         </div>
-                        <div class="row mb-3" id="question_options">
 
-                        </div>
-                        <div class="row mb-3" id="correct_options">
 
-                        </div>
-                        <div class="row mb-3" id="question_reason">
 
-                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                     </div>
                 </div>
+
+        </div>
+        </form>
+    </div>
+    <div class="modal fade" id="largeModal-2" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel3">View Question Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label" for="update-question">Question</label>
+                            <textarea required id="question_description" name="question_description" rows="3" class="form-control"
+                                disabled></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="question_options">
+
+                    </div>
+                    <div class="row mb-3" id="correct_options">
+
+                    </div>
+                    <div class="row mb-3" id="question_reason">
+
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -381,7 +383,7 @@
                     // }).reason);
 
                     // Show the offcanvas
-                    offcanvas.show();
+                    $('#largeModal').modal('show');
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -389,6 +391,9 @@
                 }
             });
         }
+
+
+
         function viewQuestionDetails(id) {
             // Your logic to view question details using the provided questionId
             console.log("Viewing details for question with ID: " + id);
@@ -398,80 +403,46 @@
                 url: "{{ route('mcq-choice-details', '') }}" + "/" + id,
                 type: 'GET',
                 success: function(response) {
-    console.log(response)
+                    console.log(response)
                     $('#question_description').val(response.Question.description);
                     $('#question_options').empty();
                     $('#correct_options').empty();
                     $('#question_reason').empty();
                     $.each(response.Question.mcq_choices, function(index, choice) {
-                var optionHtml = '<div class="col mb-3">';
-                optionHtml += '<label class="form-label" for="option_' + choice.id + '">Option ' + (index + 1) + '</label>';
-                optionHtml += '<textarea id="option_' + choice.id + '" name="option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
-                optionHtml += '</div>';
-                $('#question_options').append(optionHtml);
+                        var optionHtml = '<div class="col mb-3">';
+                        optionHtml += '<label class="form-label" for="option_' + choice.id +
+                            '">Option ' + (index + 1) + '</label>';
+                        optionHtml += '<textarea id="option_' + choice.id + '" name="option_' + choice
+                            .id + '" rows="3" class="form-control" disabled>{' + choice.choice +
+                            '}</textarea>';
+                        optionHtml += '</div>';
+                        $('#question_options').append(optionHtml);
 
-                if (choice.is_true === 1) {
-            // Append the correct option to correct_options div
-            var correctOptionHtml = '<div class="col mb-3">';
-            correctOptionHtml += '<label class="form-label text-success">Correct Option</label>';
-            correctOptionHtml += '<textarea id="correct_option_' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
-            correctOptionHtml += '</div>';
+                        if (choice.is_true === 1) {
+                            // Append the correct option to correct_options div
+                            var correctOptionHtml = '<div class="col mb-3">';
+                            correctOptionHtml +=
+                                '<label class="form-label text-success">Correct Option</label>';
+                            correctOptionHtml += '<textarea id="correct_option_' + choice.id +
+                                '" name="correct_option_' + choice.id +
+                                '" rows="3" class="form-control" disabled>' + choice.choice +
+                                '</textarea>';
+                            correctOptionHtml += '</div>';
 
-            $('#correct_options').append(correctOptionHtml);
-            var correctOptionReasonHtml = '<div class="col mb-3">';
-            correctOptionReasonHtml += '<label class="form-label text-success">Reason</label>';
-            correctOptionReasonHtml += '<textarea id="question_reason' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.reason + '</textarea>';
-            correctOptionReasonHtml += '</div>';
+                            $('#correct_options').append(correctOptionHtml);
+                            var correctOptionReasonHtml = '<div class="col mb-3">';
+                            correctOptionReasonHtml +=
+                                '<label class="form-label text-success">Reason</label>';
+                            correctOptionReasonHtml += '<textarea id="question_reason' + choice.id +
+                                '" name="correct_option_' + choice.id +
+                                '" rows="3" class="form-control" disabled>' + choice.reason +
+                                '</textarea>';
+                            correctOptionReasonHtml += '</div>';
 
-            $('#question_reason').append(correctOptionReasonHtml);
-        }
-            });
-                    $('#largeModal').modal('show');
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                    // Handle error if necessary
-                }
-            });
-        }
-        function viewQuestionDetails(id) {
-            // Your logic to view question details using the provided questionId
-            console.log("Viewing details for question with ID: " + id);
-
-
-            $.ajax({
-                url: "{{ route('mcq-choice-details', '') }}" + "/" + id,
-                type: 'GET',
-                success: function(response) {
-    console.log(response)
-                    $('#question_description').val(response.Question.description);
-                    $('#question_options').empty();
-                    $('#correct_options').empty();
-                    $('#question_reason').empty();
-                    $.each(response.Question.mcq_choices, function(index, choice) {
-                var optionHtml = '<div class="col mb-3">';
-                optionHtml += '<label class="form-label" for="option_' + choice.id + '">Option ' + (index + 1) + '</label>';
-                optionHtml += '<textarea id="option_' + choice.id + '" name="option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
-                optionHtml += '</div>';
-                $('#question_options').append(optionHtml);
-
-                if (choice.is_true === 1) {
-            // Append the correct option to correct_options div
-            var correctOptionHtml = '<div class="col mb-3">';
-            correctOptionHtml += '<label class="form-label text-success">Correct Option</label>';
-            correctOptionHtml += '<textarea id="correct_option_' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.choice + '</textarea>';
-            correctOptionHtml += '</div>';
-
-            $('#correct_options').append(correctOptionHtml);
-            var correctOptionReasonHtml = '<div class="col mb-3">';
-            correctOptionReasonHtml += '<label class="form-label text-success">Reason</label>';
-            correctOptionReasonHtml += '<textarea id="question_reason' + choice.id + '" name="correct_option_' + choice.id + '" rows="3" class="form-control" disabled>' + choice.reason + '</textarea>';
-            correctOptionReasonHtml += '</div>';
-
-            $('#question_reason').append(correctOptionReasonHtml);
-        }
-            });
-                    $('#largeModal').modal('show');
+                            $('#question_reason').append(correctOptionReasonHtml);
+                        }
+                    });
+                    $('#largeModal-2').modal('show');
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
