@@ -459,7 +459,7 @@ class UserController extends Controller
           ->pluck('users.name')
           ->first();
         $data = Classes::select('name')->where('id', $user->class_id)->first();
-        $class = $data->name;
+        $class = $data->name ?? '';
       } else if ($role == 2) {
         # parent
         $details = User::join('assign_users', 'users.id', '=', 'assign_users.child_id')

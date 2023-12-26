@@ -404,7 +404,7 @@
                 type: 'GET',
                 success: function(response) {
                     console.log(response)
-                    $('#question_description').val(response.Question.description);
+                    $('#question_description').val(sanitizeTextForTextarea(response.Question.description));
                     $('#question_options').empty();
                     $('#correct_options').empty();
                     $('#question_reason').empty();
@@ -413,8 +413,8 @@
                         optionHtml += '<label class="form-label" for="option_' + choice.id +
                             '">Option ' + (index + 1) + '</label>';
                         optionHtml += '<textarea id="option_' + choice.id + '" name="option_' + choice
-                            .id + '" rows="3" class="form-control" disabled>{' + choice.choice +
-                            '}</textarea>';
+                            .id + '" rows="3" class="form-control" disabled>' +sanitizeTextForTextarea(choice.choice) +
+                            '</textarea>';
                         optionHtml += '</div>';
                         $('#question_options').append(optionHtml);
 
@@ -425,7 +425,7 @@
                                 '<label class="form-label text-success">Correct Option</label>';
                             correctOptionHtml += '<textarea id="correct_option_' + choice.id +
                                 '" name="correct_option_' + choice.id +
-                                '" rows="3" class="form-control" disabled>' + choice.choice +
+                                '" rows="3" class="form-control" disabled>' + sanitizeTextForTextarea(choice.choice) +
                                 '</textarea>';
                             correctOptionHtml += '</div>';
 
@@ -435,7 +435,7 @@
                                 '<label class="form-label text-success">Reason</label>';
                             correctOptionReasonHtml += '<textarea id="question_reason' + choice.id +
                                 '" name="correct_option_' + choice.id +
-                                '" rows="3" class="form-control" disabled>' + choice.reason +
+                                '" rows="3" class="form-control" disabled>' + sanitizeTextForTextarea(choice.reason) +
                                 '</textarea>';
                             correctOptionReasonHtml += '</div>';
 
@@ -450,7 +450,11 @@
                 }
             });
         }
-
+        function sanitizeTextForTextarea(text) {
+                var tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+                return tempDiv.textContent || tempDiv.innerText || '';
+            }
         function updateQuestion(id) {
             // Get the form data
             var _token = $('input[name="_token"]').val();
