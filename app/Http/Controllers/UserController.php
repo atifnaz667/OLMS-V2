@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Cache;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\Card;
 use App\Models\Classes;
 use App\Models\Note;
@@ -30,7 +30,7 @@ class UserController extends Controller
     $cards = Card::get();
     $roles = Role::where('id', '!=', 1)->get();
     $users = User::with('role')->get();
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
     return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards, 'cards' => $cards, 'roles' => $roles]);
@@ -128,7 +128,7 @@ class UserController extends Controller
 
     try {
       $user = User::with('role')->findOrFail($user_id);
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
       return view('users.edit', ['user' => $user, 'classes' => $classes, 'boards' => $boards]);

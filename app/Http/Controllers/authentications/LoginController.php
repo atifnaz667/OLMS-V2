@@ -4,7 +4,7 @@ namespace App\Http\Controllers\authentications;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\AssignUser;
@@ -152,7 +152,7 @@ class LoginController extends Controller
 
   public function pendingUser(Request $request)
   {
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $boards = $results['Boards'];
     $classes = $results['Classes'];
     return view('content.authentications.auth-register-basic', ['pageConfigs' => $request->pageConfigs, 'classes' => $classes, 'boards' => $boards, 'type' => $request->type, 'card_id' => $request->card_id]);

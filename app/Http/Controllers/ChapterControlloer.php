@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use Illuminate\Support\Facades\View;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +14,7 @@ class ChapterControlloer extends Controller
 
   public function addChapter(Request $request)
   {
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
@@ -27,7 +27,7 @@ class ChapterControlloer extends Controller
   public function index()
   {
 
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];

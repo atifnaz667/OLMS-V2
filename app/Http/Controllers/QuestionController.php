@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\McqChoice;
 use App\Models\Question;
 use App\Models\SlAnswer;
@@ -31,7 +31,7 @@ class QuestionController extends Controller
     $books = [];
 
     if ($role_id == 5) {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       // If the user has role_id 5, retrieve data based on their assignments
       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
 
@@ -46,7 +46,7 @@ class QuestionController extends Controller
       $books = Book::whereIn('id', $subject_ids)->get();
       $questionType = $results['questionType'];
     } else {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
@@ -163,7 +163,7 @@ class QuestionController extends Controller
     $books = [];
 
     if ($role_id == 5) {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       // If the user has role_id 5, retrieve data based on their assignments
       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
 
@@ -178,7 +178,7 @@ class QuestionController extends Controller
       $books = Book::whereIn('id', $subject_ids)->get();
       $questionType = $results['questionType'];
     } else {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];

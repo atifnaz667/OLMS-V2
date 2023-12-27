@@ -18,7 +18,7 @@ class HomePage extends Controller
   {
     $role_id = Auth::user()->role_id;
     $user_id = Auth::user()->id;
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
     if ($role_id == 1 || $role_id == 5) {

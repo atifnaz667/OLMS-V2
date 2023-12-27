@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\User;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -104,7 +104,7 @@ class TeacherController extends Controller
           ]);
         }
         $teachers = User::where('role_id',3)->get();
-        $results = DropdownHelper::getBoardBookClass();
+        $results = DropDownHelper::getBoardBookClass();
         $classes = $results['Classes'];
         $boards = $results['Boards'];
         $books = $results['Books'];
@@ -119,7 +119,7 @@ class TeacherController extends Controller
     public function assignStudents()
     {
         $teachers = User::where('role_id',3)->get();
-        $results = DropdownHelper::getBoardBookClass();
+        $results = DropDownHelper::getBoardBookClass();
         $classes = $results['Classes'];
         $boards = $results['Boards'];
         $books = $results['Books'];
@@ -672,7 +672,7 @@ class TeacherController extends Controller
       })->where('teacher_id',$teacher_id)->get();
  
       $teachers = User::where('role_id',3)->get();
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
       $books = $results['Books'];

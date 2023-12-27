@@ -6,7 +6,7 @@ use App\Models\Topic;
 use App\Models\Chapter;
 use App\Models\Question;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use Illuminate\Support\Facades\DB;
 use App\Services\CustomErrorMessages;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +16,7 @@ class TopicController extends Controller
 
   public function addTopic(Request $request)
   {
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
@@ -64,7 +64,7 @@ class TopicController extends Controller
           'total' => $topics->total(),
         ]);
       }
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];

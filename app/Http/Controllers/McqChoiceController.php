@@ -6,7 +6,7 @@ use App\Models\Question;
 use App\Models\SlAnswer;
 use App\Models\McqChoice;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\CustomErrorMessages;
@@ -122,7 +122,7 @@ class McqChoiceController extends Controller
     $books = [];
 
     if ($role_id == 5) {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       // If the user has role_id 5, retrieve data based on their assignments
       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
 
@@ -136,7 +136,7 @@ class McqChoiceController extends Controller
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
     } else {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
@@ -169,7 +169,7 @@ class McqChoiceController extends Controller
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
     } else {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];

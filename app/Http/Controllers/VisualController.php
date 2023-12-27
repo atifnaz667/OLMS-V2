@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\Chapter;
 use App\Models\Topic;
 use App\Models\Visual;
@@ -102,7 +102,7 @@ class VisualController extends Controller
         'total' => $visuals->total(),
       ]);
     }
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
@@ -114,7 +114,7 @@ class VisualController extends Controller
    */
   public function create()
   {
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];

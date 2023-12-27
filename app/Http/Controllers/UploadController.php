@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\AssignTeacherStudent;
 use App\Models\BookPdf;
 use App\Services\CustomErrorMessages;
@@ -20,7 +20,7 @@ class UploadController extends Controller
    */
   public function index()
   {
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $books = $results['Books'];
     $boards = $results['Boards'];
     $classes = $results['Classes'];
