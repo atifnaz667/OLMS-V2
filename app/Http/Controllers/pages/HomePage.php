@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\pages;
 
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AssignTeacherStudent;
 use App\Models\Book;
@@ -34,10 +34,9 @@ class HomePage extends Controller
       } else {
         $books = Book::getBooksForParent($user_id);
         $bookNames = json_encode($books->pluck('name'));
-        $testCount = Test::
-        where('test_type','!=','Self')
-        ->where('created_for',$user_id)
-        ->where('status','Pending')->count();
+        $testCount = Test::where('test_type', '!=', 'Self')
+          ->where('created_for', $user_id)
+          ->where('status', 'Pending')->count();
         return view('dashboards.student', [
           'bookNames' => $bookNames,
           'testCount' => $testCount,
@@ -80,12 +79,12 @@ class HomePage extends Controller
         ['status', 'Attempted'],
         ['test_type', '!=', 'Self'],
       ])
-      ->when($from_date,function($q)use($from_date){
-        $q->whereDate('created_at','>=',$from_date);
-      })
-      ->when($to_date,function($q)use($to_date){
-        $q->whereDate('created_at','<=',$to_date);
-      })
+        ->when($from_date, function ($q) use ($from_date) {
+          $q->whereDate('created_at', '>=', $from_date);
+        })
+        ->when($to_date, function ($q) use ($to_date) {
+          $q->whereDate('created_at', '<=', $to_date);
+        })
         ->select(DB::raw('sum(total_questions) as total_marks'), DB::raw('sum(obtained_marks) as obtained_marks'))
         ->first();
 
