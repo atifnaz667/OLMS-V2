@@ -67,7 +67,7 @@ Route::middleware([CommonRoutes::class])->group(function () {
 
   Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
   Route::get('detail-user/{id}', [UserController::class, 'details']);
-  Route::put('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
+  Route::post('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
 
   Route::resource('user', UserController::class);
 });

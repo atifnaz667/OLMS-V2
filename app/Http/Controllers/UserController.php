@@ -127,7 +127,7 @@ class UserController extends Controller
     }
 
     try {
-      $user = User::with('role')->findOrFail($user_id);
+      $user = User::with('role','card')->findOrFail($user_id);
       $results = DropDownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
@@ -188,6 +188,7 @@ class UserController extends Controller
   {
     $rules = [
       'name' => 'required|min:5',
+      // 'user-image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -210,7 +211,16 @@ class UserController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Incorrect Old Password'], 400);
       }
     }
+    if ($request->hasFile('user-image')) {
+      $file = $request->file('user-image');
+      $ext = $file->getClientOriginalExtension();
+      $filename = time() . rand(1, 100) . '.' . $ext;
+      $file->move(public_path('files/userImages'), $filename);
+      $filePath = $filename;
+      $user->image = $filePath;
+    } 
     $user->name = $request->name;
+    $user->phone_no = $request->phone_no;
     $user->save();
 
     return response()->json([
