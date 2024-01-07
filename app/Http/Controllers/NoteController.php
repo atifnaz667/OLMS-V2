@@ -21,7 +21,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-     
+
       return view('students.notes.index');
     }
 
@@ -89,7 +89,7 @@ class NoteController extends Controller
     public function store(Request $request)
     {
 
-     
+
         $rules = array(
           'note' => 'required',
         );
@@ -135,7 +135,7 @@ class NoteController extends Controller
             'message' => 'Invalid Notes',
           ], 500);
         }
-      
+
       return response()->json([
         'status' => 'success',
         'message' => 'Notes retrieved successfully',
@@ -211,7 +211,6 @@ class NoteController extends Controller
 
         DB::transaction(function () use ($note) {
           $note->delete();
-          $note->delete();
         });
 
         return response()->json([
@@ -227,5 +226,5 @@ class NoteController extends Controller
       }
     }
 
-  
+
 }

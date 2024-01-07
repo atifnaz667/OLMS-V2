@@ -218,7 +218,7 @@ class UserController extends Controller
       $file->move(public_path('files/userImages'), $filename);
       $filePath = $filename;
       $user->image = $filePath;
-    } 
+    }
     $user->name = $request->name;
     $user->phone_no = $request->phone_no;
     $user->save();
@@ -318,6 +318,7 @@ class UserController extends Controller
 
   public function notes()
   {
+
 
     $notes = Note::where('user_id', Auth::user()->id)->paginate(15);
     return view('notes.index', ['notes' => $notes]);
@@ -421,8 +422,11 @@ class UserController extends Controller
   //   }
   // }
 
-  public function storeNote(Request $request)
+    public function storeNote(Request $request)
   {
+
+
+
     $validator = Validator::make($request->all(), [
       'note_name' => 'required',
       'note' => 'required',
@@ -442,6 +446,8 @@ class UserController extends Controller
       DB::commit();
       return response()->json(['status' => 'success', 'message' => 'Notes created successfully'], 201);
     } catch (\Exception $e) {
+
+      // dd($e);
       DB::rollBack();
 
       $message = CustomErrorMessages::getCustomMessage($e);
@@ -455,6 +461,20 @@ class UserController extends Controller
       );
     }
   }
+
+  public function deleteNote(Request $request, $id)
+  {
+    $note = Note::find($id);
+
+      $note->delete();
+
+    if (!$note) {
+      return response()->json(['status' => 'error', 'message' => 'Note not found'], 404);
+    }
+    return response()->json(['status' => 'success', 'message' => 'Note deleted successfully']);
+  }
+
+
 
   public function details($id)
   {
