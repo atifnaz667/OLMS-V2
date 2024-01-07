@@ -35,6 +35,7 @@
                                 <div class="card-body text-center">
 
                                     <h5 class="card-title mb-2">{{ substr($note->name, 0, 15) }}...</h5>
+                                    <p class="card-title mb-2">{!! Illuminate\Support\Str::limit(strip_tags($note->note), 120) !!}
                                     <hr>
                                     <a class="btn-icon edit-record" onclick="editNote('{{ $note->id }}')">
                                       <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-edit"></i></div>
