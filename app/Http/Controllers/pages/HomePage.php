@@ -34,10 +34,13 @@ class HomePage extends Controller
       } else {
         $books = Book::getBooksForParent($user_id);
         $bookNames = json_encode($books->pluck('name'));
+        $today = date("Y-m-d H:i:s");
         $testCount = Test::
-        where('test_type','!=','Self')
-        ->where('created_for',$user_id)
-        ->where('status','Pending')->count();
+        where('test_type', '!=', 'Self')
+        ->where('created_for', $user_id)
+        ->where('expiry_date', '>=', now()) // Use <= for less than or equal to
+        ->where('status', 'Pending')
+        ->count();
         return view('dashboards.student', [
           'bookNames' => $bookNames,
           'testCount' => $testCount,

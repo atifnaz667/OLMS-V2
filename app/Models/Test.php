@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Test extends Model
 {
+  protected $casts = [
+    'expiry_date' => 'datetime',
+  ];
     use HasFactory;
 
     public function createdBy(){

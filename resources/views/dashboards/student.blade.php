@@ -47,8 +47,9 @@
         }
 
         .custom_div_btn:hover {
-            background-color: #0056b3; /* Change background color on hover */
-            border-color: #0056b3; /* Change border color on hover */
+          color: #fff; /* Text color set to white */
+            background-color: #007bff; /* Primary color background */
+            border: 2px solid #007bff; /* Primary color border */
         }
 
     /* Add your CSS styles for the slider and buttons here */
@@ -133,20 +134,20 @@
             font-size: 24px;
             cursor: pointer;
             outline: none;
+            position: absolute;
+            position: fixed;
+            z-index: 10;
+            top: 180px;
+            right: 0;
         }
 
-        .Graph_btn {
-    float: right;
-    margin-top: -90px;
-  }
-
-  @media (max-width: 768px) {
-    .Graph_btn {
-      float: none;
-      margin-top: 0;
-      margin-bottom: 10px; /* Adjust as needed */
-    }
-    }
+        /* @media (max-width: 768px) {
+                .Graph_btn {
+                float: none;
+                margin-top: 0;
+                margin-bottom: 10px; /* Adjust as needed */
+                }
+        } */
     </style>
 
 </style>
@@ -164,28 +165,28 @@
 @section('content')
     {{-- <h4> {{ Auth::user()->role->role }} Home Page</h4> --}}
     <div class="row mt-5">
-        <div class="col-sm-3 mb-2">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2">
             <a href="syllabus-preparation" class="form-control btn btn-success custom-btn">
                 <i class="menu-icon tf-icons ti ti-book"></i> My Digital Bag
             </a>
         </div>
-        <div class="col-sm-3 mb-2">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2">
             <a href="self/assessment" class="form-control btn btn-info custom-btn">
                 <i class="menu-icon tf-icons ti ti-clipboard-text"></i> Self Assessment
             </a>
         </div>
-        <div class="col-sm-3 mb-2 ">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2 ">
             <a href="test/list" class="form-control btn btn-warning custom-btn {{ $testCount > 0 ? 'blinking' : '' }}">
               <span class="badge badge-center  bg-dark" style="position: absolute; top:1; right:1;">{{ $testCount }}</span>
                 <i class="menu-icon tf-icons ti ti-file-certificate"></i> Digital Task
             </a>
         </div>
-        <div class="col-sm-3 mb-2">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2">
             <a href="suggestion/create" class="form-control btn btn-danger custom-btn">
                 <i class="menu-icon tf-icons ti ti-chart-infographic"></i> Human Error & Suggestions
             </a>
         </div>
-        <!-- <div class="col-sm-3 mb-2">
+        <!-- <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2">
             <a href="#" class="form-control btn btn-primary custom-btn" id="my_teacher_button">
                 <i class="menu-icon tf-icons ti ti-users"></i> My Teachers
             </a>
@@ -194,21 +195,21 @@
                 <button class="btn btn-secondary" onclick="window.location.href='myComment/list'">Comment List</button>
             </div>
         </div> -->
-        <div class="col-sm-3 mb-2">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2">
             <a href="notes" class="form-control btn btn-secondary custom-btn">
                 <i class="menu-icon fas fa-sticky-note"></i> Notes
             </a>
         </div>
-        <div class="col-sm-3 mb-2 flex-column flex-wrap">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 mb-2 flex-column flex-wrap">
            <div class="custom_div " >
-           <button class="btn custom_div_btn" onclick="window.location.href='myTeacher/list'">My Teachers List</button>
-            <button class="btn custom_div_btn" onclick="window.location.href='myComment/list'"> <i class="menu-icon tf-icons ti ti-comments"></i>Comment List</button>
+           <button class=" custom_div_btn" onclick="window.location.href='myTeacher/list'">My Teachers</button>
+            <button class=" custom_div_btn" onclick="window.location.href='myComment/list'"> <i class="menu-icon tf-icons ti ti-comments"></i>Comments</button>
            </div>
         </div>
-  
-       
+
+
     </div>
-   
+
     <button class="Graph_btn"  onclick="toggleGraphDiv()"><i class="fa fa-bar-chart"></i></button>
 
 

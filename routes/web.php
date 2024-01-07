@@ -90,9 +90,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
   Route::get('/chapterDropDown', [ChapterControlloer::class, 'chapterDropDown'])->name('chapterDropDown');
   Route::get('/fetchChapterRecords', [ChapterControlloer::class, 'getChapters'])->name('fetchChapterRecords');
   Route::get('add-chapter', [ChapterControlloer::class, 'addChapter'])->name('add-chapter');
+  Route::get('topicDropDown', [TopicController::class, 'topics'])->name('topicDropDown');
 
   Route::apiResource('topic', TopicController::class);
-  Route::get('topicDropDown', [TopicController::class, 'topics'])->name('topicDropDown');
   Route::get('add-topic', [TopicController::class, 'addTopic'])->name('add-topic');
 
   Route::apiResource('question', QuestionController::class);
@@ -118,6 +118,8 @@ Route::middleware([StaffMiddleware::class])->group(function () {
 
   Route::apiResource('mcq-choice', McqChoiceController::class);
   Route::get('add-mcq-choice', [McqChoiceController::class, 'addMcqChoioce'])->name('add-mcq-choice');
+  Route::get('/chapterDropDown', [ChapterControlloer::class, 'chapterDropDown'])->name('chapterDropDown');
+  Route::get('topicDropDown', [TopicController::class, 'topics'])->name('topicDropDown');
 
   Route::apiResource('question', QuestionController::class);
   Route::get('add-question', [QuestionController::class, 'addQuestion'])->name('add-question');
