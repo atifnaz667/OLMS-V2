@@ -6,7 +6,7 @@ use App\Models\Question;
 use App\Models\SlAnswer;
 use App\Models\McqChoice;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\CustomErrorMessages;
@@ -16,6 +16,7 @@ use App\Models\Book;
 use App\Models\Board;
 use App\Models\Classes;
 use App\Models\AssignRole;
+use App\Models\TestChild;
 
 class McqChoiceController extends Controller
 {
@@ -46,10 +47,10 @@ class McqChoiceController extends Controller
     $chapter_id = $request->input('chapter_id');
     $difficulty_level = $request->input('difficulty_level');
 
-    if($role_id == 1){
+    if ($role_id == 1) {
       $questions = Question::with('topic.chapter')->orderBy($sort, $sort_order);
-    }else{
-      $questions = Question::with('topic.chapter')->orderBy($sort, $sort_order)->where('user_id',$user_id);
+    } else {
+      $questions = Question::with('topic.chapter')->orderBy($sort, $sort_order)->where('user_id', $user_id);
     }
 
     $questions = $questions->where('question_type', 'mcq')
@@ -115,33 +116,31 @@ class McqChoiceController extends Controller
       ]);
     }
 
-     // Initialize variables
-     $boards = [];
-     $classes = [];
-     $books = [];
+    // Initialize variables
+    $boards = [];
+    $classes = [];
+    $books = [];
 
-     if ($role_id == 5) {
-       $results = DropdownHelper::getBoardBookClass();
-       // If the user has role_id 5, retrieve data based on their assignments
-       $assignRoles = AssignRole::where('staff_id', $user->id)->get();
+    if ($role_id == 5) {
+      $results = DropDownHelper::getBoardBookClass();
+      // If the user has role_id 5, retrieve data based on their assignments
+      $assignRoles = AssignRole::where('staff_id', $user->id)->get();
 
-       // Collect unique board_ids, class_ids, and subject_ids
-       $board_ids = $assignRoles->pluck('board_id')->unique();
-       $class_ids = $assignRoles->pluck('class_id')->unique();
-       $subject_ids = $assignRoles->pluck('subject_id')->unique();
+      // Collect unique board_ids, class_ids, and subject_ids
+      $board_ids = $assignRoles->pluck('board_id')->unique();
+      $class_ids = $assignRoles->pluck('class_id')->unique();
+      $subject_ids = $assignRoles->pluck('subject_id')->unique();
 
-       // Retrieve boards, classes, and books based on the unique IDs
-       $boards = Board::whereIn('id', $board_ids)->get();
-       $classes = Classes::whereIn('id', $class_ids)->get();
-       $books = Book::whereIn('id', $subject_ids)->get();
-
-     }else{
-       $results = DropdownHelper::getBoardBookClass();
-       $books = $results['Books'];
-       $boards = $results['Boards'];
-       $classes = $results['Classes'];
-
-     }
+      // Retrieve boards, classes, and books based on the unique IDs
+      $boards = Board::whereIn('id', $board_ids)->get();
+      $classes = Classes::whereIn('id', $class_ids)->get();
+      $books = Book::whereIn('id', $subject_ids)->get();
+    } else {
+      $results = DropDownHelper::getBoardBookClass();
+      $books = $results['Books'];
+      $boards = $results['Boards'];
+      $classes = $results['Classes'];
+    }
 
     return view('mcq.index', ['books' => $books, 'boards' => $boards, 'classes' => $classes]);
   }
@@ -169,9 +168,8 @@ class McqChoiceController extends Controller
       $boards = Board::whereIn('id', $board_ids)->get();
       $classes = Classes::whereIn('id', $class_ids)->get();
       $books = Book::whereIn('id', $subject_ids)->get();
-
-    }else{
-      $results = DropdownHelper::getBoardBookClass();
+    } else {
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
@@ -412,6 +410,7 @@ class McqChoiceController extends Controller
     try {
       DB::transaction(function () use ($id) {
         // Delete the associated records in the McqChoice table
+        TestChild::where('question_id', $id)->delete();
         McqChoice::where('question_id', $id)->delete();
 
         // Delete the question

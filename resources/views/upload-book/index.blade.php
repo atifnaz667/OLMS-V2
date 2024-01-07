@@ -229,7 +229,11 @@
                                 $.each(fetchRecords, function(index, fetchRecord) {
                                     var pdfFilePath = baseUrl + 'files/booksPdf/' + fetchRecord
                                         .book_pdf;
-                                    var iconHtml = (fetchRecord.book_icon != null) ? `<img src='files/booksIcon/${fetchRecord.book_icon}' alt='Book Icon' width='50' height='50'>` : '';
+                                    var iconPath = baseUrl + 'files/booksIcon/' + fetchRecord
+                                        .book_icon;
+                                    var iconHtml = (fetchRecord.book_icon != null) ?
+                                        `<img src='${iconPath}' alt='Book Icon' width='50' height='50'>` :
+                                        '';
                                     var row = `<tr>
                                 <td>${index + 1}</td>
                                 <td>${fetchRecord.board}</td>

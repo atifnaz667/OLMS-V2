@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\pages;
 
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Http\Controllers\Controller;
 use App\Models\AssignTeacherStudent;
 use App\Models\Book;
@@ -18,7 +18,7 @@ class HomePage extends Controller
   {
     $role_id = Auth::user()->role_id;
     $user_id = Auth::user()->id;
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
     if ($role_id == 1 || $role_id == 5) {
@@ -83,12 +83,12 @@ class HomePage extends Controller
         ['status', 'Attempted'],
         ['test_type', '!=', 'Self'],
       ])
-      ->when($from_date,function($q)use($from_date){
-        $q->whereDate('created_at','>=',$from_date);
-      })
-      ->when($to_date,function($q)use($to_date){
-        $q->whereDate('created_at','<=',$to_date);
-      })
+        ->when($from_date, function ($q) use ($from_date) {
+          $q->whereDate('created_at', '>=', $from_date);
+        })
+        ->when($to_date, function ($q) use ($to_date) {
+          $q->whereDate('created_at', '<=', $to_date);
+        })
         ->select(DB::raw('sum(total_questions) as total_marks'), DB::raw('sum(obtained_marks) as obtained_marks'))
         ->first();
 

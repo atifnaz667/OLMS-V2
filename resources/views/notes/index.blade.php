@@ -33,10 +33,26 @@
                         <div class="col-md-3 mb-4">
                             <div class="card">
                                 <div class="card-body text-center">
+
+                                    <h5 class="card-title mb-2">{{ substr($note->name, 0, 15) }}...</h5>
+                                    <p class="card-title mb-2">{!! Illuminate\Support\Str::limit(strip_tags($note->note), 120) !!}
+                                    <hr>
                                     <a class="btn-icon edit-record" onclick="editNote('{{ $note->id }}')">
-                                        <div class="badge rounded-pill p-2 bg-label-danger mb-2"><i class="fa-regular fa-clipboard fa-2xl"></i></div>
-                                    </a>
-                                    <h5 class="card-title mb-2">{{ substr($note->name, 0, 15) }}</h5>
+                                      <div class="badge rounded-pill p-2 bg-label-info mb-2"><i class="ti ti-edit"></i></div>
+                                  </a>
+
+                                  <a href="#" class="delete-note-btn"
+                                                        data-note-id="{{ $note->id }}">
+                                                        <div class="badge rounded-pill p-2 bg-label-danger mb-2">
+                                                        <i class="ti ti-trash" aria-hidden="true"></i></div>
+                                                    </a>
+                                                    <form class="delete-user-form" data-note-id="{{ $note->id }}"
+                                                        action="{{ route('note.destroy', $note->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+
 
                                 </div>
                             </div>
@@ -44,7 +60,7 @@
                     @endforeach
                 </div>
             <div class="col-md-0" style="color: #582120">
-    
+
             </div>
 
             <div class="col-md-12 d-flex justify-content-end">
@@ -74,7 +90,7 @@
     </div>
 @endif
 
-            
+
         </div>
     </div>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasViewQuestion"
@@ -463,7 +479,7 @@
                         console.error(response.message);
                     }
 
-                    
+
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -536,10 +552,10 @@
             fetchQuestionRecords();
         });
 
-       
 
-       
-       
+
+
+
 
         $("#search-input").keypress(function(e) {
 
@@ -616,4 +632,46 @@
             });
         }
     </script>
+     <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('.delete-note-btn').forEach(function(button) {
+              button.addEventListener('click', function(event) {
+                  event.preventDefault();
+                  var noteId = this.getAttribute('data-note-id');
+                  var confirmDelete = confirm('Are you sure you want to delete this Note?');
+                  if (confirmDelete) {
+                      fetch('{{ route('note.destroy', ':noteId') }}'.replace(':noteId',
+                      noteId), {
+                              method: 'DELETE',
+                              headers: {
+                                  'Content-Type': 'application/json',
+                                  'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                              },
+                          })
+                          .then(response => {
+                              if (response.ok) {
+                                  var status = response.status;
+                                  var message = response.message;
+                                  $('.toast-ex .fw-semibold').text(status);
+                                  $('.toast-ex .toast-body').text(message);
+                                  selectedType = "text-success";
+                                  selectedAnimation = "animate__fade";
+                                  toastAnimationExample.classList.add(selectedAnimation);
+                                  toastAnimationExample.querySelector('.ti').classList.add(
+                                      selectedType);
+                                  toastAnimation = new bootstrap.Toast(toastAnimationExample);
+                                  toastAnimation.show();
+                                  location.reload();
+                              } else {
+                                  console.error('Error deleting Note');
+                              }
+                          })
+                          .catch(error => {
+                              console.error('Network error:', error);
+                          });
+                  }
+              });
+          });
+      });
+  </script>
 @endsection

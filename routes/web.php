@@ -64,12 +64,14 @@ Route::middleware([CommonRoutes::class])->group(function () {
   Route::get('notes/show/{id}', [NoteController::class, 'show'])->name('notes.show');
   Route::get('/notes', [UserController::class, 'notes'])->name('notes');
   Route::put('notes/update/{id}', [UserController::class, 'updateNote'])->name('notes.update');
+  Route::get('/delete-note/{id}', [UserController::class, 'deleteNote'])->name('deleteNote');
 
   Route::get('edit-user', [UserController::class, 'editUser'])->name('edit-userr');
   Route::get('detail-user/{id}', [UserController::class, 'details']);
-  Route::put('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
+  Route::post('update-user-info', [UserController::class, 'updateUserInfo'])->name('update-user-info');
 
-  Route::resource('user', UserController::class);
+  Route::resource('note', NoteController::class);
+
 });
 Route::middleware([AdminMiddleware::class])->group(function () {
   // Main Page Route

@@ -11,7 +11,7 @@ use App\Models\Board;
 use Illuminate\Support\Facades\Validator;
 use App\Services\CustomErrorMessages;
 
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 
 class AssignRoleController extends Controller
 {
@@ -20,7 +20,7 @@ class AssignRoleController extends Controller
      */
     public function index()
     {
-      $results = DropdownHelper::getBoardBookClass();
+      $results = DropDownHelper::getBoardBookClass();
       $books = $results['Books'];
       $boards = $results['Boards'];
       $classes = $results['Classes'];
@@ -119,7 +119,7 @@ class AssignRoleController extends Controller
             $User = User::with('role')->findOrFail($id);
 
 
-            $results = DropdownHelper::getBoardBookClass();
+            $results = DropDownHelper::getBoardBookClass();
             $boards = $results['Boards'];
             $books = $results['Books'];
             $classes = $results['Classes'];

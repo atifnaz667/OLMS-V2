@@ -89,8 +89,8 @@
                             <div class="form-password-toggle">
                                 <label class="form-label" for="expiryDate">Expiry Date</label>
                                 <!-- <div class="input-group input-group-merge">
-                                                                                                                                                                                                                                                        <input type="date" id="expiryDate" class="form-control" />
-                                                                                                                                                                                                                                                    </div> -->
+                                                                                                                                                                                                                                                            <input type="date" id="expiryDate" class="form-control" />
+                                                                                                                                                                                                                                                        </div> -->
                                 <select id="expiryDate" name="expiryDate" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select Option</option>
@@ -102,13 +102,13 @@
                         </div>
 
                         <!-- <div class="col-md">
-                                                                                                                                                                                                                                                <div class="form-password-toggle">
-                                                                                                                                                                                                                                                    <label class="form-label" for="validDate">Valid Till</label>
-                                                                                                                                                                                                                                                    <div class="input-group input-group-merge">
-                                                                                                                                                                                                                                                        <input type="date" id="validDate" class="form-control" />
+                                                                                                                                                                                                                                                    <div class="form-password-toggle">
+                                                                                                                                                                                                                                                        <label class="form-label" for="validDate">Valid Till</label>
+                                                                                                                                                                                                                                                        <div class="input-group input-group-merge">
+                                                                                                                                                                                                                                                            <input type="date" id="validDate" class="form-control" />
+                                                                                                                                                                                                                                                        </div>
                                                                                                                                                                                                                                                     </div>
-                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                            </div> -->
+                                                                                                                                                                                                                                                </div> -->
                     </div>
                     <button type="button" onclick="addCard()" class="btn btn-primary">Create</button>
                 </div>
@@ -353,7 +353,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="update-expiry-date">Expiry Date</label>
                         <!-- <input type="date" class="form-control" required
-                                                                                                                                                                                                                                                id="update-expiry-date"name="update-expiry-date" aria-label="class" /> -->
+                                                                                                                                                                                                                                                    id="update-expiry-date"name="update-expiry-date" aria-label="class" /> -->
                         <select id="update-expiry-date" name="update-expiry-date" class="select2 form-select"
                             data-allow-clear="true">
                             <option value="">Select Option</option>
@@ -363,10 +363,10 @@
                         </select>
                     </div>
                     <!-- <div class="mb-3">
-                                                                                                                                                                                                                                            <label class="form-label" for="update-valid-date">Valid Till</label>
-                                                                                                                                                                                                                                            <input type="date" class="form-control" required
-                                                                                                                                                                                                                                                id="update-valid-date"name="update-valid-date" aria-label="class" />
-                                                                                                                                                                                                                                        </div> -->
+                                                                                                                                                                                                                                                <label class="form-label" for="update-valid-date">Valid Till</label>
+                                                                                                                                                                                                                                                <input type="date" class="form-control" required
+                                                                                                                                                                                                                                                    id="update-valid-date"name="update-valid-date" aria-label="class" />
+                                                                                                                                                                                                                                            </div> -->
 
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Update</button>
                     <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
@@ -493,7 +493,7 @@
                             </div>
                             <div class="modal-footer">
 
-                                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Assign</button>
+                                {{-- <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Assign</button> --}}
                             </div>
                         </div>
 

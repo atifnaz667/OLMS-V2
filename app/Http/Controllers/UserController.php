@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Cache;
 use App\Models\AssignUser;
 use Illuminate\Http\Request;
-use App\Helpers\DropdownHelper;
+use App\Helpers\DropDownHelper;
 use App\Models\Card;
 use App\Models\Classes;
 use App\Models\Note;
@@ -30,7 +30,7 @@ class UserController extends Controller
     $cards = Card::get();
     $roles = Role::where('id', '!=', 1)->get();
     $users = User::with('role')->get();
-    $results = DropdownHelper::getBoardBookClass();
+    $results = DropDownHelper::getBoardBookClass();
     $classes = $results['Classes'];
     $boards = $results['Boards'];
     return view('users.index', ['users' => $users, 'classes' => $classes, 'boards' => $boards, 'cards' => $cards, 'roles' => $roles]);
@@ -127,8 +127,8 @@ class UserController extends Controller
     }
 
     try {
-      $user = User::with('role')->findOrFail($user_id);
-      $results = DropdownHelper::getBoardBookClass();
+      $user = User::with('role','card')->findOrFail($user_id);
+      $results = DropDownHelper::getBoardBookClass();
       $classes = $results['Classes'];
       $boards = $results['Boards'];
       return view('users.edit', ['user' => $user, 'classes' => $classes, 'boards' => $boards]);
@@ -188,6 +188,7 @@ class UserController extends Controller
   {
     $rules = [
       'name' => 'required|min:5',
+      // 'user-image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ];
     $validator = Validator::make($request->all(), $rules);
     if ($validator->fails()) {
@@ -210,7 +211,16 @@ class UserController extends Controller
         return response()->json(['status' => 'error', 'message' => 'Incorrect Old Password'], 400);
       }
     }
+    if ($request->hasFile('user-image')) {
+      $file = $request->file('user-image');
+      $ext = $file->getClientOriginalExtension();
+      $filename = time() . rand(1, 100) . '.' . $ext;
+      $file->move(public_path('files/userImages'), $filename);
+      $filePath = $filename;
+      $user->image = $filePath;
+    }
     $user->name = $request->name;
+    $user->phone_no = $request->phone_no;
     $user->save();
 
     return response()->json([
@@ -308,6 +318,7 @@ class UserController extends Controller
 
   public function notes()
   {
+
 
     $notes = Note::where('user_id', Auth::user()->id)->paginate(15);
     return view('notes.index', ['notes' => $notes]);
@@ -411,8 +422,11 @@ class UserController extends Controller
   //   }
   // }
 
-  public function storeNote(Request $request)
+    public function storeNote(Request $request)
   {
+
+
+
     $validator = Validator::make($request->all(), [
       'note_name' => 'required',
       'note' => 'required',
@@ -432,6 +446,8 @@ class UserController extends Controller
       DB::commit();
       return response()->json(['status' => 'success', 'message' => 'Notes created successfully'], 201);
     } catch (\Exception $e) {
+
+      // dd($e);
       DB::rollBack();
 
       $message = CustomErrorMessages::getCustomMessage($e);
@@ -446,6 +462,20 @@ class UserController extends Controller
     }
   }
 
+  public function deleteNote(Request $request, $id)
+  {
+    $note = Note::find($id);
+
+      $note->delete();
+
+    if (!$note) {
+      return response()->json(['status' => 'error', 'message' => 'Note not found'], 404);
+    }
+    return response()->json(['status' => 'success', 'message' => 'Note deleted successfully']);
+  }
+
+
+
   public function details($id)
   {
     $user = User::with('class')->where('id', $id)->first();
@@ -459,7 +489,7 @@ class UserController extends Controller
           ->pluck('users.name')
           ->first();
         $data = Classes::select('name')->where('id', $user->class_id)->first();
-        $class = $data->name;
+        $class = $data->name ?? '';
       } else if ($role == 2) {
         # parent
         $details = User::join('assign_users', 'users.id', '=', 'assign_users.child_id')
