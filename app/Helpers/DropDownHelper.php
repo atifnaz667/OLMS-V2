@@ -7,7 +7,7 @@ use App\Models\Board;
 use App\Models\Classes;
 use App\Models\QuestionType;
 
-class DropdownHelper
+class DropDownHelper
 {
   public static function getBoardBookClass()
   {
